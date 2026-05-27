@@ -1766,9 +1766,13 @@
 
       const handleCheckoutReturn = async () => {
         if (query.get("checkout") !== "success") return;
-        creditNote.textContent = "检测到 Creem 测试支付成功返回。Webhook 上线前，可先用本地确认接口模拟入账。";
+        creditNote.textContent = "检测到 Creem 测试支付成功返回。正在等待 webhook 入账，稍后刷新余额。";
 
-        if (!canUseBackend()) return;
+        if (!canUseBackend() || window.location.hostname !== "localhost") {
+          window.setTimeout(refreshAccount, 1200);
+          return;
+        }
+
         try {
           const response = await fetch("/api/checkout/mock-confirm", {
             method: "POST",
