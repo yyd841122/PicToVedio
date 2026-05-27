@@ -334,11 +334,11 @@ async function handleCreemWebhook(req, res) {
 
   if (["checkout.completed", "order.created", "payment.completed"].includes(type)) {
     const metadata = event.object?.metadata || event.data?.metadata || {};
-    const userId = metadata.userId || "demo-user";
-    const plan = metadata.plan || "creator";
+    const userId = metadata.userId;
+    const plan = metadata.plan;
     const paymentId = getPaymentId(event);
 
-    if (!db.payments[paymentId]) {
+    if (userId && ["creator", "commerce"].includes(plan) && !db.payments[paymentId]) {
       const payment = creditAmountForPlan(plan);
       db.payments[paymentId] = {
         id: paymentId,
