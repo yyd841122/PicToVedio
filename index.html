@@ -1,0 +1,1795 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MotionPic AI - Photo to Video Generator MVP</title>
+    <meta
+      name="description"
+      content="AI photo to video generator MVP: upload a photo, pick a social video template, and export short cinematic clips with credits pricing."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #192320;
+        --muted: #68736e;
+        --paper: #fbfaf7;
+        --panel: #ffffff;
+        --line: #e4e0d9;
+        --teal: #0f8c7f;
+        --teal-dark: #076d66;
+        --coral: #ee745d;
+        --yellow: #e5b94f;
+        --green-soft: #e6f5ef;
+        --coral-soft: #fff0ec;
+        --shadow: 0 18px 50px rgba(25, 35, 32, 0.12);
+        --radius: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        min-height: 100dvh;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(251, 250, 247, 0.92);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(228, 224, 217, 0.82);
+      }
+
+      .nav-inner {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(238, 116, 93, 0.9), rgba(238, 116, 93, 0) 58%),
+          linear-gradient(135deg, var(--teal), #62b9a2);
+        display: grid;
+        place-items: center;
+        color: white;
+        font-weight: 900;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        padding: 10px 12px;
+        border-radius: 8px;
+      }
+
+      .nav-links a:hover {
+        background: #f2eee7;
+        color: var(--ink);
+      }
+
+      .button {
+        border: 0;
+        border-radius: 8px;
+        min-height: 44px;
+        padding: 0 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 750;
+        transition:
+          transform 160ms ease,
+          box-shadow 160ms ease,
+          background 160ms ease;
+      }
+
+      .button:focus-visible,
+      .field:focus-visible,
+      .template:focus-visible,
+      .tab:focus-visible,
+      .chip:focus-visible,
+      .option:focus-visible {
+        outline: 3px solid rgba(15, 140, 127, 0.28);
+        outline-offset: 2px;
+      }
+
+      .button.primary {
+        background: var(--teal);
+        color: white;
+        box-shadow: 0 12px 24px rgba(15, 140, 127, 0.22);
+      }
+
+      .button.primary:hover {
+        background: var(--teal-dark);
+        transform: translateY(-1px);
+      }
+
+      .button.secondary {
+        background: white;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+
+      .button.coral {
+        background: var(--coral);
+        color: white;
+      }
+
+      .hero {
+        padding: 46px 0 30px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(430px, 1.1fr);
+        gap: 34px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: #11665c;
+        background: var(--green-soft);
+        border: 1px solid #c9e7dc;
+        font-size: 13px;
+        font-weight: 740;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 16px;
+        font-size: clamp(42px, 6vw, 68px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 590px;
+        color: var(--muted);
+        font-size: 18px;
+        margin-bottom: 26px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        max-width: 590px;
+      }
+
+      .metric {
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 23px;
+        line-height: 1.2;
+      }
+
+      .metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .visual {
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(228, 224, 217, 0.9);
+      }
+
+      .visual img {
+        width: 100%;
+        display: block;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+      }
+
+      .tool-band {
+        padding: 20px 0 54px;
+      }
+
+      .tool {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .workspace,
+      .side-panel,
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: 0 10px 28px rgba(25, 35, 32, 0.06);
+      }
+
+      .workspace {
+        padding: 18px;
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .title-group h2 {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+
+      .title-group p {
+        color: var(--muted);
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+
+      .tabs {
+        display: flex;
+        padding: 4px;
+        border-radius: 8px;
+        background: #f2eee7;
+        gap: 4px;
+      }
+
+      .tab {
+        border: 0;
+        min-height: 36px;
+        border-radius: 7px;
+        padding: 0 12px;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .tab.active {
+        background: white;
+        color: var(--ink);
+        box-shadow: 0 2px 8px rgba(25, 35, 32, 0.08);
+      }
+
+      .status-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .status-item {
+        min-height: 58px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fffdfa;
+        padding: 9px 10px;
+      }
+
+      .status-item span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .status-item strong {
+        display: block;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 16px;
+      }
+
+      .upload {
+        min-height: 432px;
+        border: 1px dashed #bbb2a7;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 22px;
+        text-align: center;
+        background:
+          linear-gradient(0deg, rgba(230, 245, 239, 0.72), rgba(255, 255, 255, 0.82)),
+          #fff;
+      }
+
+      .upload.dragging {
+        border-color: rgba(15, 140, 127, 0.9);
+        background:
+          linear-gradient(0deg, rgba(230, 245, 239, 0.92), rgba(255, 255, 255, 0.86)),
+          #fff;
+      }
+
+      .upload-preview {
+        width: min(100%, 330px);
+        aspect-ratio: 4 / 5;
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(15, 140, 127, 0.16), rgba(238, 116, 93, 0.14)),
+          #f7f3ee;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-weight: 750;
+      }
+
+      .upload-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .upload small {
+        display: block;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+
+      .editor {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field-group label {
+        display: block;
+        font-weight: 760;
+        margin-bottom: 8px;
+      }
+
+      .field,
+      .textarea {
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+        padding: 12px 13px;
+      }
+
+      .textarea {
+        min-height: 86px;
+        resize: vertical;
+      }
+
+      .templates {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        min-height: 34px;
+        padding: 0 11px;
+        background: white;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 740;
+      }
+
+      .chip.active {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: white;
+      }
+
+      .template {
+        border: 1px solid var(--line);
+        background: white;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: left;
+        min-height: 86px;
+      }
+
+      .template.active {
+        border-color: rgba(15, 140, 127, 0.72);
+        box-shadow: 0 0 0 3px rgba(15, 140, 127, 0.12);
+      }
+
+      .template strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .template span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .option-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .option {
+        border: 1px solid var(--line);
+        background: white;
+        border-radius: 8px;
+        min-height: 54px;
+        padding: 9px 10px;
+        text-align: left;
+      }
+
+      .option.active {
+        border-color: rgba(15, 140, 127, 0.72);
+        box-shadow: 0 0 0 3px rgba(15, 140, 127, 0.12);
+      }
+
+      .option strong,
+      .option span {
+        display: block;
+      }
+
+      .option strong {
+        font-size: 14px;
+      }
+
+      .option span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .estimate {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .estimate div {
+        border-radius: 8px;
+        background: #f5f1eb;
+        padding: 10px;
+      }
+
+      .estimate span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .estimate strong {
+        display: block;
+        font-size: 17px;
+      }
+
+      .preview {
+        min-height: 210px;
+        border-radius: 8px;
+        background: #17221f;
+        color: white;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .preview::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.8;
+        background:
+          linear-gradient(120deg, rgba(238, 116, 93, 0.44), transparent 34%),
+          radial-gradient(circle at 82% 18%, rgba(229, 185, 79, 0.32), transparent 30%),
+          linear-gradient(135deg, #254c44, #131f1c);
+      }
+
+      .preview > * {
+        position: relative;
+      }
+
+      .preview-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+      }
+
+      .badge {
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+
+      .play {
+        align-self: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.48);
+        background: rgba(255, 255, 255, 0.18);
+        color: white;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        padding-left: 4px;
+      }
+
+      .timeline {
+        height: 8px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.22);
+        overflow: hidden;
+      }
+
+      .timeline span {
+        display: block;
+        height: 100%;
+        width: 38%;
+        background: var(--coral);
+        border-radius: inherit;
+      }
+
+      .generate-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .export-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .button:disabled {
+        cursor: not-allowed;
+        opacity: 0.62;
+        transform: none;
+      }
+
+      .queue {
+        margin-top: 16px;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+      }
+
+      .queue-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .queue-head h3 {
+        margin-bottom: 0;
+        font-size: 16px;
+      }
+
+      .queue-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .queue-item {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 9px;
+        background: #fffdfa;
+      }
+
+      .thumb {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(15, 140, 127, 0.3), rgba(238, 116, 93, 0.28)),
+          #f2eee7;
+      }
+
+      .queue-title {
+        font-weight: 780;
+        font-size: 14px;
+      }
+
+      .queue-meta {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .pill {
+        border-radius: 999px;
+        padding: 5px 8px;
+        background: var(--green-soft);
+        color: #11665c;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .credit-note {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .side-panel {
+        padding: 18px;
+        position: sticky;
+        top: 86px;
+      }
+
+      .side-panel h3 {
+        font-size: 19px;
+        margin-bottom: 12px;
+      }
+
+      .balance-card {
+        border-radius: 8px;
+        background: var(--ink);
+        color: white;
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+
+      .balance-card span {
+        display: block;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+      }
+
+      .balance-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: end;
+        margin-top: 8px;
+      }
+
+      .balance-row strong {
+        font-size: 30px;
+        line-height: 1;
+      }
+
+      .mini-button {
+        border: 1px solid rgba(255, 255, 255, 0.26);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        min-height: 36px;
+        padding: 0 10px;
+        font-weight: 760;
+      }
+
+      .price-card {
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+
+      .price-card.featured {
+        border-color: rgba(238, 116, 93, 0.7);
+        background: var(--coral-soft);
+      }
+
+      .price-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+        margin-bottom: 8px;
+      }
+
+      .price {
+        font-size: 28px;
+        font-weight: 850;
+      }
+
+      .price-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .conversion {
+        padding: 13px;
+        border-radius: 8px;
+        background: #f5f1eb;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        background: rgba(25, 35, 32, 0.42);
+      }
+
+      .modal-backdrop.open {
+        display: flex;
+      }
+
+      .modal {
+        width: min(480px, 100%);
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 24px 70px rgba(25, 35, 32, 0.28);
+        border: 1px solid var(--line);
+        padding: 20px;
+      }
+
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .modal h2 {
+        margin-bottom: 4px;
+        font-size: 22px;
+      }
+
+      .modal p {
+        color: var(--muted);
+      }
+
+      .close-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: white;
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .checkout-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 16px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .checkout-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+      }
+
+      .checkout-list strong {
+        color: var(--ink);
+      }
+
+      .section {
+        padding: 48px 0;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 20px;
+      }
+
+      .section-head h2 {
+        margin-bottom: 0;
+        font-size: 32px;
+      }
+
+      .section-head p {
+        color: var(--muted);
+        max-width: 560px;
+        margin-bottom: 0;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .panel {
+        padding: 18px;
+      }
+
+      .panel h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      .panel p {
+        color: var(--muted);
+        margin-bottom: 0;
+      }
+
+      .score {
+        display: inline-flex;
+        min-height: 30px;
+        padding: 3px 9px;
+        align-items: center;
+        border-radius: 999px;
+        background: var(--green-soft);
+        color: #11665c;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 8px;
+        background: white;
+        border: 1px solid var(--line);
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+
+      th {
+        background: #f5f1eb;
+        font-size: 13px;
+        color: #4e5b55;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      td strong {
+        color: var(--ink);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .footer {
+        padding: 36px 0 50px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .tool,
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        .side-panel {
+          position: static;
+        }
+
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(100% - 24px, 1180px);
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .hero {
+          padding-top: 30px;
+        }
+
+        h1 {
+          font-size: 42px;
+        }
+
+        .metric-row,
+        .cards,
+        .templates,
+        .status-strip,
+        .option-grid,
+        .estimate,
+        .export-row {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar,
+        .section-head,
+        .generate-row {
+          align-items: stretch;
+          flex-direction: column;
+          display: flex;
+        }
+
+        .tabs {
+          width: 100%;
+        }
+
+        .tab {
+          flex: 1;
+        }
+
+        th,
+        td {
+          padding: 12px 10px;
+          font-size: 13px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="nav">
+        <div class="shell nav-inner">
+          <a class="brand" href="#" aria-label="MotionPic AI home">
+            <span class="mark" aria-hidden="true">M</span>
+            <span>MotionPic AI</span>
+          </a>
+          <nav class="nav-links" aria-label="Primary">
+            <a href="#tool">生成器</a>
+            <a href="#demand">需求</a>
+            <a href="#pricing">价格</a>
+          </nav>
+          <a class="button secondary" href="#tool">Start free</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="shell hero-grid">
+            <div>
+              <span class="eyebrow">Photo to Video / 照片转短视频</span>
+              <h1>把一张照片变成能传播的 AI 短视频</h1>
+              <p class="lead">
+                面向 TikTok、Reels、小红书、独立站卖家的轻量工具：上传人物、宠物或产品图，选择模板，生成可下载的短视频。
+              </p>
+              <div class="hero-actions">
+                <a class="button primary" href="#tool">体验 MVP</a>
+                <a class="button secondary" href="#demand">看需求判断</a>
+              </div>
+              <div class="metric-row" aria-label="Market signals">
+                <div class="metric">
+                  <strong>强</strong>
+                  <span>视觉结果即时可感知</span>
+                </div>
+                <div class="metric">
+                  <strong>中高</strong>
+                  <span>无水印/高清付费意愿</span>
+                </div>
+                <div class="metric">
+                  <strong>高</strong>
+                  <span>长尾模板 SEO 空间</span>
+                </div>
+              </div>
+            </div>
+            <figure class="visual" aria-label="AI photo to video product preview">
+              <img src="photo-to-video-hero.png" alt="AI photo to video generator preview" />
+            </figure>
+          </div>
+        </section>
+
+        <section class="tool-band" id="tool">
+          <div class="shell tool">
+            <div class="workspace">
+              <div class="toolbar">
+                <div class="title-group">
+                  <h2>AI Video Studio</h2>
+                  <p>上传照片，选择模板，模拟生成可下载短视频。</p>
+                </div>
+                <div class="tabs" role="tablist" aria-label="Output mode">
+                  <button class="tab active" type="button">4s</button>
+                  <button class="tab" type="button">8s</button>
+                  <button class="tab" type="button">12s</button>
+                </div>
+              </div>
+
+              <div class="status-strip" aria-label="MVP funnel metrics">
+                <div class="status-item">
+                  <span>今日免费预览</span>
+                  <strong id="freeQuota">2 / 2</strong>
+                </div>
+                <div class="status-item">
+                  <span>预计消耗</span>
+                  <strong id="creditCost">1 credit</strong>
+                </div>
+                <div class="status-item">
+                  <span>导出规格</span>
+                  <strong id="outputSpec">720p</strong>
+                </div>
+                <div class="status-item">
+                  <span>转化事件</span>
+                  <strong id="eventCount">0</strong>
+                </div>
+              </div>
+
+              <div class="flow">
+                <div class="upload" id="dropArea">
+                  <div class="upload-preview" id="uploadPreview">Your photo</div>
+                  <input class="file-input" id="fileInput" type="file" accept="image/*" />
+                  <button class="button primary" id="uploadButton" type="button">Upload photo</button>
+                  <small id="uploadHint">支持点击上传或拖拽图片；人物、宠物、产品图都可以作为第一批入口。</small>
+                </div>
+
+                <div class="editor">
+                  <div class="field-group">
+                    <label for="templateGrid">模板</label>
+                    <div class="chip-row" aria-label="Template filters">
+                      <button class="chip active" type="button" data-filter="all">All</button>
+                      <button class="chip" type="button" data-filter="creator">Creator</button>
+                      <button class="chip" type="button" data-filter="commerce">Commerce</button>
+                      <button class="chip" type="button" data-filter="emotion">Emotion</button>
+                    </div>
+                    <div class="templates" id="templateGrid">
+                      <button class="template active" type="button" data-template="Kiss" data-audience="emotion">
+                        <strong>Couple Kiss</strong>
+                        <span>情侣照、纪念日、社媒传播</span>
+                      </button>
+                      <button class="template" type="button" data-template="Pet" data-audience="creator emotion">
+                        <strong>Pet Hero</strong>
+                        <span>宠物动起来、宠物商店</span>
+                      </button>
+                      <button class="template" type="button" data-template="Product" data-audience="commerce">
+                        <strong>Product Spin</strong>
+                        <span>电商图变广告短片</span>
+                      </button>
+                      <button class="template" type="button" data-template="Old Photo" data-audience="emotion">
+                        <strong>Old Photo Alive</strong>
+                        <span>老照片、家庭纪念</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label for="prompt">动作描述</label>
+                    <textarea class="textarea" id="prompt">soft camera push-in, gentle smile, warm cinematic light, clean background, social video crop</textarea>
+                  </div>
+
+                  <div class="field-group">
+                    <label>视频比例</label>
+                    <div class="option-grid" aria-label="Aspect ratio">
+                      <button class="option active" type="button" data-ratio="9:16">
+                        <strong>9:16</strong>
+                        <span>TikTok / Reels</span>
+                      </button>
+                      <button class="option" type="button" data-ratio="1:1">
+                        <strong>1:1</strong>
+                        <span>Feed / 商品图</span>
+                      </button>
+                      <button class="option" type="button" data-ratio="16:9">
+                        <strong>16:9</strong>
+                        <span>YouTube / Web</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label>清晰度</label>
+                    <div class="option-grid" aria-label="Resolution">
+                      <button class="option active" type="button" data-resolution="720p" data-cost="1">
+                        <strong>720p</strong>
+                        <span>免费预览</span>
+                      </button>
+                      <button class="option" type="button" data-resolution="1080p" data-cost="2">
+                        <strong>1080p</strong>
+                        <span>无水印导出</span>
+                      </button>
+                      <button class="option" type="button" data-resolution="Pro" data-cost="5">
+                        <strong>Pro</strong>
+                        <span>产品广告</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="estimate" aria-label="Generation estimate">
+                    <div>
+                      <span>预计等待</span>
+                      <strong id="waitTime">25s</strong>
+                    </div>
+                    <div>
+                      <span>文件格式</span>
+                      <strong id="fileFormat">MP4</strong>
+                    </div>
+                    <div>
+                      <span>商用建议</span>
+                      <strong id="licenseHint">可升级</strong>
+                    </div>
+                  </div>
+
+                  <div class="preview" aria-label="Generated preview">
+                    <div class="preview-top">
+                      <span class="badge" id="previewTemplate">Couple Kiss template</span>
+                      <span class="badge">720p preview</span>
+                    </div>
+                    <button class="play" type="button" aria-label="Play preview">▶</button>
+                    <div class="timeline" aria-hidden="true"><span id="progressBar"></span></div>
+                  </div>
+
+                  <div class="generate-row">
+                    <button class="button coral" id="generateButton" type="button">Generate preview</button>
+                    <span class="credit-note" id="creditNote">消耗 1 credit，高清导出再收费。</span>
+                  </div>
+
+                  <div class="export-row">
+                    <button class="button secondary" id="downloadButton" type="button" disabled>Download watermarked</button>
+                    <button class="button primary" id="upgradeButton" type="button">Unlock HD no watermark</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="queue" aria-live="polite">
+                <div class="queue-head">
+                  <h3>生成记录</h3>
+                  <span class="credit-note">用于观察用户是否愿意反复生成多个版本。</span>
+                </div>
+                <div class="queue-list" id="queueList">
+                  <div class="queue-item">
+                    <div class="thumb" aria-hidden="true"></div>
+                    <div>
+                      <div class="queue-title">等待首次生成</div>
+                      <div class="queue-meta">上传图片后，点击 Generate preview 创建第一条记录。</div>
+                    </div>
+                    <span class="pill">Ready</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="side-panel" id="pricing">
+              <div class="balance-card">
+                <span>当前账户余额</span>
+                <div class="balance-row">
+                  <strong id="creditBalance">12 credits</strong>
+                  <button class="mini-button" id="buyCreditsButton" type="button">Buy credits</button>
+                </div>
+              </div>
+              <h3>推荐收费锚点</h3>
+              <div class="price-card">
+                <div class="price-head">
+                  <strong>Free</strong>
+                  <span class="price">$0</span>
+                </div>
+                <ul>
+                  <li>每天 2 次预览</li>
+                  <li>720p，带水印</li>
+                  <li>分享后再送 1 次</li>
+                </ul>
+              </div>
+              <div class="price-card featured">
+                <div class="price-head">
+                  <strong>Creator Pack</strong>
+                  <span class="price">$9</span>
+                </div>
+                <ul>
+                  <li>100 credits</li>
+                  <li>1080p 无水印下载</li>
+                  <li>批量生成 4 个版本</li>
+                </ul>
+              </div>
+              <div class="price-card">
+                <div class="price-head">
+                  <strong>Commerce</strong>
+                  <span class="price">$29</span>
+                </div>
+                <ul>
+                  <li>400 credits</li>
+                  <li>产品视频模板</li>
+                  <li>商用导出队列</li>
+                </ul>
+              </div>
+              <div class="conversion">
+                MVP 先验证：上传率、生成率、无水印点击率。真的有人点高清下载，再接 Stripe / Paddle。
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section" id="demand">
+          <div class="shell">
+            <div class="section-head">
+              <h2>需求判断</h2>
+              <p>
+                这类站的核心需求不是“AI 很新”，而是用户已经有照片，想快速拿到适合发布或成交的视频结果。
+              </p>
+            </div>
+            <div class="cards">
+              <article class="panel">
+                <span class="score">强需求</span>
+                <h3>内容创作者</h3>
+                <p>需要不断产出短视频素材，愿意为无水印、稳定模板、批量版本付费。</p>
+              </article>
+              <article class="panel">
+                <span class="score">高客单</span>
+                <h3>电商卖家</h3>
+                <p>产品图变动态广告，直接影响点击率和转化率，付费理由比娱乐用户更硬。</p>
+              </article>
+              <article class="panel">
+                <span class="score">易传播</span>
+                <h3>情侣/宠物/家庭</h3>
+                <p>情绪价值强，适合小额冲动付费，也适合水印分享带自然流量。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="shell">
+            <div class="section-head">
+              <h2>先做哪些模板</h2>
+              <p>第一批模板应该服务搜索词和付费场景，不要只做泛泛的“照片动起来”。</p>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>模板</th>
+                  <th>用户</th>
+                  <th>付费强度</th>
+                  <th>流量入口</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>AI Kiss Video</strong></td>
+                  <td>情侣、纪念日、社媒用户</td>
+                  <td>中高，情绪冲动强</td>
+                  <td>短视频平台 + SEO 长尾</td>
+                </tr>
+                <tr>
+                  <td><strong>Product Video Ad</strong></td>
+                  <td>Shopify、Amazon、独立站卖家</td>
+                  <td>高，能和转化率挂钩</td>
+                  <td>Google SEO + 冷启动投放</td>
+                </tr>
+                <tr>
+                  <td><strong>Pet Animation</strong></td>
+                  <td>宠物主、宠物店</td>
+                  <td>中，分享率高</td>
+                  <td>TikTok / Instagram / 小红书</td>
+                </tr>
+                <tr>
+                  <td><strong>Old Photo Alive</strong></td>
+                  <td>家庭纪念、老人照片修复</td>
+                  <td>中高，纪念价值强</td>
+                  <td>SEO + 社媒案例页</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="shell">
+          MVP note: 先做上传、模板页、预览生成、付费点击埋点；真实生成能力可以后接 Replicate、fal、Runway、Kling、Veo 或自有队列。
+        </div>
+      </footer>
+    </div>
+
+    <div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <div class="modal">
+        <div class="modal-head">
+          <div>
+            <h2 id="checkoutTitle">解锁高清无水印</h2>
+            <p>这是 MVP 里的付费弹窗，用来验证用户是否真的愿意从预览走到导出。</p>
+          </div>
+          <button class="close-button" id="closeModalButton" type="button" aria-label="Close checkout">×</button>
+        </div>
+        <ul class="checkout-list">
+          <li><span>当前选择</span><strong id="checkoutChoice">1080p / 4s / 9:16</strong></li>
+          <li><span>预计消耗</span><strong id="checkoutCost">2 credits</strong></li>
+          <li><span>推荐套餐</span><strong>Creator Pack $9</strong></li>
+        </ul>
+        <button class="button primary" id="mockPayButton" type="button" style="width: 100%">Mock checkout event</button>
+      </div>
+    </div>
+
+    <script>
+      const state = {
+        uploaded: false,
+        generated: false,
+        template: "Kiss",
+        ratio: "9:16",
+        resolution: "720p",
+        baseCost: 1,
+        length: "4s",
+        balance: 12,
+        freeQuota: 2,
+        events: 0,
+        generations: 0,
+        imageData: "",
+        jobId: "",
+      };
+
+      const templatePrompts = {
+        Kiss: "soft couple movement, gentle camera push-in, romantic light, social video crop",
+        Pet: "playful pet motion, bright eyes, soft background, cute social video loop",
+        Product: "premium product spin, clean studio light, subtle camera orbit, ecommerce ad",
+        "Old Photo": "old portrait comes alive, warm restoration look, slow smile, nostalgic mood",
+      };
+
+      const fileInput = document.querySelector("#fileInput");
+      const uploadButton = document.querySelector("#uploadButton");
+      const uploadPreview = document.querySelector("#uploadPreview");
+      const uploadHint = document.querySelector("#uploadHint");
+      const dropArea = document.querySelector("#dropArea");
+      const generateButton = document.querySelector("#generateButton");
+      const downloadButton = document.querySelector("#downloadButton");
+      const upgradeButton = document.querySelector("#upgradeButton");
+      const buyCreditsButton = document.querySelector("#buyCreditsButton");
+      const progressBar = document.querySelector("#progressBar");
+      const previewTemplate = document.querySelector("#previewTemplate");
+      const creditNote = document.querySelector("#creditNote");
+      const promptField = document.querySelector("#prompt");
+      const creditCost = document.querySelector("#creditCost");
+      const outputSpec = document.querySelector("#outputSpec");
+      const freeQuota = document.querySelector("#freeQuota");
+      const eventCount = document.querySelector("#eventCount");
+      const waitTime = document.querySelector("#waitTime");
+      const licenseHint = document.querySelector("#licenseHint");
+      const queueList = document.querySelector("#queueList");
+      const creditBalance = document.querySelector("#creditBalance");
+      const checkoutModal = document.querySelector("#checkoutModal");
+      const closeModalButton = document.querySelector("#closeModalButton");
+      const checkoutChoice = document.querySelector("#checkoutChoice");
+      const checkoutCost = document.querySelector("#checkoutCost");
+      const mockPayButton = document.querySelector("#mockPayButton");
+      const templates = document.querySelectorAll(".template");
+      const tabs = document.querySelectorAll(".tab");
+      const chips = document.querySelectorAll(".chip");
+      const ratioOptions = document.querySelectorAll("[data-ratio]");
+      const resolutionOptions = document.querySelectorAll("[data-resolution]");
+
+      const query = new URLSearchParams(window.location.search);
+
+      const refreshAccount = async () => {
+        if (!canUseBackend()) return;
+        try {
+          const response = await fetch("/api/account");
+          const account = await response.json();
+          if (typeof account.credits === "number") {
+            state.balance = account.credits;
+            updateEstimate();
+          }
+        } catch (error) {
+          console.warn("Account refresh failed", error);
+        }
+      };
+
+      const bumpEvent = () => {
+        state.events += 1;
+        eventCount.textContent = String(state.events);
+      };
+
+      const lengthMultiplier = () => {
+        if (state.length === "8s") return 2;
+        if (state.length === "12s") return 3;
+        return 1;
+      };
+
+      const currentCost = () => state.baseCost * lengthMultiplier();
+
+      const updateEstimate = () => {
+        const cost = currentCost();
+        creditCost.textContent = `${cost} credit${cost > 1 ? "s" : ""}`;
+        outputSpec.textContent = state.resolution;
+        freeQuota.textContent = `${state.freeQuota} / 2`;
+        creditBalance.textContent = `${state.balance} credits`;
+        waitTime.textContent = state.resolution === "Pro" ? "90s" : state.length === "12s" ? "70s" : state.length === "8s" ? "45s" : "25s";
+        licenseHint.textContent = state.resolution === "720p" ? "可升级" : "可商用";
+        checkoutChoice.textContent = `${state.resolution} / ${state.length} / ${state.ratio}`;
+        checkoutCost.textContent = `${cost} credit${cost > 1 ? "s" : ""}`;
+        creditNote.textContent =
+          state.resolution === "720p"
+            ? `消耗 ${cost} credit，预览带水印。`
+            : `消耗 ${cost} credits，可导出无水印高清版本。`;
+      };
+
+      const handleFile = (file) => {
+        if (!file || !file.type.startsWith("image/")) {
+          uploadHint.textContent = "请上传 JPG、PNG 或 WebP 图片。";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          uploadPreview.innerHTML = "";
+          const img = document.createElement("img");
+          img.src = reader.result;
+          img.alt = "Uploaded preview";
+          uploadPreview.appendChild(img);
+          state.imageData = String(reader.result);
+          state.uploaded = true;
+          uploadHint.textContent = `${file.name} 已上传，可以开始选择模板生成。`;
+          bumpEvent();
+        };
+        reader.readAsDataURL(file);
+      };
+
+      uploadButton.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", () => handleFile(fileInput.files && fileInput.files[0]));
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropArea.classList.add("dragging");
+        });
+      });
+
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropArea.classList.remove("dragging");
+        });
+      });
+
+      dropArea.addEventListener("drop", (event) => {
+        handleFile(event.dataTransfer.files && event.dataTransfer.files[0]);
+      });
+
+      chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          chips.forEach((item) => item.classList.remove("active"));
+          chip.classList.add("active");
+          const filter = chip.dataset.filter;
+          templates.forEach((template) => {
+            const visible = filter === "all" || template.dataset.audience.includes(filter);
+            template.hidden = !visible;
+          });
+          bumpEvent();
+        });
+      });
+
+      templates.forEach((template) => {
+        template.addEventListener("click", () => {
+          templates.forEach((item) => item.classList.remove("active"));
+          template.classList.add("active");
+          state.template = template.dataset.template;
+          previewTemplate.textContent = `${state.template} template`;
+          promptField.value = templatePrompts[state.template];
+          bumpEvent();
+        });
+      });
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((item) => item.classList.remove("active"));
+          tab.classList.add("active");
+          state.length = tab.textContent.trim();
+          updateEstimate();
+          bumpEvent();
+        });
+      });
+
+      ratioOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          ratioOptions.forEach((item) => item.classList.remove("active"));
+          option.classList.add("active");
+          state.ratio = option.dataset.ratio;
+          updateEstimate();
+          bumpEvent();
+        });
+      });
+
+      resolutionOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          resolutionOptions.forEach((item) => item.classList.remove("active"));
+          option.classList.add("active");
+          state.resolution = option.dataset.resolution;
+          state.baseCost = Number(option.dataset.cost);
+          updateEstimate();
+          bumpEvent();
+        });
+      });
+
+      const addQueueItem = () => {
+        state.generations += 1;
+        if (state.generations === 1) queueList.innerHTML = "";
+        const item = document.createElement("div");
+        item.className = "queue-item";
+        item.innerHTML = `
+          <div class="thumb" aria-hidden="true"></div>
+          <div>
+            <div class="queue-title">${state.template} video #${state.generations}</div>
+            <div class="queue-meta">${state.length} · ${state.ratio} · ${state.resolution} · ${currentCost()} credits</div>
+          </div>
+          <span class="pill">Done</span>
+        `;
+        queueList.prepend(item);
+      };
+
+      const canUseBackend = () => window.location.protocol !== "file:";
+
+      const createBackendJob = async () => {
+        const response = await fetch("/api/video/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageData: state.imageData,
+            template: state.template,
+            prompt: promptField.value,
+            ratio: state.ratio,
+            resolution: state.resolution,
+            seconds: Number.parseInt(state.length, 10),
+            credits: currentCost(),
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: "Create job failed" }));
+          throw new Error(error.error || "Create job failed");
+        }
+
+        return response.json();
+      };
+
+      generateButton.addEventListener("click", async () => {
+        if (!state.uploaded) {
+          uploadHint.textContent = "先上传一张图片，再生成预览。";
+          fileInput.click();
+          return;
+        }
+
+        const cost = currentCost();
+        if (state.balance < cost) {
+          checkoutModal.classList.add("open");
+          return;
+        }
+
+        generateButton.disabled = true;
+        generateButton.textContent = "Generating...";
+        progressBar.style.width = "10%";
+
+        if (canUseBackend()) {
+          try {
+            const job = await createBackendJob();
+            state.jobId = job.id || "";
+            state.generated = true;
+            if (typeof job.remainingCredits === "number") state.balance = job.remainingCredits;
+            downloadButton.disabled = false;
+            generateButton.disabled = false;
+            generateButton.textContent = "Generate another";
+            creditNote.textContent = job.provider === "mock"
+              ? "Mock 后端已创建任务。配置真实 API key 后会提交视频生成。"
+              : "真实视频任务已提交，请稍后查询生成结果。";
+            progressBar.style.width = "100%";
+            addQueueItem();
+            updateEstimate();
+            bumpEvent();
+            return;
+          } catch (error) {
+            generateButton.disabled = false;
+            generateButton.textContent = "Generate preview";
+            creditNote.textContent = error.message;
+            return;
+          }
+        }
+
+        let width = 10;
+        const timer = window.setInterval(() => {
+          width += 15;
+          progressBar.style.width = `${Math.min(width, 100)}%`;
+          if (width >= 100) {
+            window.clearInterval(timer);
+            state.generated = true;
+            state.balance -= cost;
+            if (state.resolution === "720p") state.freeQuota = Math.max(0, state.freeQuota - 1);
+            generateButton.disabled = false;
+            generateButton.textContent = "Generate another";
+            downloadButton.disabled = false;
+            creditNote.textContent = "预览已生成。高清无水印下载是付费转化点。";
+            addQueueItem();
+            updateEstimate();
+            bumpEvent();
+          }
+        }, 240);
+      });
+
+      downloadButton.addEventListener("click", () => {
+        if (!state.generated) return;
+        creditNote.textContent = "已记录一次带水印下载事件。真实版本可在这里触发 MP4 下载。";
+        bumpEvent();
+      });
+
+      const openCheckout = async () => {
+        updateEstimate();
+        if (canUseBackend()) {
+          try {
+            const response = await fetch("/api/checkout", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                plan: state.resolution === "Pro" ? "commerce" : "creator",
+                returnUrl: window.location.href,
+              }),
+            });
+            const checkout = await response.json();
+            if (checkout.url) {
+              window.location.href = checkout.url;
+              return;
+            }
+          } catch (error) {
+            creditNote.textContent = "支付接口暂不可用，已打开本地模拟弹窗。";
+          }
+        }
+        checkoutModal.classList.add("open");
+        bumpEvent();
+      };
+
+      upgradeButton.addEventListener("click", openCheckout);
+      buyCreditsButton.addEventListener("click", openCheckout);
+      closeModalButton.addEventListener("click", () => checkoutModal.classList.remove("open"));
+      checkoutModal.addEventListener("click", (event) => {
+        if (event.target === checkoutModal) checkoutModal.classList.remove("open");
+      });
+
+      mockPayButton.addEventListener("click", () => {
+        state.balance += 100;
+        checkoutModal.classList.remove("open");
+        creditNote.textContent = "已记录一次模拟支付事件，并给账户增加 100 credits。";
+        updateEstimate();
+        bumpEvent();
+      });
+
+      const handleCheckoutReturn = async () => {
+        if (query.get("checkout") !== "success") return;
+        creditNote.textContent = "检测到 Creem 测试支付成功返回。Webhook 上线前，可先用本地确认接口模拟入账。";
+
+        if (!canUseBackend()) return;
+        try {
+          const response = await fetch("/api/checkout/mock-confirm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plan: query.get("plan") || "creator" }),
+          });
+          const result = await response.json();
+          if (result.balance) {
+            state.balance = result.balance;
+            creditNote.textContent = `测试支付已模拟入账，当前余额 ${result.balance} credits。`;
+            updateEstimate();
+            bumpEvent();
+          }
+        } catch (error) {
+          creditNote.textContent = "支付已返回，但本地确认接口暂不可用。";
+        }
+      };
+
+      updateEstimate();
+      refreshAccount();
+      handleCheckoutReturn();
+    </script>
+  </body>
+</html>
