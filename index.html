@@ -1413,7 +1413,7 @@
           <li><span>预计消耗</span><strong id="checkoutCost">2 credits</strong></li>
           <li><span>推荐套餐</span><strong>Creator Pack $9</strong></li>
         </ul>
-        <button class="button primary" id="mockPayButton" type="button" style="width: 100%">Mock checkout event</button>
+        <button class="button primary" id="mockPayButton" type="button" style="width: 100%">Continue to checkout</button>
       </div>
     </div>
 
@@ -1632,6 +1632,7 @@
       };
 
       const canUseBackend = () => window.location.protocol !== "file:";
+      const isLocalDemo = () => window.location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
       const createBackendJob = async () => {
         const response = await fetch("/api/video/jobs", {
@@ -1665,7 +1666,7 @@
 
         const cost = currentCost();
         if (state.balance < cost) {
-          checkoutModal.classList.add("open");
+          await openCheckout();
           return;
         }
 
@@ -1741,10 +1742,14 @@
               window.location.href = checkout.url;
               return;
             }
+            if (checkout.error) {
+              creditNote.textContent = checkout.error;
+            }
           } catch (error) {
-            creditNote.textContent = "支付接口暂不可用，已打开本地模拟弹窗。";
+            creditNote.textContent = "支付接口暂不可用，请检查 Render 环境变量和 Creem 配置。";
           }
         }
+        if (!isLocalDemo()) return;
         checkoutModal.classList.add("open");
         bumpEvent();
       };
@@ -1756,7 +1761,11 @@
         if (event.target === checkoutModal) checkoutModal.classList.remove("open");
       });
 
-      mockPayButton.addEventListener("click", () => {
+      mockPayButton.addEventListener("click", async () => {
+        if (canUseBackend()) {
+          await openCheckout();
+          return;
+        }
         state.balance += 100;
         checkoutModal.classList.remove("open");
         creditNote.textContent = "已记录一次模拟支付事件，并给账户增加 100 credits。";

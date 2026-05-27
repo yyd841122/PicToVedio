@@ -273,25 +273,32 @@ async function handleCreemCheckout(res, body, plan) {
   }
 
   const baseUrl = config.creemTestMode ? "https://test-api.creem.io" : "https://api.creem.io";
-  const response = await fetch(`${baseUrl}/v1/checkouts`, {
-    method: "POST",
-    headers: {
-      "x-api-key": config.creemApiKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      product_id: productId,
-      request_id: randomUUID(),
-      success_url: appendQuery(body.returnUrl || config.appUrl, { checkout: "success", plan }),
-      metadata: {
-        plan,
-        userId: "demo-user",
+  let response;
+  try {
+    response = await fetch(`${baseUrl}/v1/checkouts`, {
+      method: "POST",
+      headers: {
+        "x-api-key": config.creemApiKey,
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      body: JSON.stringify({
+        product_id: productId,
+        request_id: randomUUID(),
+        success_url: appendQuery(body.returnUrl || config.appUrl, { checkout: "success", plan }),
+        metadata: {
+          plan,
+          userId: "demo-user",
+        },
+      }),
+    });
+  } catch (error) {
+    console.error("Creem checkout request failed", error);
+    return sendJson(res, 502, { error: `Creem checkout request failed: ${error.message}` });
+  }
 
   const checkout = await response.json().catch(() => ({}));
   if (!response.ok) {
+    console.error("Creem checkout failed", response.status, checkout);
     return sendJson(res, response.status, { error: checkout.error || checkout.message || "Creem checkout failed" });
   }
 
