@@ -271,6 +271,11 @@ async function handleCreemCheckout(res, body, plan) {
       error: "Creem is not configured. Set CREEM_API_KEY and product ids to enable real checkout.",
     });
   }
+  if (!isHttpHeaderValue(config.creemApiKey)) {
+    return sendJson(res, 500, {
+      error: "CREEM_API_KEY contains invalid characters. Paste the real Creem API key in Render Environment.",
+    });
+  }
 
   const baseUrl = config.creemTestMode ? "https://test-api.creem.io" : "https://api.creem.io";
   let response;
@@ -550,6 +555,10 @@ function useSupabase() {
 function isLocalRequest(req) {
   const host = String(req.headers.host || "");
   return host.startsWith("localhost") || host.startsWith("127.0.0.1") || host.startsWith("[::1]");
+}
+
+function isHttpHeaderValue(value) {
+  return /^[\t\x20-\x7e\x80-\xff]+$/.test(String(value || ""));
 }
 
 async function ensureSupabaseUser(userId) {
