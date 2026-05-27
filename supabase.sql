@@ -57,3 +57,9 @@ create index if not exists idx_credit_ledger_user_created
 insert into app_users(id, credits)
 values ('demo-user', 12)
 on conflict (id) do nothing;
+
+alter table app_users disable row level security;
+alter table video_jobs disable row level security;
+alter table payments disable row level security;
+alter table webhook_events disable row level security;
+alter table credit_ledger disable row level security;
