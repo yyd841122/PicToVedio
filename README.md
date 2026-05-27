@@ -13,6 +13,8 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Generation history and mock video jobs
 - Creem checkout integration for credit packs
 - Creem webhook endpoint for paid credit top-ups
+- Webhook event deduplication
+- Credit ledger entries for top-ups
 - OpenAI video provider adapter placeholder
 - Render deployment config
 - Cloudflare custom domain deployment guide
@@ -95,6 +97,7 @@ See [DEPLOY.md](./DEPLOY.md) for the full Render, Cloudflare, and Creem webhook 
 - Use `VIDEO_PROVIDER=mock` while validating checkout and webhook behavior.
 - Move users, credits, jobs, and payments to Supabase/Postgres before real traffic.
 - Store uploaded photos and generated videos in Cloudflare R2/S3 before real traffic.
+- Keep webhook event ids and payment ids durable; they prevent duplicate credit grants when providers retry webhooks.
 
 ## Scripts
 

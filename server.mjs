@@ -165,8 +165,13 @@ async function handleCreateVideoJob(req, res) {
 
 function handleGetAccount(res) {
   const db = readDb();
+  normalizeDb(db);
   const user = db.users["demo-user"] || { credits: 0 };
-  return sendJson(res, 200, { userId: "demo-user", credits: user.credits });
+  return sendJson(res, 200, {
+    userId: "demo-user",
+    credits: user.credits,
+    recentCredits: db.creditLedger.slice(-5).reverse(),
+  });
 }
 
 async function handleGetVideoJob(_req, res, id) {
@@ -248,13 +253,20 @@ async function handleMockConfirmPayment(req, res) {
   const plan = body.plan === "commerce" ? "commerce" : "creator";
   const userId = "demo-user";
   const db = readDb();
-  db.users[userId] ||= { credits: 0 };
-  db.users[userId].credits += plan === "commerce" ? 400 : 100;
+  normalizeDb(db);
+  const payment = creditAmountForPlan(plan);
+  addCredits(db, {
+    userId,
+    amount: payment.credits,
+    source: "mock-confirm",
+    externalId: `mock_${randomUUID()}`,
+    plan,
+  });
   writeDb(db);
   return sendJson(res, 200, {
     ok: true,
     plan,
-    creditsAdded: plan === "commerce" ? 400 : 100,
+    creditsAdded: payment.credits,
     balance: db.users[userId].credits,
   });
 }
@@ -305,16 +317,49 @@ async function handleCreemWebhook(req, res) {
 
   const event = JSON.parse(rawBody);
   const type = event.eventType || event.type;
+  const eventId = getEventId(event);
+  const db = readDb();
+  normalizeDb(db);
+
+  if (db.webhookEvents[eventId]) {
+    return sendJson(res, 200, { received: true, duplicate: true });
+  }
+
+  db.webhookEvents[eventId] = {
+    id: eventId,
+    provider: "creem",
+    type,
+    receivedAt: new Date().toISOString(),
+  };
+
   if (["checkout.completed", "order.created", "payment.completed"].includes(type)) {
     const metadata = event.object?.metadata || event.data?.metadata || {};
     const userId = metadata.userId || "demo-user";
     const plan = metadata.plan || "creator";
-    const db = readDb();
-    db.users[userId] ||= { credits: 0 };
-    db.users[userId].credits += plan === "commerce" ? 400 : 100;
-    writeDb(db);
+    const paymentId = getPaymentId(event);
+
+    if (!db.payments[paymentId]) {
+      const payment = creditAmountForPlan(plan);
+      db.payments[paymentId] = {
+        id: paymentId,
+        provider: "creem",
+        eventId,
+        userId,
+        plan,
+        credits: payment.credits,
+        createdAt: new Date().toISOString(),
+      };
+      addCredits(db, {
+        userId,
+        amount: payment.credits,
+        source: "creem-checkout",
+        externalId: paymentId,
+        plan,
+      });
+    }
   }
 
+  writeDb(db);
   return sendJson(res, 200, { received: true });
 }
 
@@ -415,16 +460,86 @@ function appendQuery(url, params) {
 function ensureDb() {
   if (!existsSync(dataDir)) mkdirSync(dataDir);
   if (!existsSync(dbPath)) {
-    writeFileSync(dbPath, JSON.stringify({ users: { "demo-user": { credits: 12 } }, jobs: {} }, null, 2));
+    writeFileSync(dbPath, JSON.stringify(createEmptyDb(), null, 2));
   }
 }
 
 function readDb() {
-  return JSON.parse(readFileSync(dbPath, "utf8"));
+  const db = JSON.parse(readFileSync(dbPath, "utf8"));
+  normalizeDb(db);
+  return db;
 }
 
 function writeDb(db) {
+  normalizeDb(db);
   writeFileSync(dbPath, JSON.stringify(db, null, 2));
+}
+
+function createEmptyDb() {
+  return {
+    users: { "demo-user": { credits: 12 } },
+    jobs: {},
+    payments: {},
+    webhookEvents: {},
+    creditLedger: [],
+  };
+}
+
+function normalizeDb(db) {
+  db.users ||= { "demo-user": { credits: 12 } };
+  db.users["demo-user"] ||= { credits: 12 };
+  db.jobs ||= {};
+  db.payments ||= {};
+  db.webhookEvents ||= {};
+  db.creditLedger ||= [];
+  return db;
+}
+
+function creditAmountForPlan(plan) {
+  return plan === "commerce"
+    ? { credits: 400, label: "Commerce Pack" }
+    : { credits: 100, label: "Creator Pack" };
+}
+
+function addCredits(db, { userId, amount, source, externalId, plan }) {
+  db.users[userId] ||= { credits: 0 };
+  const ledgerId = `${source}:${externalId}`;
+  if (db.creditLedger.some((entry) => entry.id === ledgerId)) {
+    return false;
+  }
+
+  db.users[userId].credits += amount;
+  db.creditLedger.push({
+    id: ledgerId,
+    userId,
+    amount,
+    source,
+    externalId,
+    plan,
+    createdAt: new Date().toISOString(),
+    balanceAfter: db.users[userId].credits,
+  });
+  return true;
+}
+
+function getEventId(event) {
+  return (
+    event.id ||
+    event.eventId ||
+    event.object?.id ||
+    event.data?.id ||
+    `${event.eventType || event.type || "event"}:${event.created_at || event.createdAt || randomUUID()}`
+  );
+}
+
+function getPaymentId(event) {
+  return (
+    event.object?.id ||
+    event.data?.id ||
+    event.object?.checkout?.id ||
+    event.data?.checkout?.id ||
+    getEventId(event)
+  );
 }
 
 function sendJson(res, status, data) {
