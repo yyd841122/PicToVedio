@@ -15,6 +15,9 @@ const config = {
   port: Number(process.env.PORT || 8787),
   appUrl: process.env.APP_URL || "http://localhost:8787",
   videoProvider: process.env.VIDEO_PROVIDER || "mock",
+  dataProvider: process.env.DATA_PROVIDER || "file",
+  supabaseUrl: (process.env.SUPABASE_URL || "").replace(/\/$/, ""),
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
   openaiApiKey: process.env.OPENAI_API_KEY || "",
   openaiVideoModel: process.env.OPENAI_VIDEO_MODEL || "sora-2",
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
@@ -49,7 +52,7 @@ const server = createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && url.pathname === "/api/account") {
-      return handleGetAccount(res);
+      return await handleGetAccount(res);
     }
 
     if (req.method === "POST" && url.pathname === "/api/video/jobs") {
@@ -105,14 +108,12 @@ async function handleCreateVideoJob(req, res) {
     return sendJson(res, 400, { error: "imageData must be a data URL image" });
   }
 
-  const db = readDb();
   const cost = Number(body.credits || 1);
   const userId = "demo-user";
-  db.users[userId] ||= { credits: 12 };
+  const account = await getAccount(userId);
 
-  if (db.users[userId].credits < cost) {
-    writeDb(db);
-    return sendJson(res, 402, { error: "Not enough credits", remainingCredits: db.users[userId].credits });
+  if (account.credits < cost) {
+    return sendJson(res, 402, { error: "Not enough credits", remainingCredits: account.credits });
   }
 
   const job = {
@@ -132,9 +133,7 @@ async function handleCreateVideoJob(req, res) {
     error: "",
   };
 
-  db.users[userId].credits -= cost;
-  db.jobs[job.id] = job;
-  writeDb(db);
+  const remainingCredits = await createJobAndDebit(job, cost);
 
   if (config.videoProvider === "openai") {
     try {
@@ -147,36 +146,29 @@ async function handleCreateVideoJob(req, res) {
       job.error = error.message;
     }
 
-    const latest = readDb();
-    latest.jobs[job.id] = job;
-    writeDb(latest);
+    await saveJob(job);
   }
 
   if (config.videoProvider === "mock") {
     job.status = "succeeded";
     job.outputUrl = `${config.appUrl}/mock-output.mp4`;
-    const latest = readDb();
-    latest.jobs[job.id] = job;
-    writeDb(latest);
+    await saveJob(job);
   }
 
-  return sendJson(res, 200, { ...job, remainingCredits: db.users[userId].credits });
+  return sendJson(res, 200, { ...job, remainingCredits });
 }
 
-function handleGetAccount(res) {
-  const db = readDb();
-  normalizeDb(db);
-  const user = db.users["demo-user"] || { credits: 0 };
+async function handleGetAccount(res) {
+  const account = await getAccount("demo-user");
   return sendJson(res, 200, {
     userId: "demo-user",
-    credits: user.credits,
-    recentCredits: db.creditLedger.slice(-5).reverse(),
+    credits: account.credits,
+    recentCredits: account.recentCredits,
   });
 }
 
 async function handleGetVideoJob(_req, res, id) {
-  const db = readDb();
-  const job = db.jobs[id];
+  const job = await getJob(id);
 
   if (!job) {
     return sendJson(res, 404, { error: "Job not found" });
@@ -186,8 +178,7 @@ async function handleGetVideoJob(_req, res, id) {
     const providerJob = await getOpenAiVideoJob(job.providerJobId);
     job.status = providerJob.status || job.status;
     job.outputUrl = providerJob.output_url || job.outputUrl;
-    db.jobs[id] = job;
-    writeDb(db);
+    await saveJob(job);
   }
 
   return sendJson(res, 200, job);
@@ -248,26 +239,26 @@ async function handleMockConfirmPayment(req, res) {
   if (!config.creemTestMode) {
     return sendJson(res, 403, { error: "Mock payment confirmation is only available in test mode" });
   }
+  if (!isLocalRequest(req)) {
+    return sendJson(res, 403, { error: "Mock payment confirmation is only available on localhost" });
+  }
 
   const body = await readJson(req);
   const plan = body.plan === "commerce" ? "commerce" : "creator";
   const userId = "demo-user";
-  const db = readDb();
-  normalizeDb(db);
   const payment = creditAmountForPlan(plan);
-  addCredits(db, {
+  const result = await grantCredits({
     userId,
     amount: payment.credits,
     source: "mock-confirm",
     externalId: `mock_${randomUUID()}`,
     plan,
   });
-  writeDb(db);
   return sendJson(res, 200, {
     ok: true,
     plan,
     creditsAdded: payment.credits,
-    balance: db.users[userId].credits,
+    balance: result.balance,
   });
 }
 
@@ -318,19 +309,8 @@ async function handleCreemWebhook(req, res) {
   const event = JSON.parse(rawBody);
   const type = event.eventType || event.type;
   const eventId = getEventId(event);
-  const db = readDb();
-  normalizeDb(db);
-
-  if (db.webhookEvents[eventId]) {
-    return sendJson(res, 200, { received: true, duplicate: true });
-  }
-
-  db.webhookEvents[eventId] = {
-    id: eventId,
-    provider: "creem",
-    type,
-    receivedAt: new Date().toISOString(),
-  };
+  const eventRecorded = await recordWebhookEvent({ id: eventId, provider: "creem", type });
+  if (!eventRecorded) return sendJson(res, 200, { received: true, duplicate: true });
 
   if (["checkout.completed", "order.created", "payment.completed"].includes(type)) {
     const metadata = event.object?.metadata || event.data?.metadata || {};
@@ -338,28 +318,20 @@ async function handleCreemWebhook(req, res) {
     const plan = metadata.plan;
     const paymentId = getPaymentId(event);
 
-    if (userId && ["creator", "commerce"].includes(plan) && !db.payments[paymentId]) {
+    if (userId && ["creator", "commerce"].includes(plan)) {
       const payment = creditAmountForPlan(plan);
-      db.payments[paymentId] = {
-        id: paymentId,
-        provider: "creem",
-        eventId,
-        userId,
-        plan,
-        credits: payment.credits,
-        createdAt: new Date().toISOString(),
-      };
-      addCredits(db, {
+      await grantCredits({
         userId,
         amount: payment.credits,
         source: "creem-checkout",
         externalId: paymentId,
         plan,
+        provider: "creem",
+        eventId,
       });
     }
   }
 
-  writeDb(db);
   return sendJson(res, 200, { received: true });
 }
 
@@ -376,13 +348,289 @@ async function handleStripeWebhook(req, res) {
     const session = event.data.object;
     const userId = session.metadata?.userId || "demo-user";
     const plan = session.metadata?.plan || "creator";
-    const db = readDb();
-    db.users[userId] ||= { credits: 0 };
-    db.users[userId].credits += plan === "commerce" ? 400 : 100;
-    writeDb(db);
+    const payment = creditAmountForPlan(plan);
+    await grantCredits({
+      userId,
+      amount: payment.credits,
+      source: "stripe-checkout",
+      externalId: session.id || getEventId(event),
+      plan,
+      provider: "stripe",
+      eventId: getEventId(event),
+    });
   }
 
   return sendJson(res, 200, { received: true });
+}
+
+async function getAccount(userId) {
+  if (useSupabase()) {
+    await ensureSupabaseUser(userId);
+    const users = await supabaseRequest(`app_users?id=eq.${filterValue(userId)}&select=id,credits&limit=1`);
+    const ledger = await supabaseRequest(
+      `credit_ledger?user_id=eq.${filterValue(userId)}&select=id,user_id,amount,source,external_id,plan,created_at,balance_after&order=created_at.desc&limit=5`
+    );
+    return {
+      credits: Number(users[0]?.credits || 0),
+      recentCredits: ledger.map(ledgerRowToEntry),
+    };
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  const user = db.users[userId] || { credits: 0 };
+  return {
+    credits: user.credits,
+    recentCredits: db.creditLedger.slice(-5).reverse(),
+  };
+}
+
+async function createJobAndDebit(job, cost) {
+  if (useSupabase()) {
+    await ensureSupabaseUser(job.userId);
+    const account = await getAccount(job.userId);
+    if (account.credits < cost) {
+      throw new Error("Not enough credits");
+    }
+
+    const remainingCredits = account.credits - cost;
+    await supabaseRequest("video_jobs", {
+      method: "POST",
+      body: jobToRow(job),
+      prefer: "return=minimal",
+    });
+    await supabaseRequest(`app_users?id=eq.${filterValue(job.userId)}`, {
+      method: "PATCH",
+      body: { credits: remainingCredits, updated_at: new Date().toISOString() },
+      prefer: "return=minimal",
+    });
+    return remainingCredits;
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  db.users[job.userId] ||= { credits: 12 };
+  db.users[job.userId].credits -= cost;
+  db.jobs[job.id] = job;
+  writeDb(db);
+  return db.users[job.userId].credits;
+}
+
+async function getJob(id) {
+  if (useSupabase()) {
+    const jobs = await supabaseRequest(`video_jobs?id=eq.${filterValue(id)}&select=*&limit=1`);
+    return jobs[0] ? rowToJob(jobs[0]) : null;
+  }
+
+  const db = readDb();
+  return db.jobs[id] || null;
+}
+
+async function saveJob(job) {
+  if (useSupabase()) {
+    await supabaseRequest("video_jobs?on_conflict=id", {
+      method: "POST",
+      body: jobToRow(job),
+      prefer: "resolution=merge-duplicates,return=minimal",
+    });
+    return;
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  db.jobs[job.id] = job;
+  writeDb(db);
+}
+
+async function recordWebhookEvent({ id, provider, type }) {
+  if (useSupabase()) {
+    const existing = await supabaseRequest(`webhook_events?id=eq.${filterValue(id)}&select=id&limit=1`);
+    if (existing.length) return false;
+    await supabaseRequest("webhook_events", {
+      method: "POST",
+      body: { id, provider, type },
+      prefer: "return=minimal",
+    });
+    return true;
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  if (db.webhookEvents[id]) return false;
+  db.webhookEvents[id] = {
+    id,
+    provider,
+    type,
+    receivedAt: new Date().toISOString(),
+  };
+  writeDb(db);
+  return true;
+}
+
+async function grantCredits({ userId, amount, source, externalId, plan, provider = "mock", eventId = "" }) {
+  if (useSupabase()) {
+    await ensureSupabaseUser(userId);
+    const ledgerId = `${source}:${externalId}`;
+    const existingLedger = await supabaseRequest(`credit_ledger?id=eq.${filterValue(ledgerId)}&select=id,balance_after&limit=1`);
+    if (existingLedger.length) {
+      return { credited: false, balance: Number(existingLedger[0].balance_after || 0) };
+    }
+
+    const account = await getAccount(userId);
+    const balance = account.credits + amount;
+
+    if (provider && provider !== "mock") {
+      const existingPayment = await supabaseRequest(`payments?id=eq.${filterValue(externalId)}&select=id&limit=1`);
+      if (!existingPayment.length) {
+        await supabaseRequest("payments", {
+          method: "POST",
+          body: {
+            id: externalId,
+            provider,
+            event_id: eventId || null,
+            user_id: userId,
+            plan,
+            credits: amount,
+          },
+          prefer: "return=minimal",
+        });
+      }
+    }
+
+    await supabaseRequest(`app_users?id=eq.${filterValue(userId)}`, {
+      method: "PATCH",
+      body: { credits: balance, updated_at: new Date().toISOString() },
+      prefer: "return=minimal",
+    });
+    await supabaseRequest("credit_ledger", {
+      method: "POST",
+      body: {
+        id: ledgerId,
+        user_id: userId,
+        amount,
+        source,
+        external_id: externalId,
+        plan,
+        balance_after: balance,
+      },
+      prefer: "return=minimal",
+    });
+    return { credited: true, balance };
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  if (provider && provider !== "mock" && !db.payments[externalId]) {
+    db.payments[externalId] = {
+      id: externalId,
+      provider,
+      eventId,
+      userId,
+      plan,
+      credits: amount,
+      createdAt: new Date().toISOString(),
+    };
+  }
+  const credited = addCredits(db, { userId, amount, source, externalId, plan });
+  writeDb(db);
+  return { credited, balance: db.users[userId].credits };
+}
+
+function useSupabase() {
+  return config.dataProvider === "supabase" && Boolean(config.supabaseUrl && config.supabaseServiceRoleKey);
+}
+
+function isLocalRequest(req) {
+  const host = String(req.headers.host || "");
+  return host.startsWith("localhost") || host.startsWith("127.0.0.1") || host.startsWith("[::1]");
+}
+
+async function ensureSupabaseUser(userId) {
+  const users = await supabaseRequest(`app_users?id=eq.${filterValue(userId)}&select=id&limit=1`);
+  if (users.length) return;
+
+  await supabaseRequest("app_users", {
+    method: "POST",
+    body: { id: userId, credits: 12 },
+    prefer: "return=minimal",
+  });
+}
+
+async function supabaseRequest(path, { method = "GET", body, prefer } = {}) {
+  const response = await fetch(`${config.supabaseUrl}/rest/v1/${path}`, {
+    method,
+    headers: {
+      apikey: config.supabaseServiceRoleKey,
+      Authorization: `Bearer ${config.supabaseServiceRoleKey}`,
+      "Content-Type": "application/json",
+      ...(prefer ? { Prefer: prefer } : {}),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : null;
+  if (!response.ok) {
+    const message = data?.message || data?.error || `Supabase request failed: ${response.status}`;
+    throw new Error(message);
+  }
+  return data || [];
+}
+
+function filterValue(value) {
+  return encodeURIComponent(String(value));
+}
+
+function jobToRow(job) {
+  return {
+    id: job.id,
+    user_id: job.userId,
+    provider: job.provider,
+    status: job.status,
+    template: job.template,
+    ratio: job.ratio,
+    resolution: job.resolution,
+    seconds: job.seconds,
+    credits: job.credits,
+    prompt: job.prompt,
+    provider_job_id: job.providerJobId,
+    output_url: job.outputUrl,
+    error: job.error,
+    created_at: job.createdAt,
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function rowToJob(row) {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    provider: row.provider,
+    status: row.status,
+    template: row.template,
+    ratio: row.ratio,
+    resolution: row.resolution,
+    seconds: row.seconds,
+    credits: row.credits,
+    prompt: row.prompt,
+    createdAt: row.created_at,
+    providerJobId: row.provider_job_id || "",
+    outputUrl: row.output_url || "",
+    error: row.error || "",
+  };
+}
+
+function ledgerRowToEntry(row) {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    amount: row.amount,
+    source: row.source,
+    externalId: row.external_id,
+    plan: row.plan,
+    createdAt: row.created_at,
+    balanceAfter: row.balance_after,
+  };
 }
 
 async function createOpenAiVideoJob(body) {

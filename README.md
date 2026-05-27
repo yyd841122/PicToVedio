@@ -25,7 +25,7 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Back end: Node.js `http` server
 - Payments: Creem checkout and webhook support
 - Deployment target: Render + Cloudflare DNS
-- Demo database: local JSON file at `data/db.json`
+- Data storage: local JSON for development, Supabase/Postgres for deployed credits
 
 ## Local Setup
 
@@ -60,12 +60,21 @@ Required for Creem test checkout:
 ```env
 APP_URL=http://localhost:8787
 VIDEO_PROVIDER=mock
+DATA_PROVIDER=file
 PAYMENT_PROVIDER=creem
 CREEM_TEST_MODE=true
 CREEM_API_KEY=
 CREEM_PRODUCT_CREATOR=prod_6Wza18GtJN57ME1FXSed2I
 CREEM_PRODUCT_COMMERCE=prod_6YcTIRCZNVrZzwYXYqyKrH
 CREEM_WEBHOOK_SECRET=
+```
+
+Required on Render after creating Supabase:
+
+```env
+DATA_PROVIDER=supabase
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
 ```
 
 Optional for real video generation later:
@@ -90,12 +99,14 @@ Render Web Service -> Cloudflare CNAME -> video.cozyguidehub.com
 
 See [DEPLOY.md](./DEPLOY.md) for the full Render, Cloudflare, and Creem webhook setup.
 
+Before switching Render to `DATA_PROVIDER=supabase`, open Supabase SQL Editor and run [supabase.sql](./supabase.sql). Then add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in Render Environment and redeploy.
+
 ## Important Notes
 
 - Do not commit `.env`; it is ignored by `.gitignore`.
 - `data/db.json` is a demo database and is ignored.
 - Use `VIDEO_PROVIDER=mock` while validating checkout and webhook behavior.
-- Move users, credits, jobs, and payments to Supabase/Postgres before real traffic.
+- Use Supabase/Postgres on Render before real traffic so paid credits survive restarts and redeploys.
 - Store uploaded photos and generated videos in Cloudflare R2/S3 before real traffic.
 - Keep webhook event ids and payment ids durable; they prevent duplicate credit grants when providers retry webhooks.
 

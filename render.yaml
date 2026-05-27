@@ -11,6 +11,8 @@ services:
         value: https://video.cozyguidehub.com
       - key: VIDEO_PROVIDER
         value: mock
+      - key: DATA_PROVIDER
+        value: supabase
       - key: PAYMENT_PROVIDER
         value: creem
       - key: CREEM_TEST_MODE

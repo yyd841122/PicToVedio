@@ -46,6 +46,9 @@ Add these in Render:
 ```env
 APP_URL=https://video.cozyguidehub.com
 VIDEO_PROVIDER=mock
+DATA_PROVIDER=supabase
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 PAYMENT_PROVIDER=creem
 CREEM_TEST_MODE=true
 CREEM_API_KEY=your_creem_api_key
@@ -56,7 +59,31 @@ CREEM_WEBHOOK_SECRET=
 
 Leave `CREEM_WEBHOOK_SECRET` blank until you create the webhook in Creem.
 
-## 4. Add Custom Domain In Render
+## 4. Create Supabase Tables
+
+In Supabase:
+
+1. Create an organization and project on the free plan.
+2. Open `SQL Editor`.
+3. Paste the contents of `supabase.sql`.
+4. Click `Run`.
+
+Then open:
+
+```text
+Project Settings -> API
+```
+
+Copy these values into Render:
+
+```env
+SUPABASE_URL=Project URL
+SUPABASE_SERVICE_ROLE_KEY=service_role secret
+```
+
+Never paste `SUPABASE_SERVICE_ROLE_KEY` into public code or GitHub.
+
+## 5. Add Custom Domain In Render
 
 In the Render service:
 
@@ -72,7 +99,7 @@ video.cozyguidehub.com
 
 Render will show a CNAME target.
 
-## 5. Add DNS Record In Cloudflare
+## 6. Add DNS Record In Cloudflare
 
 In Cloudflare:
 
@@ -96,7 +123,7 @@ Wait until Render shows the domain as verified, then open:
 https://video.cozyguidehub.com
 ```
 
-## 6. Configure Creem Webhook
+## 7. Configure Creem Webhook
 
 After the custom domain works:
 
