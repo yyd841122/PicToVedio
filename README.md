@@ -15,6 +15,8 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Creem webhook endpoint for paid credit top-ups
 - Webhook event deduplication
 - Credit ledger entries for top-ups
+- UI language switcher for English, Chinese, German, Italian, French, Spanish, Japanese, and Korean
+- SEO alternate links for multilingual launch URLs
 - OpenAI video provider adapter placeholder
 - Render deployment config
 - Cloudflare custom domain deployment guide
@@ -89,6 +91,21 @@ OPENAI_VIDEO_MODEL=sora-2
 - Creator Pack: `$9` for `100 credits`
 - Commerce Pack: `$29` for `400 credits`
 
+## Multilingual URLs
+
+```text
+/?lang=en
+/?lang=zh
+/?lang=de
+/?lang=it
+/?lang=fr
+/?lang=es
+/?lang=ja
+/?lang=ko
+```
+
+The selector stores the visitor's language locally and updates page title, description, hero, tool, pricing, demand, and checkout copy.
+
 ## Deployment
 
 The current deployment plan is:
@@ -100,6 +117,8 @@ Render Web Service -> Cloudflare CNAME -> video.cozyguidehub.com
 See [DEPLOY.md](./DEPLOY.md) for the full Render, Cloudflare, and Creem webhook setup.
 
 Before switching Render to `DATA_PROVIDER=supabase`, open Supabase SQL Editor and run [supabase.sql](./supabase.sql). Then add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in Render Environment and redeploy.
+
+Before taking real payments, switch Creem from test mode to live mode in Render by setting `CREEM_TEST_MODE=false`, replacing the product ids, API key, and webhook secret with live Creem values, then paying a small live test order.
 
 ## Important Notes
 

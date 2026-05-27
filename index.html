@@ -8,6 +8,15 @@
       name="description"
       content="AI photo to video generator MVP: upload a photo, pick a social video template, and export short cinematic clips with credits pricing."
     />
+    <link rel="canonical" href="https://video.cozyguidehub.com/" />
+    <link rel="alternate" hreflang="en" href="https://video.cozyguidehub.com/?lang=en" />
+    <link rel="alternate" hreflang="zh" href="https://video.cozyguidehub.com/?lang=zh" />
+    <link rel="alternate" hreflang="de" href="https://video.cozyguidehub.com/?lang=de" />
+    <link rel="alternate" hreflang="it" href="https://video.cozyguidehub.com/?lang=it" />
+    <link rel="alternate" hreflang="fr" href="https://video.cozyguidehub.com/?lang=fr" />
+    <link rel="alternate" hreflang="es" href="https://video.cozyguidehub.com/?lang=es" />
+    <link rel="alternate" hreflang="ja" href="https://video.cozyguidehub.com/?lang=ja" />
+    <link rel="alternate" hreflang="ko" href="https://video.cozyguidehub.com/?lang=ko" />
     <style>
       :root {
         color-scheme: light;
@@ -118,6 +127,22 @@
       .nav-links a:hover {
         background: #f2eee7;
         color: var(--ink);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .language-select {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+        color: var(--ink);
+        padding: 0 10px;
+        font-weight: 700;
       }
 
       .button {
@@ -1065,7 +1090,19 @@
             <a href="#demand">需求</a>
             <a href="#pricing">价格</a>
           </nav>
-          <a class="button secondary" href="#tool">Start free</a>
+          <div class="nav-actions">
+            <select class="language-select" id="languageSelect" aria-label="Language">
+              <option value="en">EN</option>
+              <option value="zh">中文</option>
+              <option value="de">DE</option>
+              <option value="it">IT</option>
+              <option value="fr">FR</option>
+              <option value="es">ES</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+            </select>
+            <a class="button secondary" href="#tool">Start free</a>
+          </div>
         </div>
       </header>
 
@@ -1450,6 +1487,7 @@
       const downloadButton = document.querySelector("#downloadButton");
       const upgradeButton = document.querySelector("#upgradeButton");
       const buyCreditsButton = document.querySelector("#buyCreditsButton");
+      const languageSelect = document.querySelector("#languageSelect");
       const progressBar = document.querySelector("#progressBar");
       const previewTemplate = document.querySelector("#previewTemplate");
       const creditNote = document.querySelector("#creditNote");
@@ -1474,6 +1512,235 @@
       const resolutionOptions = document.querySelectorAll("[data-resolution]");
 
       const query = new URLSearchParams(window.location.search);
+
+      const translations = {
+        en: {
+          title: "MotionPic AI - AI Photo to Video Generator",
+          description: "Turn one photo into short AI videos for TikTok, Reels, ecommerce, pets, couples, and old photo memories.",
+          navTool: "Generator",
+          navDemand: "Demand",
+          navPricing: "Pricing",
+          startFree: "Start free",
+          eyebrow: "Photo to Video",
+          h1: "Turn one photo into an AI video people want to share",
+          lead: "A lightweight tool for TikTok, Reels, creators, and ecommerce sellers: upload a person, pet, or product photo, choose a template, and create a downloadable short video.",
+          heroPrimary: "Try MVP",
+          heroSecondary: "See demand",
+          metric1: "Strong",
+          metric1Text: "Instant visual result",
+          metric2: "Mid-high",
+          metric2Text: "Willingness to pay for HD/no watermark",
+          metric3: "High",
+          metric3Text: "Long-tail template SEO",
+          studioTitle: "AI Video Studio",
+          studioSubtitle: "Upload a photo, pick a template, and generate a downloadable short video.",
+          freePreview: "Free previews today",
+          cost: "Estimated cost",
+          output: "Export quality",
+          events: "Conversion events",
+          upload: "Upload photo",
+          uploadPlaceholder: "Your photo",
+          uploadHint: "Click or drag an image here. People, pets, and product photos are great starting points.",
+          template: "Template",
+          prompt: "Motion prompt",
+          ratio: "Aspect ratio",
+          quality: "Quality",
+          previewFree: "Free preview",
+          noWatermark: "No-watermark export",
+          productAd: "Product ad",
+          wait: "Wait time",
+          format: "File format",
+          commercial: "Commercial use",
+          upgradeable: "Upgradeable",
+          commercialReady: "Ready",
+          generate: "Generate preview",
+          download: "Download watermarked",
+          unlock: "Unlock HD no watermark",
+          queueTitle: "Generation history",
+          queueHint: "Track whether users come back to generate more versions.",
+          queueEmptyTitle: "Waiting for first generation",
+          queueEmptyMeta: "Upload a photo, then click Generate preview to create the first record.",
+          balance: "Current balance",
+          buy: "Buy credits",
+          pricingTitle: "Recommended paid anchors",
+          free: "Free",
+          creatorPack: "Creator Pack",
+          commerce: "Commerce",
+          free1: "2 previews per day",
+          free2: "720p with watermark",
+          free3: "1 extra after sharing",
+          creator1: "100 credits",
+          creator2: "1080p no-watermark downloads",
+          creator3: "Batch generate 4 versions",
+          commerce1: "400 credits",
+          commerce2: "Product video templates",
+          commerce3: "Commercial export queue",
+          conversion: "MVP metrics: upload rate, generation rate, no-watermark clicks. Test payments are connected through Creem.",
+          demandTitle: "Demand Check",
+          demandLead: "The core demand is not that AI is new. Users already have photos and want a fast video result for posting or selling.",
+          demand1Score: "Strong demand",
+          demand1Title: "Creators",
+          demand1Text: "They need constant short video assets and will pay for no watermark, stable templates, and batch variations.",
+          demand2Score: "High AOV",
+          demand2Title: "Ecommerce sellers",
+          demand2Text: "Product photos turned into ads can affect CTR and conversion, so the paid value is easier to justify.",
+          demand3Score: "Shareable",
+          demand3Title: "Couples, pets, family",
+          demand3Text: "Emotional value drives small impulse purchases and watermark sharing can bring organic traffic.",
+          templateSectionTitle: "Templates to launch first",
+          templateSectionLead: "The first templates should match search demand and paid use cases, not only generic photo animation.",
+          tableTemplate: "Template",
+          tableUsers: "Users",
+          tablePaid: "Paid strength",
+          tableTraffic: "Traffic source",
+          modalTitle: "Unlock HD no watermark",
+          modalDesc: "This checkout step validates whether users are willing to move from preview to export.",
+          currentChoice: "Current choice",
+          recommendedPlan: "Recommended plan",
+          checkout: "Continue to checkout",
+          footer: "MVP note: validate upload, template selection, preview generation, and paid export intent first; real generation can later connect to Replicate, fal, Runway, Kling, Veo, or your own queue."
+        },
+        zh: {
+          title: "MotionPic AI - AI 照片转视频生成器",
+          description: "把一张照片变成适合 TikTok、Reels、小红书、电商、宠物、情侣和老照片纪念的 AI 短视频。",
+          navTool: "生成器", navDemand: "需求", navPricing: "价格", startFree: "Start free",
+          eyebrow: "Photo to Video / 照片转短视频",
+          h1: "把一张照片变成能传播的 AI 短视频",
+          lead: "面向 TikTok、Reels、小红书、独立站卖家的轻量工具：上传人物、宠物或产品图，选择模板，生成可下载的短视频。",
+          heroPrimary: "体验 MVP", heroSecondary: "看需求判断",
+          metric1: "强", metric1Text: "视觉结果即时可感知", metric2: "中高", metric2Text: "无水印/高清付费意愿", metric3: "高", metric3Text: "长尾模板 SEO 空间",
+          studioTitle: "AI Video Studio", studioSubtitle: "上传照片，选择模板，模拟生成可下载短视频。",
+          freePreview: "今日免费预览", cost: "预计消耗", output: "导出规格", events: "转化事件",
+          upload: "Upload photo", uploadPlaceholder: "Your photo", uploadHint: "支持点击上传或拖拽图片；人物、宠物、产品图都可以作为第一批入口。",
+          template: "模板", prompt: "动作描述", ratio: "视频比例", quality: "清晰度",
+          previewFree: "免费预览", noWatermark: "无水印导出", productAd: "产品广告", wait: "预计等待", format: "文件格式", commercial: "商用建议",
+          upgradeable: "可升级", commercialReady: "可商用", generate: "Generate preview", download: "Download watermarked", unlock: "Unlock HD no watermark",
+          queueTitle: "生成记录", queueHint: "用于观察用户是否愿意反复生成多个版本。", queueEmptyTitle: "等待首次生成", queueEmptyMeta: "上传图片后，点击 Generate preview 创建第一条记录。",
+          balance: "当前账户余额", buy: "Buy credits", pricingTitle: "推荐收费锚点",
+          free: "Free", creatorPack: "Creator Pack", commerce: "Commerce",
+          free1: "每天 2 次预览", free2: "720p，带水印", free3: "分享后再送 1 次",
+          creator1: "100 credits", creator2: "1080p 无水印下载", creator3: "批量生成 4 个版本",
+          commerce1: "400 credits", commerce2: "产品视频模板", commerce3: "商用导出队列",
+          conversion: "MVP 先验证：上传率、生成率、无水印点击率。当前测试收款链路已接入 Creem。",
+          demandTitle: "需求判断", demandLead: "这类站的核心需求不是“AI 很新”，而是用户已经有照片，想快速拿到适合发布或成交的视频结果。",
+          demand1Score: "强需求", demand1Title: "内容创作者", demand1Text: "需要不断产出短视频素材，愿意为无水印、稳定模板、批量版本付费。",
+          demand2Score: "高客单", demand2Title: "电商卖家", demand2Text: "产品图变动态广告，直接影响点击率和转化率，付费理由比娱乐用户更硬。",
+          demand3Score: "易传播", demand3Title: "情侣/宠物/家庭", demand3Text: "情绪价值强，适合小额冲动付费，也适合水印分享带自然流量。",
+          templateSectionTitle: "先做哪些模板", templateSectionLead: "第一批模板应该服务搜索词和付费场景，不要只做泛泛的“照片动起来”。",
+          tableTemplate: "模板", tableUsers: "用户", tablePaid: "付费强度", tableTraffic: "流量入口",
+          modalTitle: "解锁高清无水印", modalDesc: "这是 MVP 里的付费弹窗，用来验证用户是否真的愿意从预览走到导出。",
+          currentChoice: "当前选择", recommendedPlan: "推荐套餐", checkout: "Continue to checkout",
+          footer: "MVP note: 先做上传、模板页、预览生成、付费点击埋点；真实生成能力可以后接 Replicate、fal、Runway、Kling、Veo 或自有队列。"
+        }
+      };
+
+      const languageNames = { de: "Deutsch", it: "Italiano", fr: "Français", es: "Español", ja: "日本語", ko: "한국어" };
+      const localized = {
+        de: { title: "MotionPic AI - KI Foto zu Video Generator", description: "Erstelle aus einem Foto kurze KI-Videos für TikTok, Reels, Ecommerce, Haustiere, Paare und Erinnerungen.", h1: "Verwandle ein Foto in ein teilbares KI-Kurzvideo", lead: "Ein leichtes Tool für TikTok, Reels, Creator und Onlineshops: Foto hochladen, Vorlage wählen und ein kurzes Video exportieren.", startFree: "Kostenlos starten", generate: "Vorschau erstellen", buy: "Credits kaufen", pricingTitle: "Empfohlene Preispunkte", demandTitle: "Nachfrage prüfen", modalTitle: "HD ohne Wasserzeichen freischalten" },
+        it: { title: "MotionPic AI - Generatore AI da Foto a Video", description: "Trasforma una foto in video brevi AI per TikTok, Reels, ecommerce, animali, coppie e ricordi.", h1: "Trasforma una foto in un video AI da condividere", lead: "Uno strumento leggero per TikTok, Reels, creator ed ecommerce: carica una foto, scegli un template ed esporta un breve video.", startFree: "Inizia gratis", generate: "Genera anteprima", buy: "Compra crediti", pricingTitle: "Prezzi consigliati", demandTitle: "Analisi domanda", modalTitle: "Sblocca HD senza watermark" },
+        fr: { title: "MotionPic AI - Générateur IA Photo en Vidéo", description: "Transformez une photo en courtes vidéos IA pour TikTok, Reels, e-commerce, animaux, couples et souvenirs.", h1: "Transformez une photo en courte vidéo IA partageable", lead: "Un outil léger pour TikTok, Reels, créateurs et e-commerce : importez une photo, choisissez un modèle et exportez une courte vidéo.", startFree: "Commencer gratuit", generate: "Générer aperçu", buy: "Acheter crédits", pricingTitle: "Offres recommandées", demandTitle: "Analyse demande", modalTitle: "Débloquer HD sans filigrane" },
+        es: { title: "MotionPic AI - Generador IA de Foto a Video", description: "Convierte una foto en videos cortos IA para TikTok, Reels, ecommerce, mascotas, parejas y recuerdos.", h1: "Convierte una foto en un video IA listo para compartir", lead: "Una herramienta ligera para TikTok, Reels, creadores y ecommerce: sube una foto, elige una plantilla y exporta un video corto.", startFree: "Empezar gratis", generate: "Generar vista previa", buy: "Comprar créditos", pricingTitle: "Precios recomendados", demandTitle: "Validación de demanda", modalTitle: "Desbloquear HD sin marca de agua" },
+        ja: { title: "MotionPic AI - AI写真動画ジェネレーター", description: "1枚の写真からTikTok、Reels、EC、ペット、カップル、思い出向けのAIショート動画を作成。", h1: "1枚の写真をシェアされるAIショート動画に", lead: "TikTok、Reels、クリエイター、EC向けの軽量ツール。写真をアップロードし、テンプレートを選んで短い動画を書き出せます。", startFree: "無料で開始", generate: "プレビュー生成", buy: "クレジット購入", pricingTitle: "おすすめ料金", demandTitle: "需要チェック", modalTitle: "HD・透かしなしを解除" },
+        ko: { title: "MotionPic AI - AI 사진 영상 생성기", description: "사진 한 장으로 TikTok, Reels, 커머스, 반려동물, 커플, 추억용 AI 숏폼 영상을 만드세요.", h1: "사진 한 장을 공유되는 AI 숏폼 영상으로", lead: "TikTok, Reels, 크리에이터와 커머스 셀러를 위한 가벼운 도구입니다. 사진을 올리고 템플릿을 선택해 짧은 영상을 내보내세요.", startFree: "무료 시작", generate: "미리보기 생성", buy: "크레딧 구매", pricingTitle: "추천 유료 플랜", demandTitle: "수요 검증", modalTitle: "HD 워터마크 제거 잠금 해제" }
+      };
+
+      let currentLang = "zh";
+      let currentCopy = translations.zh;
+
+      const supportedLanguages = ["en", "zh", "de", "it", "fr", "es", "ja", "ko"];
+      const browserLanguage = () => {
+        const code = (navigator.language || "zh").slice(0, 2).toLowerCase();
+        return supportedLanguages.includes(code) ? code : "en";
+      };
+      const initialLanguage = () => {
+        const requested = (query.get("lang") || localStorage.getItem("motionpic-lang") || browserLanguage()).toLowerCase();
+        return supportedLanguages.includes(requested) ? requested : "en";
+      };
+      const copyFor = (lang) => ({
+        ...translations.en,
+        ...(lang === "zh" ? translations.zh : {}),
+        ...(localized[lang] || {}),
+      });
+      const setText = (selector, value) => {
+        const element = document.querySelector(selector);
+        if (element) element.textContent = value;
+      };
+      const setAllText = (selector, values) => {
+        document.querySelectorAll(selector).forEach((element, index) => {
+          if (values[index] !== undefined) element.textContent = values[index];
+        });
+      };
+      const setAllTextFrom = (elements, values) => {
+        if (!elements) return;
+        elements.forEach((element, index) => {
+          if (values[index] !== undefined) element.textContent = values[index];
+        });
+      };
+      const applyLanguage = (lang) => {
+        currentLang = lang;
+        currentCopy = copyFor(lang);
+        localStorage.setItem("motionpic-lang", lang);
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+        document.title = currentCopy.title;
+        document.querySelector('meta[name="description"]')?.setAttribute("content", currentCopy.description);
+        if (languageSelect) languageSelect.value = lang;
+
+        setText('.nav-links a[href="#tool"]', currentCopy.navTool);
+        setText('.nav-links a[href="#demand"]', currentCopy.navDemand);
+        setText('.nav-links a[href="#pricing"]', currentCopy.navPricing);
+        setText(".nav-actions .button", currentCopy.startFree);
+        setText(".eyebrow", currentCopy.eyebrow);
+        setText(".hero h1", currentCopy.h1);
+        setText(".lead", currentCopy.lead);
+        setAllText(".hero-actions .button", [currentCopy.heroPrimary, currentCopy.heroSecondary]);
+        setAllText(".metric strong", [currentCopy.metric1, currentCopy.metric2, currentCopy.metric3]);
+        setAllText(".metric span", [currentCopy.metric1Text, currentCopy.metric2Text, currentCopy.metric3Text]);
+        setText(".title-group h2", currentCopy.studioTitle);
+        setText(".title-group p", currentCopy.studioSubtitle);
+        setAllText(".status-item span", [currentCopy.freePreview, currentCopy.cost, currentCopy.output, currentCopy.events]);
+        setText("#uploadButton", currentCopy.upload);
+        if (!state.uploaded) {
+          setText("#uploadPreview", currentCopy.uploadPlaceholder);
+          setText("#uploadHint", currentCopy.uploadHint);
+        }
+        setAllText(".editor .field-group > label", [currentCopy.template, currentCopy.prompt, currentCopy.ratio, currentCopy.quality]);
+        setText('[data-resolution="720p"] span', currentCopy.previewFree);
+        setText('[data-resolution="1080p"] span', currentCopy.noWatermark);
+        setText('[data-resolution="Pro"] span', currentCopy.productAd);
+        setAllText(".estimate span", [currentCopy.wait, currentCopy.format, currentCopy.commercial]);
+        setText("#generateButton", currentCopy.generate);
+        setText("#downloadButton", currentCopy.download);
+        setText("#upgradeButton", currentCopy.unlock);
+        setText(".queue-head h3", currentCopy.queueTitle);
+        setText(".queue-head .credit-note", currentCopy.queueHint);
+        if (state.generations === 0) {
+          setText(".queue-title", currentCopy.queueEmptyTitle);
+          setText(".queue-meta", currentCopy.queueEmptyMeta);
+        }
+        setText(".balance-card > span", currentCopy.balance);
+        setText("#buyCreditsButton", currentCopy.buy);
+        setText(".side-panel > h3", currentCopy.pricingTitle);
+        setAllText(".price-card .price-head strong", [currentCopy.free, currentCopy.creatorPack, currentCopy.commerce]);
+        const priceCards = document.querySelectorAll(".price-card");
+        setAllTextFrom(priceCards[0]?.querySelectorAll("li"), [currentCopy.free1, currentCopy.free2, currentCopy.free3]);
+        setAllTextFrom(priceCards[1]?.querySelectorAll("li"), [currentCopy.creator1, currentCopy.creator2, currentCopy.creator3]);
+        setAllTextFrom(priceCards[2]?.querySelectorAll("li"), [currentCopy.commerce1, currentCopy.commerce2, currentCopy.commerce3]);
+        setText(".conversion", currentCopy.conversion);
+        setText("#demand .section-head h2", currentCopy.demandTitle);
+        setText("#demand .section-head p", currentCopy.demandLead);
+        setAllText("#demand .score", [currentCopy.demand1Score, currentCopy.demand2Score, currentCopy.demand3Score]);
+        setAllText("#demand .panel h3", [currentCopy.demand1Title, currentCopy.demand2Title, currentCopy.demand3Title]);
+        setAllText("#demand .panel p", [currentCopy.demand1Text, currentCopy.demand2Text, currentCopy.demand3Text]);
+        setText("section:not(#demand) .section-head h2", currentCopy.templateSectionTitle);
+        setText("section:not(#demand) .section-head p", currentCopy.templateSectionLead);
+        setAllText(".table th", [currentCopy.tableTemplate, currentCopy.tableUsers, currentCopy.tablePaid, currentCopy.tableTraffic]);
+        setText(".footer .shell", currentCopy.footer);
+        setText("#checkoutTitle", currentCopy.modalTitle);
+        setText(".modal-head p", currentCopy.modalDesc);
+        setAllText(".checkout-list li span", [currentCopy.currentChoice, currentCopy.cost, currentCopy.recommendedPlan]);
+        setText("#mockPayButton", currentCopy.checkout);
+        updateEstimate();
+      };
 
       const refreshAccount = async () => {
         if (!canUseBackend()) return;
@@ -1509,13 +1776,13 @@
         freeQuota.textContent = `${state.freeQuota} / 2`;
         creditBalance.textContent = `${state.balance} credits`;
         waitTime.textContent = state.resolution === "Pro" ? "90s" : state.length === "12s" ? "70s" : state.length === "8s" ? "45s" : "25s";
-        licenseHint.textContent = state.resolution === "720p" ? "可升级" : "可商用";
+        licenseHint.textContent = state.resolution === "720p" ? currentCopy.upgradeable : currentCopy.commercialReady;
         checkoutChoice.textContent = `${state.resolution} / ${state.length} / ${state.ratio}`;
         checkoutCost.textContent = `${cost} credit${cost > 1 ? "s" : ""}`;
         creditNote.textContent =
           state.resolution === "720p"
-            ? `消耗 ${cost} credit，预览带水印。`
-            : `消耗 ${cost} credits，可导出无水印高清版本。`;
+            ? `${currentCopy.cost} ${cost} credit${cost > 1 ? "s" : ""}.`
+            : `${currentCopy.cost} ${cost} credit${cost > 1 ? "s" : ""}. ${currentCopy.noWatermark}.`;
       };
 
       const handleFile = (file) => {
@@ -1756,6 +2023,12 @@
 
       upgradeButton.addEventListener("click", openCheckout);
       buyCreditsButton.addEventListener("click", openCheckout);
+      languageSelect.addEventListener("change", () => {
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("lang", languageSelect.value);
+        window.history.replaceState({}, "", nextUrl);
+        applyLanguage(languageSelect.value);
+      });
       closeModalButton.addEventListener("click", () => checkoutModal.classList.remove("open"));
       checkoutModal.addEventListener("click", (event) => {
         if (event.target === checkoutModal) checkoutModal.classList.remove("open");
@@ -1800,7 +2073,7 @@
         }
       };
 
-      updateEstimate();
+      applyLanguage(initialLanguage());
       refreshAccount();
       handleCheckoutReturn();
     </script>

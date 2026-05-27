@@ -151,3 +151,69 @@ CREEM_WEBHOOK_SECRET=your_webhook_secret
 ```
 
 Redeploy or restart the Render service.
+
+## 8. Switch From Test Payments To Live Payments
+
+Keep the current test setup until the whole flow is stable. When you are ready to accept real money:
+
+1. Finish Creem identity, payout, and live store checks.
+2. Create live products in Creem with the same package names:
+
+```text
+Creator Pack: $9 for 100 credits
+Commerce Pack: $29 for 400 credits
+```
+
+3. Copy the live product ids into Render:
+
+```env
+CREEM_PRODUCT_CREATOR=live_creator_product_id
+CREEM_PRODUCT_COMMERCE=live_commerce_product_id
+```
+
+4. Replace the test API key with the live Creem API key.
+5. Set:
+
+```env
+CREEM_TEST_MODE=false
+```
+
+6. Create a live webhook in Creem:
+
+```text
+https://video.cozyguidehub.com/api/creem/webhook
+```
+
+7. Copy the live webhook signing secret into Render:
+
+```env
+CREEM_WEBHOOK_SECRET=live_webhook_signing_secret
+```
+
+8. Click `Save, rebuild, and deploy` in Render.
+
+After deploy, create a low-price live product first if possible, pay once yourself, and confirm:
+
+```text
+/api/account credits increase
+Supabase credit_ledger has creem-checkout
+Supabase payments has the payment id
+Supabase webhook_events has checkout.completed
+```
+
+## 9. Multilingual Launch URLs
+
+The same app supports eight languages through the `lang` query parameter:
+
+```text
+https://video.cozyguidehub.com/?lang=en
+https://video.cozyguidehub.com/?lang=zh
+https://video.cozyguidehub.com/?lang=de
+https://video.cozyguidehub.com/?lang=it
+https://video.cozyguidehub.com/?lang=fr
+https://video.cozyguidehub.com/?lang=es
+https://video.cozyguidehub.com/?lang=ja
+https://video.cozyguidehub.com/?lang=ko
+```
+
+For SEO, start with one language per traffic channel instead of publishing thin pages everywhere at once. English, Japanese, Korean, Spanish, French, German, Italian, and Chinese are wired into the UI language selector.
