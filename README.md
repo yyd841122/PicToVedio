@@ -84,9 +84,21 @@ SUPABASE_SERVICE_ROLE_KEY=
 Optional for real video generation later:
 
 ```env
+DASHSCOPE_API_KEY=
+DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 OPENAI_API_KEY=
 OPENAI_VIDEO_MODEL=sora-2
 ```
+
+To enable Alibaba Cloud Model Studio / Bailian image-to-video on Render:
+
+```env
+VIDEO_PROVIDER=dashscope
+DASHSCOPE_API_KEY=sk-...
+DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
+```
+
+DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. If a provider request fails, credits are refunded through the ledger.
 
 ## Credit Packs
 
@@ -135,6 +147,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - Do not commit `.env`; it is ignored by `.gitignore`.
 - `data/db.json` is a demo database and is ignored.
 - Use `VIDEO_PROVIDER=mock` while validating checkout and webhook behavior.
+- Use `VIDEO_PROVIDER=dashscope` after adding `DASHSCOPE_API_KEY` to Render.
 - Use Supabase/Postgres on Render before real traffic so paid credits survive restarts and redeploys.
 - Store uploaded photos and generated videos in Cloudflare R2/S3 before real traffic.
 - Keep webhook event ids and payment ids durable; they prevent duplicate credit grants when providers retry webhooks.

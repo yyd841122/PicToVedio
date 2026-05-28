@@ -25,23 +25,23 @@ Last updated: 2026-05-28
 ## In Progress
 
 - [ ] Prepare the site for real video generation.
-- [ ] Decide the first real video API provider.
+- [x] Decide the first real video API provider: Alibaba Cloud Model Studio / Bailian DashScope.
+- [ ] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
 - [ ] Keep Creem in test mode until real generation works.
 - [ ] Build the first SEO/GEO content layer around the homepage and templates.
 
 ## Next: P0
 
-- [ ] Connect a real image-to-video API.
-- [ ] Add a provider adapter for the selected domestic API.
-- [ ] Support provider job creation and status polling.
-- [ ] Normalize job states: `queued`, `processing`, `succeeded`, `failed`.
+- [x] Add a provider adapter for DashScope.
+- [x] Support DashScope job creation and status polling.
+- [x] Normalize job states: `queued`, `processing`, `succeeded`, `failed`.
+- [ ] Run one real DashScope image-to-video test.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
 - [ ] Replace `demo-user` with anonymous device IDs.
 - [ ] Bind credits to each anonymous user ID.
-- [ ] Add safe credit refund behavior when real generation fails.
-- [ ] Run one complete real generation test.
+- [x] Add safe credit refund behavior when real generation fails.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
 

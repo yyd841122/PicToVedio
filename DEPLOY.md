@@ -46,6 +46,8 @@ Add these in Render:
 ```env
 APP_URL=https://video.cozyguidehub.com
 VIDEO_PROVIDER=mock
+DASHSCOPE_API_KEY=
+DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
@@ -58,6 +60,16 @@ CREEM_WEBHOOK_SECRET=
 ```
 
 Leave `CREEM_WEBHOOK_SECRET` blank until you create the webhook in Creem.
+
+Keep `VIDEO_PROVIDER=mock` until checkout and credits are stable. After the Alibaba Cloud Model Studio / Bailian API key is ready, set:
+
+```env
+VIDEO_PROVIDER=dashscope
+DASHSCOPE_API_KEY=sk-...
+DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
+```
+
+Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.
 
 ## 4. Create Supabase Tables
 

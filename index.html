@@ -1645,6 +1645,7 @@
         generations: 0,
         imageData: "",
         jobId: "",
+        outputUrl: "",
       };
 
       const templatePrompts = {
@@ -2167,7 +2168,7 @@
         });
       });
 
-      const addQueueItem = () => {
+      const addQueueItem = (label = "Done") => {
         state.generations += 1;
         if (state.generations === 1) queueList.innerHTML = "";
         const item = document.createElement("div");
@@ -2178,9 +2179,10 @@
             <div class="queue-title">${state.template} video #${state.generations}</div>
             <div class="queue-meta">${state.length} · ${state.ratio} · ${state.resolution} · ${currentCost()} credits</div>
           </div>
-          <span class="pill">Done</span>
+          <span class="pill">${label}</span>
         `;
         queueList.prepend(item);
+        return item.querySelector(".pill");
       };
 
       const canUseBackend = () => window.location.protocol !== "file:";
@@ -2209,6 +2211,34 @@
         return response.json();
       };
 
+      const fetchBackendJob = async (id) => {
+        const response = await fetch(`/api/video/jobs/${encodeURIComponent(id)}`);
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: "Fetch job failed" }));
+          throw new Error(error.error || "Fetch job failed");
+        }
+        return response.json();
+      };
+
+      const pollBackendJob = async (job, pill) => {
+        let current = job;
+        if (current.status === "failed") {
+          throw new Error(current.error || "Video generation failed");
+        }
+
+        for (let attempt = 0; attempt < 90; attempt += 1) {
+          if (current.status === "succeeded") return current;
+          if (current.status === "failed") throw new Error(current.error || "Video generation failed");
+
+          if (pill) pill.textContent = current.status === "queued" ? "Queued" : "Processing";
+          progressBar.style.width = `${Math.min(95, 25 + attempt)}%`;
+          await new Promise((resolve) => window.setTimeout(resolve, 4000));
+          current = await fetchBackendJob(job.id);
+        }
+
+        throw new Error("Video is still processing. Please refresh and check the job again later.");
+      };
+
       generateButton.addEventListener("click", async () => {
         if (!state.uploaded) {
           uploadHint.textContent = "先上传一张图片，再生成预览。";
@@ -2230,6 +2260,27 @@
           try {
             const job = await createBackendJob();
             state.jobId = job.id || "";
+            if (typeof job.remainingCredits === "number") state.balance = job.remainingCredits;
+            const pill = addQueueItem(job.status === "succeeded" ? "Done" : "Queued");
+            creditNote.textContent = job.provider === "mock"
+              ? "Mock backend job created. Configure a real API key to submit video generation."
+              : "Real video job submitted. Waiting for provider result...";
+            updateEstimate();
+
+            const finishedJob = await pollBackendJob(job, pill);
+            state.generated = true;
+            state.outputUrl = finishedJob.outputUrl || "";
+            downloadButton.disabled = false;
+            generateButton.disabled = false;
+            generateButton.textContent = "Generate another";
+            if (pill) pill.textContent = "Done";
+            creditNote.textContent = state.outputUrl
+              ? "Video is ready. You can download the generated MP4."
+              : "Video job completed.";
+            progressBar.style.width = "100%";
+            updateEstimate();
+            bumpEvent();
+            return;
             state.generated = true;
             if (typeof job.remainingCredits === "number") state.balance = job.remainingCredits;
             downloadButton.disabled = false;
@@ -2273,6 +2324,11 @@
 
       downloadButton.addEventListener("click", () => {
         if (!state.generated) return;
+        if (state.outputUrl) {
+          window.open(state.outputUrl, "_blank", "noopener,noreferrer");
+          creditNote.textContent = "Download opened in a new tab.";
+          return;
+        }
         creditNote.textContent = "已记录一次带水印下载事件。真实版本可在这里触发 MP4 下载。";
         bumpEvent();
       });

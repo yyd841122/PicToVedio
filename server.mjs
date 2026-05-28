@@ -20,6 +20,8 @@ const config = {
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
   openaiApiKey: process.env.OPENAI_API_KEY || "",
   openaiVideoModel: process.env.OPENAI_VIDEO_MODEL || "sora-2",
+  dashscopeApiKey: process.env.DASHSCOPE_API_KEY || "",
+  dashscopeVideoModel: process.env.DASHSCOPE_VIDEO_MODEL || "wan2.6-i2v-flash",
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",
@@ -135,7 +137,7 @@ async function handleCreateVideoJob(req, res) {
     error: "",
   };
 
-  const remainingCredits = await createJobAndDebit(job, cost);
+  let remainingCredits = await createJobAndDebit(job, cost);
 
   if (config.videoProvider === "openai") {
     try {
@@ -146,6 +148,22 @@ async function handleCreateVideoJob(req, res) {
     } catch (error) {
       job.status = "failed";
       job.error = error.message;
+      remainingCredits = await refundCreditsForFailedJob(job);
+    }
+
+    await saveJob(job);
+  }
+
+  if (config.videoProvider === "dashscope") {
+    try {
+      const providerJob = await createDashScopeVideoJob(body);
+      job.status = providerJob.status || "processing";
+      job.providerJobId = providerJob.id || "";
+      job.outputUrl = providerJob.outputUrl || "";
+    } catch (error) {
+      job.status = "failed";
+      job.error = error.message;
+      remainingCredits = await refundCreditsForFailedJob(job);
     }
 
     await saveJob(job);
@@ -180,6 +198,17 @@ async function handleGetVideoJob(_req, res, id) {
     const providerJob = await getOpenAiVideoJob(job.providerJobId);
     job.status = providerJob.status || job.status;
     job.outputUrl = providerJob.output_url || job.outputUrl;
+    await saveJob(job);
+  }
+
+  if (job.provider === "dashscope" && job.providerJobId && ["queued", "processing"].includes(job.status)) {
+    const providerJob = await getDashScopeVideoJob(job.providerJobId);
+    job.status = providerJob.status || job.status;
+    job.outputUrl = providerJob.outputUrl || job.outputUrl;
+    job.error = providerJob.error || job.error;
+    if (job.status === "failed") {
+      await refundCreditsForFailedJob(job);
+    }
     await saveJob(job);
   }
 
@@ -418,6 +447,19 @@ async function createJobAndDebit(job, cost) {
       body: { credits: remainingCredits, updated_at: new Date().toISOString() },
       prefer: "return=minimal",
     });
+    await supabaseRequest("credit_ledger", {
+      method: "POST",
+      body: {
+        id: `video-debit:${job.id}`,
+        user_id: job.userId,
+        amount: -cost,
+        source: "video-debit",
+        external_id: job.id,
+        plan: job.template,
+        balance_after: remainingCredits,
+      },
+      prefer: "return=minimal",
+    });
     return remainingCredits;
   }
 
@@ -426,8 +468,29 @@ async function createJobAndDebit(job, cost) {
   db.users[job.userId] ||= { credits: 12 };
   db.users[job.userId].credits -= cost;
   db.jobs[job.id] = job;
+  db.creditLedger.push({
+    id: `video-debit:${job.id}`,
+    userId: job.userId,
+    amount: -cost,
+    source: "video-debit",
+    externalId: job.id,
+    plan: job.template,
+    createdAt: new Date().toISOString(),
+    balanceAfter: db.users[job.userId].credits,
+  });
   writeDb(db);
   return db.users[job.userId].credits;
+}
+
+async function refundCreditsForFailedJob(job) {
+  const result = await grantCredits({
+    userId: job.userId,
+    amount: Number(job.credits || 0),
+    source: "video-refund",
+    externalId: job.id,
+    plan: "failed-video-job",
+  });
+  return result.balance;
 }
 
 async function getJob(id) {
@@ -700,6 +763,110 @@ async function getOpenAiVideoJob(providerJobId) {
     throw new Error(result.error?.message || "OpenAI video status request failed");
   }
   return result;
+}
+
+async function createDashScopeVideoJob(body) {
+  if (!config.dashscopeApiKey) {
+    throw new Error("DASHSCOPE_API_KEY is missing");
+  }
+
+  const payload = {
+    model: config.dashscopeVideoModel,
+    input: {
+      prompt: body.prompt,
+      img_url: body.imageData,
+    },
+    parameters: {
+      resolution: mapDashScopeResolution(body.resolution),
+      duration: mapDashScopeDuration(body.seconds),
+      prompt_extend: true,
+    },
+  };
+
+  const response = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${config.dashscopeApiKey}`,
+      "Content-Type": "application/json",
+      "X-DashScope-Async": "enable",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(getProviderError(result, "DashScope video request failed"));
+  }
+
+  const taskId = result.output?.task_id;
+  if (!taskId) {
+    throw new Error("DashScope did not return task_id");
+  }
+
+  return {
+    id: taskId,
+    status: mapDashScopeStatus(result.output?.task_status),
+    outputUrl: result.output?.video_url || "",
+  };
+}
+
+async function getDashScopeVideoJob(providerJobId) {
+  if (!config.dashscopeApiKey) {
+    throw new Error("DASHSCOPE_API_KEY is missing");
+  }
+
+  const response = await fetch(`https://dashscope.aliyuncs.com/api/v1/tasks/${providerJobId}`, {
+    headers: {
+      Authorization: `Bearer ${config.dashscopeApiKey}`,
+    },
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(getProviderError(result, "DashScope video status request failed"));
+  }
+
+  return {
+    id: result.output?.task_id || providerJobId,
+    status: mapDashScopeStatus(result.output?.task_status),
+    outputUrl: result.output?.video_url || "",
+    error: result.output?.message || result.message || "",
+  };
+}
+
+function mapDashScopeResolution(resolution) {
+  if (config.dashscopeVideoModel.includes("wanx2.1")) return "720P";
+  if (resolution === "1080p" || resolution === "Pro") return "1080P";
+  return "720P";
+}
+
+function mapDashScopeDuration(seconds) {
+  const requested = Number(seconds || 5);
+
+  if (config.dashscopeVideoModel.includes("wanx2.1-i2v-turbo")) {
+    return [3, 4, 5].includes(requested) ? requested : 4;
+  }
+
+  if (config.dashscopeVideoModel.includes("wanx2.1-i2v-plus") || config.dashscopeVideoModel.includes("wan2.2-i2v")) {
+    return 5;
+  }
+
+  if (config.dashscopeVideoModel.includes("wan2.5")) {
+    return requested >= 8 ? 10 : 5;
+  }
+
+  return Math.max(2, Math.min(15, requested));
+}
+
+function mapDashScopeStatus(status) {
+  if (status === "SUCCEEDED") return "succeeded";
+  if (["FAILED", "CANCELED", "UNKNOWN"].includes(status)) return "failed";
+  if (["PENDING", "RUNNING"].includes(status)) return "processing";
+  return "queued";
+}
+
+function getProviderError(result, fallback) {
+  return result.message || result.output?.message || result.error?.message || result.code || fallback;
 }
 
 function mapSize(ratio, resolution) {
