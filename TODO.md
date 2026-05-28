@@ -29,6 +29,8 @@ Last updated: 2026-05-28
 - [x] Enforced server-side credit pricing for real generation requests.
 - [x] Added optional Cloudflare R2 adapter for uploaded images and generated videos.
 - [x] Replaced shared `demo-user` traffic with browser-based anonymous user IDs.
+- [x] Added Privacy Policy, Terms of Service, Refund Policy, and footer contact links.
+- [x] Added first SEO template pages for AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
 
 ## In Progress
 
@@ -38,7 +40,7 @@ Last updated: 2026-05-28
 - [ ] Decide object storage provider.
 - [ ] Create Cloudflare R2 bucket and access keys.
 - [ ] Keep Creem in test mode until real generation works.
-- [ ] Build the first SEO/GEO content layer around the homepage and templates.
+- [x] Build the first SEO/GEO content layer around the homepage and templates.
 
 ## Next: P0
 
@@ -59,10 +61,10 @@ Last updated: 2026-05-28
 
 ## Next: P1
 
-- [ ] Add Privacy Policy.
-- [ ] Add Terms of Service.
-- [ ] Add Refund Policy.
-- [ ] Add contact email in footer.
+- [x] Add Privacy Policy.
+- [x] Add Terms of Service.
+- [x] Add Refund Policy.
+- [x] Add contact email in footer.
 - [ ] Add analytics events:
   - Page view.
   - Upload.
@@ -71,7 +73,7 @@ Last updated: 2026-05-28
   - Job failure.
   - Checkout click.
   - Checkout success.
-- [ ] Add SEO landing pages for:
+- [x] Add SEO landing pages for:
   - AI Kiss Video.
   - Product Video Ad.
   - Pet Animation.
@@ -98,5 +100,5 @@ Last updated: 2026-05-28
 - [x] Real video API key.
 - [ ] Object storage account and access keys.
 - [ ] Creem live API key, live product IDs, and live webhook signing secret.
-- [ ] Public contact email.
+- [x] Public contact email placeholder.
 - [ ] Final brand name confirmation if changing away from MotionPic AI.

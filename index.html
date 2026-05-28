@@ -1107,6 +1107,24 @@
         font-size: 13px;
       }
 
+      .footer .shell {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .footer-links a {
+        color: var(--muted);
+        font-weight: 700;
+      }
+
       @media (max-width: 980px) {
         .hero-grid,
         .tool,
@@ -1157,6 +1175,7 @@
 
         .toolbar,
         .section-head,
+        .footer .shell,
         .generate-row {
           align-items: stretch;
           flex-direction: column;
@@ -1517,25 +1536,25 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>AI Kiss Video</strong></td>
+                  <td><strong><a href="/templates/ai-kiss-video">AI Kiss Video</a></strong></td>
                   <td>情侣照、纪念日照片</td>
                   <td>轻微镜头推进、亲密互动氛围</td>
                   <td>TikTok / Reels / 小红书分享</td>
                 </tr>
                 <tr>
-                  <td><strong>Product Video Ad</strong></td>
+                  <td><strong><a href="/templates/product-video-ad">Product Video Ad</a></strong></td>
                   <td>商品主图、模特图、场景图</td>
                   <td>产品旋转、镜头推近、广告感光效</td>
                   <td>独立站、Amazon、Shopify 商品页</td>
                 </tr>
                 <tr>
-                  <td><strong>Pet Animation</strong></td>
+                  <td><strong><a href="/templates/pet-animation">Pet Animation</a></strong></td>
                   <td>猫狗照片、宠物店素材</td>
                   <td>眨眼、转头、可爱动态效果</td>
                   <td>宠物账号、宠物店推广</td>
                 </tr>
                 <tr>
-                  <td><strong>Old Photo Alive</strong></td>
+                  <td><strong><a href="/templates/old-photo-alive">Old Photo Alive</a></strong></td>
                   <td>家庭老照片、纪念照片</td>
                   <td>微笑、眨眼、轻微表情变化</td>
                   <td>家庭纪念、节日祝福</td>
@@ -1611,7 +1630,13 @@
 
       <footer class="footer">
         <div class="shell">
-          MotionPic AI helps creators and sellers turn still photos into short videos for social posts, product pages, and memorable moments.
+          <span id="footerCopy">MotionPic AI helps creators and sellers turn still photos into short videos for social posts, product pages, and memorable moments.</span>
+          <nav class="footer-links" aria-label="Legal links">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/refund">Refund</a>
+            <a href="mailto:support@cozyguidehub.com">Contact</a>
+          </nav>
         </div>
       </footer>
     </div>
@@ -2061,7 +2086,7 @@
           currentCopy.faq5Text,
           currentCopy.faq6Text,
         ]);
-        setText(".footer .shell", currentCopy.footer);
+        setText("#footerCopy", currentCopy.footer);
         setText("#checkoutTitle", currentCopy.modalTitle);
         setText(".modal-head p", currentCopy.modalDesc);
         setAllText(".checkout-list li span", [currentCopy.currentChoice, currentCopy.cost, currentCopy.recommendedPlan]);

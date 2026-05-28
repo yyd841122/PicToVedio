@@ -1076,7 +1076,12 @@ function mapSize(ratio, resolution) {
 
 function serveStatic(pathname, res) {
   const cleanPath = pathname === "/" ? "/index.html" : pathname;
-  const filePath = resolve(join(root, cleanPath));
+  let filePath = resolve(join(root, cleanPath));
+  const extension = extname(filePath);
+
+  if (!extension && !existsSync(filePath)) {
+    filePath = resolve(join(root, `${cleanPath}.html`));
+  }
 
   if (!filePath.startsWith(root) || !existsSync(filePath)) {
     const notFoundPath = resolve(join(root, "404.html"));

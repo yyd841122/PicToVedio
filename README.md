@@ -18,6 +18,8 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - UI language switcher for English, Chinese, German, Italian, French, Spanish, Japanese, and Korean
 - SEO alternate links for multilingual launch URLs
 - SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and custom 404 page
+- Privacy Policy, Terms of Service, Refund Policy, and footer contact links
+- SEO template landing pages for AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive
 - OpenAI video provider adapter placeholder
 - Render deployment config
 - Cloudflare custom domain deployment guide
@@ -172,6 +174,23 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [SEO_GEO_PROMOTION_PLAN.md](./SEO_GEO_PROMOTION_PLAN.md): SEO, GEO, and promotion execution plan.
 - [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
 - [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
+
+## Legal Pages
+
+- `/privacy`: privacy policy for uploads, generated assets, payments, and support data.
+- `/terms`: service terms for uploads, AI output, credits, payments, and acceptable use.
+- `/refund`: refund policy for credit packs, failed jobs, and duplicate payments.
+
+The footer currently uses `support@cozyguidehub.com` as the public support email. Replace it before launch if you prefer another address.
+
+## SEO Template Pages
+
+- `/templates/ai-kiss-video`
+- `/templates/product-video-ad`
+- `/templates/pet-animation`
+- `/templates/old-photo-alive`
+
+These pages give the first long-tail keywords dedicated entry points for search engines, AI search, and directory submissions.
 
 ## Important Notes
 
