@@ -31,7 +31,7 @@ Last updated: 2026-05-28
 - [x] Replaced shared `demo-user` traffic with browser-based anonymous user IDs.
 - [x] Added Privacy Policy, Terms of Service, Refund Policy, and footer contact links.
 - [x] Added first SEO template pages for AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
-- [x] Added language selector navigation to legal pages and template landing pages.
+- [x] Kept legal pages and template landing pages English-only to avoid partial-translation confusion.
 
 ## In Progress
 

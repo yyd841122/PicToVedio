@@ -152,7 +152,7 @@ MotionPic creates a browser-local anonymous user id such as `mp_...` and sends i
 
 The selector stores the visitor's language locally and updates page title, description, hero, tool, pricing, use cases, FAQ, and checkout copy.
 
-Legal pages and template landing pages include the same language selector for navigation consistency. In this first stage, changing language from those pages returns visitors to the localized generator page. Fully translated legal and template pages can be added later as dedicated SEO pages.
+Legal pages and template landing pages are intentionally English-only in this first stage to avoid misleading visitors with partial translations. Fully translated legal and template pages can be added later as dedicated SEO pages.
 
 ## Deployment
 
