@@ -47,7 +47,24 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 18px;
         padding: 18px 0;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .language-select {
+        height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+        padding: 0 12px;
       }
 
       a {
@@ -91,13 +108,33 @@
         color: var(--muted);
         font-size: 14px;
       }
+
+      @media (max-width: 640px) {
+        .nav .shell,
+        .nav-actions {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
     </style>
   </head>
   <body>
     <header class="nav">
       <div class="shell">
         <strong>MotionPic AI</strong>
-        <a href="/">Back to Generator</a>
+        <div class="nav-actions">
+          <select class="language-select" data-language-select aria-label="Language">
+            <option value="en">English</option>
+            <option value="zh">Chinese</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="fr">Francais</option>
+            <option value="es">Espanol</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+          </select>
+          <a href="/">Back to Generator</a>
+        </div>
       </div>
     </header>
     <main class="shell">
@@ -151,5 +188,18 @@
     <footer class="footer">
       <div class="shell">MotionPic AI · <a href="/privacy">Privacy</a> · <a href="/refund">Refund Policy</a></div>
     </footer>
+    <script>
+      (() => {
+        const selector = document.querySelector("[data-language-select]");
+        const supported = ["en", "zh", "de", "it", "fr", "es", "ja", "ko"];
+        const query = new URLSearchParams(window.location.search);
+        const requested = query.get("lang") || localStorage.getItem("motionpic-lang") || (navigator.language || "en").slice(0, 2);
+        selector.value = supported.includes(requested) ? requested : "en";
+        selector.addEventListener("change", () => {
+          localStorage.setItem("motionpic-lang", selector.value);
+          window.location.href = `/?lang=${encodeURIComponent(selector.value)}`;
+        });
+      })();
+    </script>
   </body>
 </html>

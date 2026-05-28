@@ -31,6 +31,7 @@ Last updated: 2026-05-28
 - [x] Replaced shared `demo-user` traffic with browser-based anonymous user IDs.
 - [x] Added Privacy Policy, Terms of Service, Refund Policy, and footer contact links.
 - [x] Added first SEO template pages for AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
+- [x] Added language selector navigation to legal pages and template landing pages.
 
 ## In Progress
 
@@ -79,6 +80,7 @@ Last updated: 2026-05-28
   - Pet Animation.
   - Old Photo Alive.
 - [ ] Add FAQ and comparison copy to each template page.
+- [ ] Create fully translated legal and template pages for EN/ZH/DE/IT/FR/ES/JA/KO.
 - [ ] Submit sitemap to Google Search Console and Bing Webmaster Tools.
 - [ ] Prepare Baidu submission if targeting Chinese search.
 
