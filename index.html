@@ -3,11 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MotionPic AI - AI Photo to Video Generator</title>
+    <title>AI Photo to Video Generator - MotionPic AI | Turn Photos into Viral Short Videos</title>
     <meta
       name="description"
-      content="AI photo to video generator: upload a photo, pick a social video template, and export short cinematic clips with credits pricing."
+      content="Create AI photo-to-video clips for TikTok, Reels, product pages, pets, couples, and memories. Upload one photo, choose a template, and export HD videos."
     />
+    <meta
+      name="keywords"
+      content="AI photo to video, photo to video generator, image to video AI, AI video generator, product video maker, pet animation, old photo animation, AI kiss video, MotionPic AI"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href="https://video.cozyguidehub.com/" />
     <link rel="alternate" hreflang="en" href="https://video.cozyguidehub.com/?lang=en" />
     <link rel="alternate" hreflang="zh" href="https://video.cozyguidehub.com/?lang=zh" />
@@ -17,6 +23,92 @@
     <link rel="alternate" hreflang="es" href="https://video.cozyguidehub.com/?lang=es" />
     <link rel="alternate" hreflang="ja" href="https://video.cozyguidehub.com/?lang=ja" />
     <link rel="alternate" hreflang="ko" href="https://video.cozyguidehub.com/?lang=ko" />
+    <link rel="alternate" hreflang="x-default" href="https://video.cozyguidehub.com/?lang=en" />
+    <meta property="og:title" content="AI Photo to Video Generator - MotionPic AI" />
+    <meta
+      property="og:description"
+      content="Turn one photo into short AI videos for creators, sellers, pets, couples, and old memories."
+    />
+    <meta property="og:image" content="https://video.cozyguidehub.com/photo-to-video-hero.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://video.cozyguidehub.com/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="MotionPic AI" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AI Photo to Video Generator - MotionPic AI" />
+    <meta
+      name="twitter:description"
+      content="Upload one photo, choose a template, and export short AI videos for social posts and product pages."
+    />
+    <meta name="twitter:image" content="https://video.cozyguidehub.com/photo-to-video-hero.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://video.cozyguidehub.com/#organization",
+            "name": "MotionPic AI",
+            "url": "https://video.cozyguidehub.com/",
+            "logo": "https://video.cozyguidehub.com/photo-to-video-hero.png"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://video.cozyguidehub.com/#software",
+            "name": "MotionPic AI",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Web",
+            "url": "https://video.cozyguidehub.com/",
+            "image": "https://video.cozyguidehub.com/photo-to-video-hero.png",
+            "description": "MotionPic AI turns one photo into short AI videos for social posts, product pages, pets, couples, and old memories.",
+            "offers": [
+              { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+              { "@type": "Offer", "name": "Creator Pack", "price": "9", "priceCurrency": "USD" },
+              { "@type": "Offer", "name": "Commerce Pack", "price": "29", "priceCurrency": "USD" }
+            ],
+            "publisher": { "@id": "https://video.cozyguidehub.com/#organization" }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://video.cozyguidehub.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is an AI photo to video generator?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It is a web tool that uses an uploaded photo, a motion prompt, and a template to create a short AI video for social posts, product pages, or memories."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What photos work best?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Portraits, couple photos, pet photos, product images, model shots, and old family photos are strong starting points."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do credits work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Credits are used to generate previews, unlock HD no-watermark exports, and create multiple video variations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use videos for commercial content?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Commerce pack is designed for product video templates and commercial export workflows."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
     <style>
       :root {
         color-scheme: light;
@@ -993,6 +1085,22 @@
         border-bottom: 0;
       }
 
+      .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .faq-item h3 {
+        margin-bottom: 8px;
+        font-size: 17px;
+      }
+
+      .faq-item p {
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+
       .footer {
         padding: 36px 0 50px;
         color: var(--muted);
@@ -1012,6 +1120,10 @@
 
         .cards {
           grid-template-columns: 1fr 1fr;
+        }
+
+        .faq-grid {
+          grid-template-columns: 1fr;
         }
       }
 
@@ -1034,6 +1146,7 @@
 
         .metric-row,
         .cards,
+        .faq-grid,
         .templates,
         .status-strip,
         .option-grid,
@@ -1383,7 +1496,7 @@
           </div>
         </section>
 
-        <section class="section">
+        <section class="section" id="templates">
           <div class="shell">
             <div class="section-head">
               <h2>热门模板</h2>
@@ -1425,6 +1538,69 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <section class="section" id="about-motionpic">
+          <div class="shell">
+            <div class="section-head">
+              <h2>为什么选择 MotionPic AI</h2>
+              <p>
+                MotionPic AI 专注把静态照片变成短视频，而不是复杂的视频剪辑软件。它更适合想快速发布、测试素材和提高内容产出的个人与卖家。
+              </p>
+            </div>
+            <div class="cards">
+              <article class="panel">
+                <span class="score">更聚焦</span>
+                <h3>专注照片转短视频</h3>
+                <p>围绕人物、宠物、产品和老照片设计模板，让用户不用学习剪辑也能得到可发布的视频。</p>
+              </article>
+              <article class="panel">
+                <span class="score">更实用</span>
+                <h3>面向真实发布场景</h3>
+                <p>比例、清晰度、时长和动作描述都围绕 TikTok、Reels、小红书、商品页和广告素材设计。</p>
+              </article>
+              <article class="panel">
+                <span class="score">更清楚</span>
+                <h3>Credits 付费透明</h3>
+                <p>先预览，再决定是否解锁高清无水印版本；Creator Pack 和 Commerce Pack 对应不同使用强度。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="faq">
+          <div class="shell">
+            <div class="section-head">
+              <h2>常见问题</h2>
+              <p>下面这些问题帮助用户快速理解 MotionPic AI 的用途、credits 和商业使用方式，也方便搜索引擎和 AI 搜索理解本站。</p>
+            </div>
+            <div class="faq-grid">
+              <article class="panel faq-item">
+                <h3>什么是 AI photo to video generator？</h3>
+                <p>它是一种把单张照片、动作描述和模板结合起来，生成短视频的在线工具。</p>
+              </article>
+              <article class="panel faq-item">
+                <h3>哪些照片适合上传？</h3>
+                <p>人物照、情侣照、宠物照、商品主图、模特图和家庭老照片都适合作为第一批素材。</p>
+              </article>
+              <article class="panel faq-item">
+                <h3>生成的视频有水印吗？</h3>
+                <p>免费预览适合先看效果，高清无水印导出会消耗 credits 或需要购买套餐。</p>
+              </article>
+              <article class="panel faq-item">
+                <h3>Credits 如何使用？</h3>
+                <p>Credits 用于生成预览、解锁高清无水印下载，以及批量生成多个视频版本。</p>
+              </article>
+              <article class="panel faq-item">
+                <h3>可以用于商业内容吗？</h3>
+                <p>Commerce Pack 面向产品视频模板和商用导出流程，适合独立站、Amazon、Shopify 和广告素材。</p>
+              </article>
+              <article class="panel faq-item">
+                <h3>它和通用 AI 视频工具有什么不同？</h3>
+                <p>通用工具更开放，MotionPic AI 更聚焦照片转短视频模板，降低创作成本，让结果更接近可发布素材。</p>
+              </article>
+            </div>
           </div>
         </section>
       </main>
@@ -1605,6 +1781,31 @@
           tableRow4Upload: "Old family photos and memory portraits",
           tableRow4Result: "Smile, blink, subtle expression changes",
           tableRow4Use: "Family memories and holiday greetings",
+          aboutTitle: "Why Choose MotionPic AI",
+          aboutLead: "MotionPic AI focuses on turning still photos into short videos instead of becoming a complex editing suite. It is built for quick publishing, content testing, and faster creative output.",
+          about1Score: "Focused",
+          about1Title: "Built for photo-to-video",
+          about1Text: "Templates are designed around portraits, pets, products, and old photos so users can create publishable videos without learning editing software.",
+          about2Score: "Practical",
+          about2Title: "Made for real publishing channels",
+          about2Text: "Aspect ratios, quality settings, duration, and motion prompts are shaped for TikTok, Reels, Shorts, product pages, and ad creatives.",
+          about3Score: "Clear",
+          about3Title: "Transparent credit pricing",
+          about3Text: "Preview first, then decide whether to unlock HD no-watermark exports. Creator and Commerce packs match different usage levels.",
+          faqTitle: "Frequently Asked Questions",
+          faqLead: "These answers help visitors understand MotionPic AI, credits, watermark exports, and commercial usage.",
+          faq1Title: "What is an AI photo to video generator?",
+          faq1Text: "It is an online tool that combines one uploaded photo, a motion prompt, and a template to create a short AI video.",
+          faq2Title: "What photos work best?",
+          faq2Text: "Portraits, couple photos, pet photos, product shots, model images, and old family photos are strong starting points.",
+          faq3Title: "Will generated videos have a watermark?",
+          faq3Text: "Free previews are useful for checking the result. HD no-watermark exports use credits or a paid pack.",
+          faq4Title: "How do credits work?",
+          faq4Text: "Credits are used for previews, HD no-watermark exports, and batch generation of multiple video variations.",
+          faq5Title: "Can I use videos commercially?",
+          faq5Text: "The Commerce Pack is designed for product video templates and commercial export workflows for stores and ads.",
+          faq6Title: "How is it different from general AI video tools?",
+          faq6Text: "General tools are open-ended. MotionPic AI focuses on photo-to-video templates so outputs are closer to ready-to-publish assets.",
           modalTitle: "Unlock HD no watermark",
           modalDesc: "Use credits to unlock HD no-watermark exports and generate more variations.",
           currentChoice: "Current choice",
@@ -1652,6 +1853,31 @@
           tableRow4Upload: "家庭老照片、纪念照片",
           tableRow4Result: "微笑、眨眼、轻微表情变化",
           tableRow4Use: "家庭纪念、节日祝福",
+          aboutTitle: "为什么选择 MotionPic AI",
+          aboutLead: "MotionPic AI 专注把静态照片变成短视频，而不是复杂的视频剪辑软件。它更适合想快速发布、测试素材和提高内容产出的个人与卖家。",
+          about1Score: "更聚焦",
+          about1Title: "专注照片转短视频",
+          about1Text: "围绕人物、宠物、产品和老照片设计模板，让用户不用学习剪辑也能得到可发布的视频。",
+          about2Score: "更实用",
+          about2Title: "面向真实发布场景",
+          about2Text: "比例、清晰度、时长和动作描述都围绕 TikTok、Reels、小红书、商品页和广告素材设计。",
+          about3Score: "更清楚",
+          about3Title: "Credits 付费透明",
+          about3Text: "先预览，再决定是否解锁高清无水印版本；Creator Pack 和 Commerce Pack 对应不同使用强度。",
+          faqTitle: "常见问题",
+          faqLead: "下面这些问题帮助用户快速理解 MotionPic AI 的用途、credits 和商业使用方式，也方便搜索引擎和 AI 搜索理解本站。",
+          faq1Title: "什么是 AI photo to video generator？",
+          faq1Text: "它是一种把单张照片、动作描述和模板结合起来，生成短视频的在线工具。",
+          faq2Title: "哪些照片适合上传？",
+          faq2Text: "人物照、情侣照、宠物照、商品主图、模特图和家庭老照片都适合作为第一批素材。",
+          faq3Title: "生成的视频有水印吗？",
+          faq3Text: "免费预览适合先看效果，高清无水印导出会消耗 credits 或需要购买套餐。",
+          faq4Title: "Credits 如何使用？",
+          faq4Text: "Credits 用于生成预览、解锁高清无水印下载，以及批量生成多个视频版本。",
+          faq5Title: "可以用于商业内容吗？",
+          faq5Text: "Commerce Pack 面向产品视频模板和商用导出流程，适合独立站、Amazon、Shopify 和广告素材。",
+          faq6Title: "它和通用 AI 视频工具有什么不同？",
+          faq6Text: "通用工具更开放，MotionPic AI 更聚焦照片转短视频模板，降低创作成本，让结果更接近可发布素材。",
           modalTitle: "解锁高清无水印", modalDesc: "购买 credits 后可解锁高清无水印导出，并用于生成更多版本。",
           currentChoice: "当前选择", recommendedPlan: "推荐套餐", checkout: "Continue to checkout",
           footer: "MotionPic AI 帮助创作者和卖家把静态照片变成可发布、可展示、可纪念的短视频。"
@@ -1763,13 +1989,36 @@
         setAllText("#demand .score", [currentCopy.demand1Score, currentCopy.demand2Score, currentCopy.demand3Score]);
         setAllText("#demand .panel h3", [currentCopy.demand1Title, currentCopy.demand2Title, currentCopy.demand3Title]);
         setAllText("#demand .panel p", [currentCopy.demand1Text, currentCopy.demand2Text, currentCopy.demand3Text]);
-        setText("section:not(#demand) .section-head h2", currentCopy.templateSectionTitle);
-        setText("section:not(#demand) .section-head p", currentCopy.templateSectionLead);
+        setText("#templates .section-head h2", currentCopy.templateSectionTitle);
+        setText("#templates .section-head p", currentCopy.templateSectionLead);
         setAllText(".table th", [currentCopy.tableTemplate, currentCopy.tableUsers, currentCopy.tablePaid, currentCopy.tableTraffic]);
         setTableRow(0, [currentCopy.tableRow1Upload, currentCopy.tableRow1Result, currentCopy.tableRow1Use]);
         setTableRow(1, [currentCopy.tableRow2Upload, currentCopy.tableRow2Result, currentCopy.tableRow2Use]);
         setTableRow(2, [currentCopy.tableRow3Upload, currentCopy.tableRow3Result, currentCopy.tableRow3Use]);
         setTableRow(3, [currentCopy.tableRow4Upload, currentCopy.tableRow4Result, currentCopy.tableRow4Use]);
+        setText("#about-motionpic .section-head h2", currentCopy.aboutTitle);
+        setText("#about-motionpic .section-head p", currentCopy.aboutLead);
+        setAllText("#about-motionpic .score", [currentCopy.about1Score, currentCopy.about2Score, currentCopy.about3Score]);
+        setAllText("#about-motionpic .panel h3", [currentCopy.about1Title, currentCopy.about2Title, currentCopy.about3Title]);
+        setAllText("#about-motionpic .panel p", [currentCopy.about1Text, currentCopy.about2Text, currentCopy.about3Text]);
+        setText("#faq .section-head h2", currentCopy.faqTitle);
+        setText("#faq .section-head p", currentCopy.faqLead);
+        setAllText("#faq .faq-item h3", [
+          currentCopy.faq1Title,
+          currentCopy.faq2Title,
+          currentCopy.faq3Title,
+          currentCopy.faq4Title,
+          currentCopy.faq5Title,
+          currentCopy.faq6Title,
+        ]);
+        setAllText("#faq .faq-item p", [
+          currentCopy.faq1Text,
+          currentCopy.faq2Text,
+          currentCopy.faq3Text,
+          currentCopy.faq4Text,
+          currentCopy.faq5Text,
+          currentCopy.faq6Text,
+        ]);
         setText(".footer .shell", currentCopy.footer);
         setText("#checkoutTitle", currentCopy.modalTitle);
         setText(".modal-head p", currentCopy.modalDesc);

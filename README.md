@@ -17,9 +17,11 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Credit ledger entries for top-ups
 - UI language switcher for English, Chinese, German, Italian, French, Spanish, Japanese, and Korean
 - SEO alternate links for multilingual launch URLs
+- SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and custom 404 page
 - OpenAI video provider adapter placeholder
 - Render deployment config
 - Cloudflare custom domain deployment guide
+- Project history, roadmap, SEO/GEO plan, and promotion copy documents
 
 ## Tech Stack
 
@@ -104,7 +106,7 @@ OPENAI_VIDEO_MODEL=sora-2
 /?lang=ko
 ```
 
-The selector stores the visitor's language locally and updates page title, description, hero, tool, pricing, demand, and checkout copy.
+The selector stores the visitor's language locally and updates page title, description, hero, tool, pricing, use cases, FAQ, and checkout copy.
 
 ## Deployment
 
@@ -119,6 +121,14 @@ See [DEPLOY.md](./DEPLOY.md) for the full Render, Cloudflare, and Creem webhook 
 Before switching Render to `DATA_PROVIDER=supabase`, open Supabase SQL Editor and run [supabase.sql](./supabase.sql). Then add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in Render Environment and redeploy.
 
 Before taking real payments, switch Creem from test mode to live mode in Render by setting `CREEM_TEST_MODE=false`, replacing the product ids, API key, and webhook secret with live Creem values, then paying a small live test order.
+
+## Project Documents
+
+- [PROJECT_HISTORY.md](./PROJECT_HISTORY.md): from-zero project history and current state.
+- [TODO.md](./TODO.md): completed work and remaining P0/P1/P2 tasks.
+- [ROADMAP_PLAN.md](./ROADMAP_PLAN.md): milestone plan from MVP to real launch.
+- [SEO_GEO_PROMOTION_PLAN.md](./SEO_GEO_PROMOTION_PLAN.md): SEO, GEO, and promotion execution plan.
+- [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
 
 ## Important Notes
 

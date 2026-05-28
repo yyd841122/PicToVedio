@@ -41,6 +41,8 @@ const mimeTypes = {
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
   ".svg": "image/svg+xml",
+  ".txt": "text/plain; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
 };
 
 const server = createServer(async (req, res) => {
@@ -711,6 +713,12 @@ function serveStatic(pathname, res) {
   const filePath = resolve(join(root, cleanPath));
 
   if (!filePath.startsWith(root) || !existsSync(filePath)) {
+    const notFoundPath = resolve(join(root, "404.html"));
+    if (existsSync(notFoundPath)) {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      createReadStream(notFoundPath).pipe(res);
+      return;
+    }
     return sendJson(res, 404, { error: "Not found" });
   }
 
