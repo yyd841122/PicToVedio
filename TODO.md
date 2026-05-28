@@ -27,6 +27,7 @@ Last updated: 2026-05-28
 - [x] Changed the default template and prompts toward lower-distortion portrait motion.
 - [x] Added unit economics notes for credit pricing and margins.
 - [x] Enforced server-side credit pricing for real generation requests.
+- [x] Added optional Cloudflare R2 adapter for uploaded images and generated videos.
 
 ## In Progress
 
@@ -34,6 +35,7 @@ Last updated: 2026-05-28
 - [x] Decide the first real video API provider: Alibaba Cloud Model Studio / Bailian DashScope.
 - [x] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
+- [ ] Create Cloudflare R2 bucket and access keys.
 - [ ] Keep Creem in test mode until real generation works.
 - [ ] Build the first SEO/GEO content layer around the homepage and templates.
 

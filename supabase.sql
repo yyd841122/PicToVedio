@@ -16,6 +16,7 @@ create table if not exists video_jobs (
   seconds integer,
   credits integer not null default 1,
   prompt text,
+  input_url text,
   provider_job_id text,
   output_url text,
   error text,
@@ -53,6 +54,9 @@ create table if not exists credit_ledger (
 
 create index if not exists idx_credit_ledger_user_created
   on credit_ledger(user_id, created_at desc);
+
+alter table video_jobs
+  add column if not exists input_url text;
 
 insert into app_users(id, credits)
 values ('demo-user', 12)

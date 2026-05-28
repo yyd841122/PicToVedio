@@ -52,6 +52,7 @@ DASHSCOPE_AUDIO=false
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+STORAGE_PROVIDER=none
 PAYMENT_PROVIDER=creem
 CREEM_TEST_MODE=true
 CREEM_API_KEY=your_creem_api_key
@@ -97,7 +98,44 @@ SUPABASE_SERVICE_ROLE_KEY=service_role secret
 
 Never paste `SUPABASE_SERVICE_ROLE_KEY` into public code or GitHub.
 
-## 5. Add Custom Domain In Render
+## 5. Optional: Add Cloudflare R2 Object Storage
+
+Use this before real traffic so uploaded photos and generated videos are stored by MotionPic instead of only relying on temporary provider URLs.
+
+In Cloudflare:
+
+1. Open `R2 Object Storage`.
+2. Create a bucket, for example `motionpic-assets`.
+3. Open `Manage R2 API Tokens`.
+4. Create an API token with object read/write access to this bucket.
+5. Copy:
+   - Account ID.
+   - Access Key ID.
+   - Secret Access Key.
+   - Bucket name.
+6. Optional but recommended: connect a public custom domain to the bucket, for example `assets.cozyguidehub.com`.
+
+In Render, add:
+
+```env
+STORAGE_PROVIDER=r2
+CLOUDFLARE_R2_ACCOUNT_ID=your_cloudflare_account_id
+CLOUDFLARE_R2_ACCESS_KEY_ID=your_r2_access_key_id
+CLOUDFLARE_R2_SECRET_ACCESS_KEY=your_r2_secret_access_key
+CLOUDFLARE_R2_BUCKET=motionpic-assets
+CLOUDFLARE_R2_PUBLIC_BASE_URL=https://assets.cozyguidehub.com
+```
+
+If your Supabase project was created before object storage support was added, run this in Supabase SQL Editor:
+
+```sql
+alter table video_jobs
+  add column if not exists input_url text;
+```
+
+Then click `Save, rebuild, and deploy` in Render.
+
+## 6. Add Custom Domain In Render
 
 In the Render service:
 
@@ -113,7 +151,7 @@ video.cozyguidehub.com
 
 Render will show a CNAME target.
 
-## 6. Add DNS Record In Cloudflare
+## 7. Add DNS Record In Cloudflare
 
 In Cloudflare:
 
@@ -137,7 +175,7 @@ Wait until Render shows the domain as verified, then open:
 https://video.cozyguidehub.com
 ```
 
-## 7. Configure Creem Webhook
+## 8. Configure Creem Webhook
 
 After the custom domain works:
 
@@ -166,7 +204,7 @@ CREEM_WEBHOOK_SECRET=your_webhook_secret
 
 Redeploy or restart the Render service.
 
-## 8. Switch From Test Payments To Live Payments
+## 9. Switch From Test Payments To Live Payments
 
 Keep the current test setup until the whole flow is stable. When you are ready to accept real money:
 
@@ -215,7 +253,7 @@ Supabase payments has the payment id
 Supabase webhook_events has checkout.completed
 ```
 
-## 9. Multilingual Launch URLs
+## 10. Multilingual Launch URLs
 
 The same app supports eight languages through the `lang` query parameter:
 

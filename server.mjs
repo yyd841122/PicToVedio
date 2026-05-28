@@ -1,4 +1,4 @@
-import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, resolve } from "node:path";
@@ -29,6 +29,12 @@ const config = {
   creemWebhookSecret: process.env.CREEM_WEBHOOK_SECRET || "",
   creemCreatorProduct: process.env.CREEM_PRODUCT_CREATOR || "",
   creemCommerceProduct: process.env.CREEM_PRODUCT_COMMERCE || "",
+  storageProvider: process.env.STORAGE_PROVIDER || "none",
+  r2AccountId: process.env.CLOUDFLARE_R2_ACCOUNT_ID || "",
+  r2AccessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || "",
+  r2SecretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || "",
+  r2Bucket: process.env.CLOUDFLARE_R2_BUCKET || "",
+  r2PublicBaseUrl: (process.env.CLOUDFLARE_R2_PUBLIC_BASE_URL || "").replace(/\/$/, ""),
   stripeSecretKey: process.env.STRIPE_SECRET_KEY || "",
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
   stripeCreatorPrice: process.env.STRIPE_PRICE_CREATOR || "",
@@ -135,17 +141,26 @@ async function handleCreateVideoJob(req, res) {
     createdAt: new Date().toISOString(),
     providerJobId: "",
     outputUrl: "",
+    inputUrl: "",
     error: "",
   };
+
+  const providerBody = { ...body };
+  const storedInput = await maybeStoreUploadedImage(job, body.imageData);
+  if (storedInput?.url) {
+    job.inputUrl = storedInput.url;
+    providerBody.imageData = storedInput.providerUrl || body.imageData;
+  }
 
   let remainingCredits = await createJobAndDebit(job, cost);
 
   if (config.videoProvider === "openai") {
     try {
-      const providerJob = await createOpenAiVideoJob(body);
+      const providerJob = await createOpenAiVideoJob(providerBody);
       job.status = providerJob.status || "queued";
       job.providerJobId = providerJob.id || "";
       job.outputUrl = providerJob.output_url || "";
+      await maybeStoreGeneratedVideo(job);
     } catch (error) {
       job.status = "failed";
       job.error = error.message;
@@ -157,10 +172,11 @@ async function handleCreateVideoJob(req, res) {
 
   if (config.videoProvider === "dashscope") {
     try {
-      const providerJob = await createDashScopeVideoJob(body);
+      const providerJob = await createDashScopeVideoJob(providerBody);
       job.status = providerJob.status || "processing";
       job.providerJobId = providerJob.id || "";
       job.outputUrl = providerJob.outputUrl || "";
+      await maybeStoreGeneratedVideo(job);
     } catch (error) {
       job.status = "failed";
       job.error = error.message;
@@ -199,6 +215,7 @@ async function handleGetVideoJob(_req, res, id) {
     const providerJob = await getOpenAiVideoJob(job.providerJobId);
     job.status = providerJob.status || job.status;
     job.outputUrl = providerJob.output_url || job.outputUrl;
+    await maybeStoreGeneratedVideo(job);
     await saveJob(job);
   }
 
@@ -210,6 +227,7 @@ async function handleGetVideoJob(_req, res, id) {
     if (job.status === "failed") {
       await refundCreditsForFailedJob(job);
     }
+    await maybeStoreGeneratedVideo(job);
     await saveJob(job);
   }
 
@@ -682,6 +700,7 @@ function jobToRow(job) {
     prompt: job.prompt,
     provider_job_id: job.providerJobId,
     output_url: job.outputUrl,
+    ...(job.inputUrl ? { input_url: job.inputUrl } : {}),
     error: job.error,
     created_at: job.createdAt,
     updated_at: new Date().toISOString(),
@@ -703,6 +722,7 @@ function rowToJob(row) {
     createdAt: row.created_at,
     providerJobId: row.provider_job_id || "",
     outputUrl: row.output_url || "",
+    inputUrl: row.input_url || "",
     error: row.error || "",
   };
 }
@@ -906,6 +926,126 @@ function calculateCreditCost(body) {
   const templateSurcharge = template === "Kiss" ? 1 : 0;
 
   return baseCost * durationMultiplier + templateSurcharge;
+}
+
+async function maybeStoreUploadedImage(job, dataUrl) {
+  if (config.storageProvider !== "r2") return null;
+
+  const parsed = parseDataUrl(dataUrl);
+  if (!parsed) return null;
+
+  const extension = parsed.contentType === "image/png" ? "png" : parsed.contentType === "image/webp" ? "webp" : "jpg";
+  const key = `uploads/${job.userId}/${job.id}.${extension}`;
+  const url = await putR2Object(key, parsed.buffer, parsed.contentType);
+  return {
+    url,
+    providerUrl: config.r2PublicBaseUrl ? url : "",
+  };
+}
+
+async function maybeStoreGeneratedVideo(job) {
+  if (config.storageProvider !== "r2") return;
+  if (job.status !== "succeeded" || !job.outputUrl) return;
+  if (job.outputUrl.includes(config.r2PublicBaseUrl) && config.r2PublicBaseUrl) return;
+
+  try {
+    const response = await fetch(job.outputUrl);
+    if (!response.ok) {
+      throw new Error(`Could not copy generated video to storage: ${response.status}`);
+    }
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const contentType = response.headers.get("content-type") || "video/mp4";
+    const key = `outputs/${job.userId}/${job.id}.mp4`;
+    const storedUrl = await putR2Object(key, buffer, contentType);
+    if (config.r2PublicBaseUrl) job.outputUrl = storedUrl;
+  } catch (error) {
+    console.warn(error.message);
+  }
+}
+
+function parseDataUrl(dataUrl) {
+  const match = String(dataUrl).match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) return null;
+
+  return {
+    contentType: match[1],
+    buffer: Buffer.from(match[2], "base64"),
+  };
+}
+
+async function putR2Object(key, buffer, contentType) {
+  ensureR2Config();
+
+  const now = new Date();
+  const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
+  const dateStamp = amzDate.slice(0, 8);
+  const host = `${config.r2AccountId}.r2.cloudflarestorage.com`;
+  const canonicalUri = `/${encodeS3Path(`${config.r2Bucket}/${key}`)}`;
+  const endpoint = `https://${host}${canonicalUri}`;
+  const payloadHash = sha256Hex(buffer);
+  const canonicalHeaders = [
+    `content-type:${contentType}`,
+    `host:${host}`,
+    `x-amz-content-sha256:${payloadHash}`,
+    `x-amz-date:${amzDate}`,
+  ].join("\n") + "\n";
+  const signedHeaders = "content-type;host;x-amz-content-sha256;x-amz-date";
+  const canonicalRequest = ["PUT", canonicalUri, "", canonicalHeaders, signedHeaders, payloadHash].join("\n");
+  const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+  const stringToSign = ["AWS4-HMAC-SHA256", amzDate, credentialScope, sha256Hex(canonicalRequest)].join("\n");
+  const signingKey = getSignatureKey(config.r2SecretAccessKey, dateStamp, "auto", "s3");
+  const signature = createHmac("sha256", signingKey).update(stringToSign).digest("hex");
+  const authorization = `AWS4-HMAC-SHA256 Credential=${config.r2AccessKeyId}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+
+  const response = await fetch(endpoint, {
+    method: "PUT",
+    headers: {
+      Authorization: authorization,
+      "Content-Type": contentType,
+      "X-Amz-Content-Sha256": payloadHash,
+      "X-Amz-Date": amzDate,
+    },
+    body: buffer,
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`R2 upload failed: ${response.status} ${text}`);
+  }
+
+  return config.r2PublicBaseUrl ? `${config.r2PublicBaseUrl}/${encodeS3Path(key)}` : `r2://${config.r2Bucket}/${key}`;
+}
+
+function ensureR2Config() {
+  const missing = [
+    ["CLOUDFLARE_R2_ACCOUNT_ID", config.r2AccountId],
+    ["CLOUDFLARE_R2_ACCESS_KEY_ID", config.r2AccessKeyId],
+    ["CLOUDFLARE_R2_SECRET_ACCESS_KEY", config.r2SecretAccessKey],
+    ["CLOUDFLARE_R2_BUCKET", config.r2Bucket],
+  ].filter(([, value]) => !value);
+
+  if (missing.length) {
+    throw new Error(`Missing R2 config: ${missing.map(([key]) => key).join(", ")}`);
+  }
+}
+
+function encodeS3Path(path) {
+  return path
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+}
+
+function sha256Hex(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function getSignatureKey(secretKey, dateStamp, region, service) {
+  const kDate = createHmac("sha256", `AWS4${secretKey}`).update(dateStamp).digest();
+  const kRegion = createHmac("sha256", kDate).update(region).digest();
+  const kService = createHmac("sha256", kRegion).update(service).digest();
+  return createHmac("sha256", kService).update("aws4_request").digest();
 }
 
 function getProviderError(result, fallback) {

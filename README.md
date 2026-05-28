@@ -102,6 +102,19 @@ DASHSCOPE_AUDIO=false
 
 DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. MotionPic defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
 
+Optional for Cloudflare R2 object storage:
+
+```env
+STORAGE_PROVIDER=r2
+CLOUDFLARE_R2_ACCOUNT_ID=
+CLOUDFLARE_R2_ACCESS_KEY_ID=
+CLOUDFLARE_R2_SECRET_ACCESS_KEY=
+CLOUDFLARE_R2_BUCKET=motionpic-assets
+CLOUDFLARE_R2_PUBLIC_BASE_URL=https://assets.example.com
+```
+
+When R2 is enabled, uploaded photos are saved under `uploads/{userId}/{jobId}` and generated videos are copied under `outputs/{userId}/{jobId}.mp4`. If a public R2 URL is configured, MotionPic also passes that image URL to the video provider instead of a browser data URL.
+
 ## Credit Packs
 
 - Creator Pack: `$9` for `100 credits`
