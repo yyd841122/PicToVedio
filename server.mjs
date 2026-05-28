@@ -63,7 +63,7 @@ const server = createServer(async (req, res) => {
     }
 
     if (req.method === "GET" && url.pathname === "/api/account") {
-      return await handleGetAccount(res);
+      return await handleGetAccount(req, res);
     }
 
     if (req.method === "POST" && url.pathname === "/api/video/jobs") {
@@ -120,7 +120,7 @@ async function handleCreateVideoJob(req, res) {
   }
 
   const cost = calculateCreditCost(body);
-  const userId = "demo-user";
+  const userId = getRequestUserId(req, body);
   const account = await getAccount(userId);
 
   if (account.credits < cost) {
@@ -195,20 +195,26 @@ async function handleCreateVideoJob(req, res) {
   return sendJson(res, 200, { ...job, remainingCredits });
 }
 
-async function handleGetAccount(res) {
-  const account = await getAccount("demo-user");
+async function handleGetAccount(req, res) {
+  const userId = getRequestUserId(req);
+  const account = await getAccount(userId);
   return sendJson(res, 200, {
-    userId: "demo-user",
+    userId,
     credits: account.credits,
     recentCredits: account.recentCredits,
   });
 }
 
-async function handleGetVideoJob(_req, res, id) {
+async function handleGetVideoJob(req, res, id) {
   const job = await getJob(id);
 
   if (!job) {
     return sendJson(res, 404, { error: "Job not found" });
+  }
+
+  const userId = getRequestUserId(req);
+  if (job.userId !== userId) {
+    return sendJson(res, 403, { error: "Job does not belong to this user" });
   }
 
   if (job.provider === "openai" && job.providerJobId && ["queued", "in_progress"].includes(job.status)) {
@@ -237,9 +243,10 @@ async function handleGetVideoJob(_req, res, id) {
 async function handleCheckout(req, res) {
   const body = await readJson(req);
   const plan = body.plan === "commerce" ? "commerce" : "creator";
+  const userId = getRequestUserId(req, body);
 
   if (config.paymentProvider === "creem") {
-    return await handleCreemCheckout(res, body, plan);
+    return await handleCreemCheckout(res, body, plan, userId);
   }
 
   if (config.paymentProvider === "mock") {
@@ -265,7 +272,7 @@ async function handleCheckout(req, res) {
     "line_items[0][price]": price,
     "line_items[0][quantity]": "1",
     "metadata[plan]": plan,
-    "metadata[userId]": "demo-user",
+    "metadata[userId]": userId,
   });
 
   const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -295,7 +302,7 @@ async function handleMockConfirmPayment(req, res) {
 
   const body = await readJson(req);
   const plan = body.plan === "commerce" ? "commerce" : "creator";
-  const userId = "demo-user";
+  const userId = getRequestUserId(req, body);
   const payment = creditAmountForPlan(plan);
   const result = await grantCredits({
     userId,
@@ -312,7 +319,7 @@ async function handleMockConfirmPayment(req, res) {
   });
 }
 
-async function handleCreemCheckout(res, body, plan) {
+async function handleCreemCheckout(res, body, plan, userId) {
   const productId = plan === "commerce" ? config.creemCommerceProduct : config.creemCreatorProduct;
 
   if (!config.creemApiKey || !productId) {
@@ -342,7 +349,7 @@ async function handleCreemCheckout(res, body, plan) {
         success_url: appendQuery(body.returnUrl || config.appUrl, { checkout: "success", plan }),
         metadata: {
           plan,
-          userId: "demo-user",
+          userId,
         },
       }),
     });
@@ -440,10 +447,12 @@ async function getAccount(userId) {
 
   const db = readDb();
   normalizeDb(db);
-  const user = db.users[userId] || { credits: 0 };
+  db.users[userId] ||= { credits: 12 };
+  writeDb(db);
+  const user = db.users[userId];
   return {
     credits: user.credits,
-    recentCredits: db.creditLedger.slice(-5).reverse(),
+    recentCredits: db.creditLedger.filter((entry) => entry.userId === userId).slice(-5).reverse(),
   };
 }
 
@@ -680,6 +689,13 @@ async function supabaseRequest(path, { method = "GET", body, prefer } = {}) {
     throw new Error(message);
   }
   return data || [];
+}
+
+function getRequestUserId(req, body = {}) {
+  const candidate = body.userId || req.headers["x-motionpic-user-id"] || "";
+  const userId = String(candidate).trim();
+  if (/^mp_[a-z0-9_-]{12,80}$/i.test(userId)) return userId;
+  return "demo-user";
 }
 
 function filterValue(value) {

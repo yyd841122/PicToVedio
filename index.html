@@ -1695,6 +1695,24 @@
 
       const query = new URLSearchParams(window.location.search);
 
+      const getUserId = () => {
+        const stored = localStorage.getItem("motionpic-user-id");
+        if (stored) return stored;
+
+        const randomPart = window.crypto?.randomUUID
+          ? window.crypto.randomUUID().replace(/-/g, "")
+          : `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+        const id = `mp_${randomPart.slice(0, 32)}`;
+        localStorage.setItem("motionpic-user-id", id);
+        return id;
+      };
+
+      const userId = getUserId();
+      const apiHeaders = (json = false) => ({
+        ...(json ? { "Content-Type": "application/json" } : {}),
+        "X-MotionPic-User-ID": userId,
+      });
+
       const translations = {
         en: {
           title: "MotionPic AI - AI Photo to Video Generator",
@@ -2054,7 +2072,7 @@
       const refreshAccount = async () => {
         if (!canUseBackend()) return;
         try {
-          const response = await fetch("/api/account");
+          const response = await fetch("/api/account", { headers: apiHeaders() });
           const account = await response.json();
           if (typeof account.credits === "number") {
             state.balance = account.credits;
@@ -2216,8 +2234,9 @@
       const createBackendJob = async () => {
         const response = await fetch("/api/video/jobs", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: apiHeaders(true),
           body: JSON.stringify({
+            userId,
             imageData: state.imageData,
             template: state.template,
             prompt: promptField.value,
@@ -2237,7 +2256,7 @@
       };
 
       const fetchBackendJob = async (id) => {
-        const response = await fetch(`/api/video/jobs/${encodeURIComponent(id)}`);
+        const response = await fetch(`/api/video/jobs/${encodeURIComponent(id)}`, { headers: apiHeaders() });
         if (!response.ok) {
           const error = await response.json().catch(() => ({ error: "Fetch job failed" }));
           throw new Error(error.error || "Fetch job failed");
@@ -2364,8 +2383,9 @@
           try {
             const response = await fetch("/api/checkout", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: apiHeaders(true),
               body: JSON.stringify({
+                userId,
                 plan: state.resolution === "Pro" ? "commerce" : "creator",
                 returnUrl: window.location.href,
               }),
@@ -2424,8 +2444,8 @@
         try {
           const response = await fetch("/api/checkout/mock-confirm", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ plan: query.get("plan") || "creator" }),
+            headers: apiHeaders(true),
+            body: JSON.stringify({ userId, plan: query.get("plan") || "creator" }),
           });
           const result = await response.json();
           if (result.balance) {

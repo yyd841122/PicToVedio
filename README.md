@@ -131,6 +131,10 @@ Current generation credit rules:
 
 The server recalculates the credit cost for each generation request. It does not trust the `credits` value sent by the browser.
 
+## Anonymous Users
+
+MotionPic creates a browser-local anonymous user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
+
 ## Multilingual URLs
 
 ```text

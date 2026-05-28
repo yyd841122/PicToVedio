@@ -28,6 +28,7 @@ Last updated: 2026-05-28
 - [x] Added unit economics notes for credit pricing and margins.
 - [x] Enforced server-side credit pricing for real generation requests.
 - [x] Added optional Cloudflare R2 adapter for uploaded images and generated videos.
+- [x] Replaced shared `demo-user` traffic with browser-based anonymous user IDs.
 
 ## In Progress
 
@@ -50,8 +51,8 @@ Last updated: 2026-05-28
 - [ ] Revisit visible Creem package amounts before switching to live mode.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
-- [ ] Replace `demo-user` with anonymous device IDs.
-- [ ] Bind credits to each anonymous user ID.
+- [x] Replace `demo-user` with anonymous device IDs.
+- [x] Bind credits to each anonymous user ID.
 - [x] Add safe credit refund behavior when real generation fails.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
