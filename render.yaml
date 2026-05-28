@@ -13,6 +13,8 @@ services:
         value: mock
       - key: DASHSCOPE_VIDEO_MODEL
         value: wan2.6-i2v-flash
+      - key: DASHSCOPE_AUDIO
+        value: "false"
       - key: DATA_PROVIDER
         value: supabase
       - key: PAYMENT_PROVIDER

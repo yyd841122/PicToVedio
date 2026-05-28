@@ -48,6 +48,7 @@ APP_URL=https://video.cozyguidehub.com
 VIDEO_PROVIDER=mock
 DASHSCOPE_API_KEY=
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
+DASHSCOPE_AUDIO=false
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
@@ -67,6 +68,7 @@ Keep `VIDEO_PROVIDER=mock` until checkout and credits are stable. After the Alib
 VIDEO_PROVIDER=dashscope
 DASHSCOPE_API_KEY=sk-...
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
+DASHSCOPE_AUDIO=false
 ```
 
 Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.

@@ -36,6 +36,7 @@ Last updated: 2026-05-28
 - [x] Add a provider adapter for DashScope.
 - [x] Support DashScope job creation and status polling.
 - [x] Normalize job states: `queued`, `processing`, `succeeded`, `failed`.
+- [x] Default DashScope output to silent video and identity-preserving prompts to reduce cost and distortion.
 - [ ] Run one real DashScope image-to-video test.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.

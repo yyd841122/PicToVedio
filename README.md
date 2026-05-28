@@ -86,6 +86,7 @@ Optional for real video generation later:
 ```env
 DASHSCOPE_API_KEY=
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
+DASHSCOPE_AUDIO=false
 OPENAI_API_KEY=
 OPENAI_VIDEO_MODEL=sora-2
 ```
@@ -96,9 +97,10 @@ To enable Alibaba Cloud Model Studio / Bailian image-to-video on Render:
 VIDEO_PROVIDER=dashscope
 DASHSCOPE_API_KEY=sk-...
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
+DASHSCOPE_AUDIO=false
 ```
 
-DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. If a provider request fails, credits are refunded through the ledger.
+DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. MotionPic defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
 
 ## Credit Packs
 

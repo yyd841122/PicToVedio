@@ -22,6 +22,7 @@ const config = {
   openaiVideoModel: process.env.OPENAI_VIDEO_MODEL || "sora-2",
   dashscopeApiKey: process.env.DASHSCOPE_API_KEY || "",
   dashscopeVideoModel: process.env.DASHSCOPE_VIDEO_MODEL || "wan2.6-i2v-flash",
+  dashscopeAudio: process.env.DASHSCOPE_AUDIO === "true",
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",
@@ -773,13 +774,16 @@ async function createDashScopeVideoJob(body) {
   const payload = {
     model: config.dashscopeVideoModel,
     input: {
-      prompt: body.prompt,
+      prompt: buildDashScopePrompt(body),
       img_url: body.imageData,
     },
     parameters: {
       resolution: mapDashScopeResolution(body.resolution),
       duration: mapDashScopeDuration(body.seconds),
+      audio: config.dashscopeAudio,
       prompt_extend: true,
+      negative_prompt:
+        "deformed face, distorted face, different person, extra fingers, warped eyes, asymmetrical eyes, broken teeth, blurry face, low quality, artifacts, exaggerated motion, face morphing",
     },
   };
 
@@ -832,6 +836,27 @@ async function getDashScopeVideoJob(providerJobId) {
     outputUrl: result.output?.video_url || "",
     error: result.output?.message || result.message || "",
   };
+}
+
+function buildDashScopePrompt(body) {
+  const basePrompt = String(body.prompt || "").trim();
+  const ratioInstruction =
+    body.ratio === "9:16"
+      ? "vertical 9:16 social video framing"
+      : body.ratio === "16:9"
+        ? "horizontal 16:9 video framing"
+        : "square 1:1 social video framing";
+
+  return [
+    "Use the uploaded photo as the exact first frame.",
+    "Preserve the same people, facial identity, age, clothing, hairstyle, and background.",
+    "Keep faces natural and stable; avoid changing facial features.",
+    "Create only subtle realistic motion: gentle camera push-in, tiny head movement, natural blinking, soft smile.",
+    ratioInstruction,
+    basePrompt,
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 function mapDashScopeResolution(resolution) {
