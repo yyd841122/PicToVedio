@@ -1354,15 +1354,15 @@
                   <div class="field-group">
                     <label>清晰度</label>
                     <div class="option-grid" aria-label="Resolution">
-                      <button class="option active" type="button" data-resolution="720p" data-cost="1">
+                      <button class="option active" type="button" data-resolution="720p" data-cost="2">
                         <strong>720p</strong>
                         <span>免费预览</span>
                       </button>
-                      <button class="option" type="button" data-resolution="1080p" data-cost="2">
+                      <button class="option" type="button" data-resolution="1080p" data-cost="4">
                         <strong>1080p</strong>
                         <span>无水印导出</span>
                       </button>
-                      <button class="option" type="button" data-resolution="Pro" data-cost="5">
+                      <button class="option" type="button" data-resolution="Pro" data-cost="6">
                         <strong>Pro</strong>
                         <span>产品广告</span>
                       </button>
@@ -1641,7 +1641,7 @@
         template: "Portrait",
         ratio: "9:16",
         resolution: "720p",
-        baseCost: 1,
+        baseCost: 2,
         length: "4s",
         balance: 12,
         freeQuota: 2,
@@ -1751,10 +1751,10 @@
           free1: "2 previews per day",
           free2: "720p with watermark",
           free3: "1 extra after sharing",
-          creator1: "100 credits",
+          creator1: "100 credits, about 50 standard clips",
           creator2: "1080p no-watermark downloads",
           creator3: "Batch generate 4 versions",
-          commerce1: "400 credits",
+          commerce1: "400 credits, about 200 standard clips",
           commerce2: "Product video templates",
           commerce3: "Commercial export queue",
           conversion: "Use credits for HD no-watermark exports, batch variations, and future commercial template queues.",
@@ -1815,7 +1815,7 @@
           faq3Title: "Will generated videos have a watermark?",
           faq3Text: "Free previews are useful for checking the result. HD no-watermark exports use credits or a paid pack.",
           faq4Title: "How do credits work?",
-          faq4Text: "Credits are used for previews, HD no-watermark exports, and batch generation of multiple video variations.",
+          faq4Text: "Credits are used for previews, HD no-watermark exports, and batch generation. A standard 4-second 720p clip uses 2 credits.",
           faq5Title: "Can I use videos commercially?",
           faq5Text: "The Commerce Pack is designed for product video templates and commercial export workflows for stores and ads.",
           faq6Title: "How is it different from general AI video tools?",
@@ -1846,8 +1846,8 @@
           balance: "当前账户余额", buy: "Buy credits", pricingTitle: "推荐收费锚点",
           free: "Free", creatorPack: "Creator Pack", commerce: "Commerce",
           free1: "每天 2 次预览", free2: "720p，带水印", free3: "分享后再送 1 次",
-          creator1: "100 credits", creator2: "1080p 无水印下载", creator3: "批量生成 4 个版本",
-          commerce1: "400 credits", commerce2: "产品视频模板", commerce3: "商用导出队列",
+          creator1: "100 credits，约 50 条标准短片", creator2: "1080p 无水印下载", creator3: "批量生成 4 个版本",
+          commerce1: "400 credits，约 200 条标准短片", commerce2: "产品视频模板", commerce3: "商用导出队列",
           conversion: "购买 credits 后可用于高清无水印导出、批量生成多个版本，以及后续商用模板队列。",
           demandTitle: "你可以用它做什么", demandLead: "上传一张人物、宠物、产品或老照片，选择模板，就能得到适合社媒发布、纪念分享或商品展示的短视频。",
           demand1Score: "社媒发布", demand1Title: "人物照片变短视频", demand1Text: "把头像、写真或日常照片做成适合 TikTok、Reels、小红书发布的动态短片。",
@@ -1895,7 +1895,7 @@
           faq3Title: "生成的视频有水印吗？",
           faq3Text: "免费预览适合先看效果，高清无水印导出会消耗 credits 或需要购买套餐。",
           faq4Title: "Credits 如何使用？",
-          faq4Text: "Credits 用于生成预览、解锁高清无水印下载，以及批量生成多个视频版本。",
+          faq4Text: "Credits 用于生成预览、解锁高清无水印下载，以及批量生成多个视频版本。标准 4 秒 720p 短片消耗 2 credits。",
           faq5Title: "可以用于商业内容吗？",
           faq5Text: "Commerce Pack 面向产品视频模板和商用导出流程，适合独立站、Amazon、Shopify 和广告素材。",
           faq6Title: "它和通用 AI 视频工具有什么不同？",
@@ -2076,7 +2076,9 @@
         return 1;
       };
 
-      const currentCost = () => state.baseCost * lengthMultiplier();
+      const templateSurcharge = () => (state.template === "Kiss" ? 1 : 0);
+
+      const currentCost = () => state.baseCost * lengthMultiplier() + templateSurcharge();
 
       const updateEstimate = () => {
         const cost = currentCost();

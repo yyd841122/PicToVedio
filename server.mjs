@@ -102,7 +102,7 @@ server.listen(config.port, () => {
 
 async function handleCreateVideoJob(req, res) {
   const body = await readJson(req);
-  const required = ["imageData", "prompt", "template", "ratio", "resolution", "seconds", "credits"];
+  const required = ["imageData", "prompt", "template", "ratio", "resolution", "seconds"];
   const missing = required.filter((key) => body[key] === undefined || body[key] === "");
 
   if (missing.length) {
@@ -113,7 +113,7 @@ async function handleCreateVideoJob(req, res) {
     return sendJson(res, 400, { error: "imageData must be a data URL image" });
   }
 
-  const cost = Number(body.credits || 1);
+  const cost = calculateCreditCost(body);
   const userId = "demo-user";
   const account = await getAccount(userId);
 
@@ -888,6 +888,24 @@ function mapDashScopeStatus(status) {
   if (["FAILED", "CANCELED", "UNKNOWN"].includes(status)) return "failed";
   if (["PENDING", "RUNNING"].includes(status)) return "processing";
   return "queued";
+}
+
+function calculateCreditCost(body) {
+  const resolution = String(body.resolution || "720p");
+  const seconds = Number(body.seconds || 4);
+  const template = String(body.template || "");
+
+  const baseCost =
+    resolution === "Pro"
+      ? 6
+      : resolution === "1080p"
+        ? 4
+        : 2;
+
+  const durationMultiplier = seconds >= 12 ? 3 : seconds >= 8 ? 2 : 1;
+  const templateSurcharge = template === "Kiss" ? 1 : 0;
+
+  return baseCost * durationMultiplier + templateSurcharge;
 }
 
 function getProviderError(result, fallback) {

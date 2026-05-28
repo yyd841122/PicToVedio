@@ -26,6 +26,7 @@ Last updated: 2026-05-28
 - [x] Reduced default generation cost by disabling audio.
 - [x] Changed the default template and prompts toward lower-distortion portrait motion.
 - [x] Added unit economics notes for credit pricing and margins.
+- [x] Enforced server-side credit pricing for real generation requests.
 
 ## In Progress
 
@@ -43,7 +44,8 @@ Last updated: 2026-05-28
 - [x] Normalize job states: `queued`, `processing`, `succeeded`, `failed`.
 - [x] Default DashScope output to silent video and identity-preserving prompts to reduce cost and distortion.
 - [x] Run one real DashScope image-to-video test.
-- [ ] Revise live credit economics before charging real users.
+- [x] Revise first-pass credit economics before charging real users.
+- [ ] Revisit visible Creem package amounts before switching to live mode.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
 - [ ] Replace `demo-user` with anonymous device IDs.

@@ -107,6 +107,17 @@ DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`
 - Creator Pack: `$9` for `100 credits`
 - Commerce Pack: `$29` for `400 credits`
 
+Current generation credit rules:
+
+- 4s / 720p: `2 credits`
+- 4s / 1080p: `4 credits`
+- 4s / Pro: `6 credits`
+- 8s uses 2x the base cost.
+- 12s uses 3x the base cost.
+- High-risk creative templates such as `Couple Kiss` add `1 credit`.
+
+The server recalculates the credit cost for each generation request. It does not trust the `credits` value sent by the browser.
+
 ## Multilingual URLs
 
 ```text

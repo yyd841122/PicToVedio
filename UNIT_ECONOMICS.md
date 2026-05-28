@@ -36,15 +36,18 @@ Assumptions for planning:
 
 Do not price one real generation as one paid credit in live mode.
 
-Recommended first version:
+Implemented first version:
 
 | Action | Suggested Credits | Reason |
 | --- | ---: | --- |
 | 4s / 720p preview | 2 credits | Keeps $9 pack from being loss-making. |
-| 4s / 720p no-watermark export | 3 credits | Paid value should be higher than preview. |
-| 8s generation | 4-6 credits | Longer duration costs more and may fail more often. |
-| 1080p or HD export | 5-8 credits | Higher quality should be premium. |
-| High-risk creative templates, like kiss videos | 3-5 credits | Distortion and retry risk is higher. |
+| 4s / 1080p export | 4 credits | Higher quality should be premium. |
+| 4s / Pro export | 6 credits | Pro mode needs more margin for retries and quality checks. |
+| 8s generation | 2x base cost | Longer duration costs more and may fail more often. |
+| 12s generation | 3x base cost | Longer duration should stay premium. |
+| High-risk creative templates, like kiss videos | +1 credit | Distortion and retry risk is higher. |
+
+The backend recalculates this cost for every generation request. The browser can display the estimate, but the server does not trust a client-supplied `credits` value.
 
 ## Recommended Live Packages
 
@@ -59,8 +62,9 @@ Safer packages before live launch:
 Alternative if the visible "100 credits" offer is kept:
 
 - Keep Creator Pack at 100 credits.
-- Charge 3 credits for a normal 4-second 720p generation.
-- Charge 5+ credits for HD/no-watermark/high-risk outputs.
+- Charge 2 credits for a normal 4-second 720p generation.
+- Charge 4+ credits for HD/no-watermark outputs.
+- Add 1 credit for high-risk creative templates such as kiss videos.
 
 This preserves the marketing appeal of "100 credits" while avoiding a near-zero margin.
 
