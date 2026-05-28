@@ -21,12 +21,17 @@ Last updated: 2026-05-28
 - [x] Replaced internal demand-analysis copy with user-facing product copy.
 - [x] Added SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and 404.html.
 - [x] Added project history, TODO, roadmap, SEO/GEO, and promotion copy documents.
+- [x] Connected DashScope image-to-video generation on Render.
+- [x] Ran real DashScope image-to-video generation successfully.
+- [x] Reduced default generation cost by disabling audio.
+- [x] Changed the default template and prompts toward lower-distortion portrait motion.
+- [x] Added unit economics notes for credit pricing and margins.
 
 ## In Progress
 
 - [ ] Prepare the site for real video generation.
 - [x] Decide the first real video API provider: Alibaba Cloud Model Studio / Bailian DashScope.
-- [ ] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
+- [x] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
 - [ ] Keep Creem in test mode until real generation works.
 - [ ] Build the first SEO/GEO content layer around the homepage and templates.
@@ -37,7 +42,8 @@ Last updated: 2026-05-28
 - [x] Support DashScope job creation and status polling.
 - [x] Normalize job states: `queued`, `processing`, `succeeded`, `failed`.
 - [x] Default DashScope output to silent video and identity-preserving prompts to reduce cost and distortion.
-- [ ] Run one real DashScope image-to-video test.
+- [x] Run one real DashScope image-to-video test.
+- [ ] Revise live credit economics before charging real users.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
 - [ ] Replace `demo-user` with anonymous device IDs.
@@ -84,7 +90,7 @@ Last updated: 2026-05-28
 
 ## Blocked By User Input
 
-- [ ] Real video API key.
+- [x] Real video API key.
 - [ ] Object storage account and access keys.
 - [ ] Creem live API key, live product IDs, and live webhook signing secret.
 - [ ] Public contact email.

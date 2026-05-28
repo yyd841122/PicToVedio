@@ -143,6 +143,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [ROADMAP_PLAN.md](./ROADMAP_PLAN.md): milestone plan from MVP to real launch.
 - [SEO_GEO_PROMOTION_PLAN.md](./SEO_GEO_PROMOTION_PLAN.md): SEO, GEO, and promotion execution plan.
 - [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
+- [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
 
 ## Important Notes
 

@@ -1305,28 +1305,32 @@
                       <button class="chip" type="button" data-filter="emotion">Emotion</button>
                     </div>
                     <div class="templates" id="templateGrid">
-                      <button class="template active" type="button" data-template="Kiss" data-audience="emotion">
-                        <strong>Couple Kiss</strong>
-                        <span>情侣照、纪念日、社媒传播</span>
-                      </button>
-                      <button class="template" type="button" data-template="Pet" data-audience="creator emotion">
-                        <strong>Pet Hero</strong>
-                        <span>宠物动起来、宠物商店</span>
+                      <button class="template active" type="button" data-template="Portrait" data-audience="creator emotion">
+                        <strong>Natural Portrait</strong>
+                        <span>人像微笑、眨眼、轻运镜</span>
                       </button>
                       <button class="template" type="button" data-template="Product" data-audience="commerce">
-                        <strong>Product Spin</strong>
-                        <span>电商图变广告短片</span>
+                        <strong>Product Motion</strong>
+                        <span>商品图轻微推近与展示</span>
                       </button>
                       <button class="template" type="button" data-template="Old Photo" data-audience="emotion">
                         <strong>Old Photo Alive</strong>
                         <span>老照片、家庭纪念</span>
+                      </button>
+                      <button class="template" type="button" data-template="Pet" data-audience="creator emotion">
+                        <strong>Pet Motion</strong>
+                        <span>宠物轻微动起来</span>
+                      </button>
+                      <button class="template" type="button" data-template="Kiss" data-audience="emotion">
+                        <strong>Couple Kiss</strong>
+                        <span>创意效果，失真风险更高</span>
                       </button>
                     </div>
                   </div>
 
                   <div class="field-group">
                     <label for="prompt">动作描述</label>
-                    <textarea class="textarea" id="prompt">soft camera push-in, gentle smile, warm cinematic light, clean background, social video crop</textarea>
+                    <textarea class="textarea" id="prompt">very subtle camera push-in, natural blinking only, gentle smile, preserve exact face identity, stable facial features</textarea>
                   </div>
 
                   <div class="field-group">
@@ -1382,7 +1386,7 @@
 
                   <div class="preview" aria-label="Generated preview">
                     <div class="preview-top">
-                      <span class="badge" id="previewTemplate">Couple Kiss template</span>
+                      <span class="badge" id="previewTemplate">Natural Portrait template</span>
                       <span class="badge">720p preview</span>
                     </div>
                     <button class="play" type="button" aria-label="Play preview">▶</button>
@@ -1634,7 +1638,7 @@
       const state = {
         uploaded: false,
         generated: false,
-        template: "Kiss",
+        template: "Portrait",
         ratio: "9:16",
         resolution: "720p",
         baseCost: 1,
@@ -1649,10 +1653,11 @@
       };
 
       const templatePrompts = {
-        Kiss: "soft couple movement, gentle camera push-in, romantic light, social video crop",
-        Pet: "playful pet motion, bright eyes, soft background, cute social video loop",
-        Product: "premium product spin, clean studio light, subtle camera orbit, ecommerce ad",
-        "Old Photo": "old portrait comes alive, warm restoration look, slow smile, nostalgic mood",
+        Portrait: "very subtle camera push-in, natural blinking only, gentle smile, preserve exact face identity, stable facial features",
+        Product: "subtle product push-in, clean studio lighting, stable product shape, no deformation, ecommerce ad",
+        "Old Photo": "old portrait comes alive with subtle blinking and gentle smile, preserve original face, nostalgic mood",
+        Pet: "playful but subtle pet motion, natural eyes, stable fur and face, cute social video loop",
+        Kiss: "gentle romantic motion, minimal face movement, preserve both faces, soft cinematic light, avoid face morphing",
       };
 
       const fileInput = document.querySelector("#fileInput");
@@ -1765,23 +1770,31 @@
           demand3Title: "Pets and old photos come alive",
           demand3Text: "Add natural movement to pet photos, family memories, and old portraits for greetings and sharing.",
           templateSectionTitle: "Popular Templates",
-          templateSectionLead: "Start with scenes that are easy to understand and easy to share: couples, pets, products, and old photos.",
+          templateSectionLead: "Start with low-distortion scenes that are easier to deliver: natural portrait motion, product push-ins, old photo revival, and subtle pet animation. Use kiss videos as a creative template after safer outputs work.",
           tableTemplate: "Template",
           tableUsers: "Upload",
           tablePaid: "Video result",
           tableTraffic: "Use case",
-          tableRow1Upload: "Couple photos, anniversary photos",
-          tableRow1Result: "Soft push-in, romantic interaction mood",
-          tableRow1Use: "TikTok / Reels / Shorts sharing",
+          tableRow1Name: "Natural Portrait",
+          tableRow1Upload: "Portraits, selfies, half-body photos",
+          tableRow1Result: "Subtle push-in, natural blink, stable smile",
+          tableRow1Use: "TikTok / Reels / profile video posts",
+          tableRow2Name: "Product Motion",
           tableRow2Upload: "Product shots, model photos, lifestyle images",
-          tableRow2Result: "Product spin, camera push, ad-style lighting",
+          tableRow2Result: "Small camera push-in, stable product shape, ad lighting",
           tableRow2Use: "Storefronts, Amazon, Shopify product pages",
-          tableRow3Upload: "Cat and dog photos, pet shop assets",
-          tableRow3Result: "Blinking, head turns, cute motion",
-          tableRow3Use: "Pet accounts and pet shop promotion",
-          tableRow4Upload: "Old family photos and memory portraits",
-          tableRow4Result: "Smile, blink, subtle expression changes",
-          tableRow4Use: "Family memories and holiday greetings",
+          tableRow3Name: "Old Photo Alive",
+          tableRow3Upload: "Old family photos and memory portraits",
+          tableRow3Result: "Gentle smile, blinking, small expression change",
+          tableRow3Use: "Memories, family sharing, holiday posts",
+          tableRow4Name: "Pet Motion",
+          tableRow4Upload: "Cat and dog photos, pet shop assets",
+          tableRow4Result: "Small eye and head movement with stable face",
+          tableRow4Use: "Pet accounts and pet shop promotion",
+          tableRow5Name: "Couple Kiss",
+          tableRow5Upload: "Couple photos and anniversary images",
+          tableRow5Result: "Creative intimate motion, higher variation risk",
+          tableRow5Use: "Small-batch creative social tests",
           aboutTitle: "Why Choose MotionPic AI",
           aboutLead: "MotionPic AI focuses on turning still photos into short videos instead of becoming a complex editing suite. It is built for quick publishing, content testing, and faster creative output.",
           about1Score: "Focused",
@@ -1840,20 +1853,28 @@
           demand1Score: "社媒发布", demand1Title: "人物照片变短视频", demand1Text: "把头像、写真或日常照片做成适合 TikTok、Reels、小红书发布的动态短片。",
           demand2Score: "商品展示", demand2Title: "产品图变广告视频", demand2Text: "让商品主图、模特图或场景图动起来，用于独立站、Amazon、Shopify 和广告素材。",
           demand3Score: "纪念分享", demand3Title: "宠物与老照片动起来", demand3Text: "让宠物、家庭纪念照和老照片产生自然动作，适合节日祝福和社交分享。",
-          templateSectionTitle: "热门模板", templateSectionLead: "从最容易出效果的场景开始：情侣、宠物、产品、老照片。后续可以继续增加节日、婚礼、头像、商品图等模板。",
+          templateSectionTitle: "热门模板", templateSectionLead: "先从低失真、容易交付的场景开始：人像微动、产品轻运镜、老照片复活和宠物轻动作。亲吻等复杂互动作为创意模板小批量测试。",
           tableTemplate: "模板", tableUsers: "适合上传", tablePaid: "生成效果", tableTraffic: "常见用途",
-          tableRow1Upload: "情侣照、纪念日照片",
-          tableRow1Result: "轻微镜头推进、亲密互动氛围",
-          tableRow1Use: "TikTok / Reels / 小红书分享",
+          tableRow1Name: "Natural Portrait",
+          tableRow1Upload: "头像、自拍、半身照",
+          tableRow1Result: "轻微推近、自然眨眼、稳定微笑",
+          tableRow1Use: "TikTok / Reels / 小红书头像短片",
+          tableRow2Name: "Product Motion",
           tableRow2Upload: "商品主图、模特图、场景图",
-          tableRow2Result: "产品旋转、镜头推近、广告感光效",
+          tableRow2Result: "轻微推近、商品形状稳定、广告感光效",
           tableRow2Use: "独立站、Amazon、Shopify 商品页",
-          tableRow3Upload: "猫狗照片、宠物店素材",
-          tableRow3Result: "眨眼、转头、可爱动态效果",
-          tableRow3Use: "宠物账号、宠物店推广",
-          tableRow4Upload: "家庭老照片、纪念照片",
-          tableRow4Result: "微笑、眨眼、轻微表情变化",
-          tableRow4Use: "家庭纪念、节日祝福",
+          tableRow3Name: "Old Photo Alive",
+          tableRow3Upload: "家庭老照片、纪念照片",
+          tableRow3Result: "微笑、眨眼、轻微表情变化",
+          tableRow3Use: "家庭纪念、节日祝福",
+          tableRow4Name: "Pet Motion",
+          tableRow4Upload: "猫狗照片、宠物店素材",
+          tableRow4Result: "轻微眼神和头部动作，面部稳定",
+          tableRow4Use: "宠物账号、宠物店推广",
+          tableRow5Name: "Couple Kiss",
+          tableRow5Upload: "情侣照、纪念日照片",
+          tableRow5Result: "创意亲密互动，失真风险更高",
+          tableRow5Use: "小批量社交创意测试",
           aboutTitle: "为什么选择 MotionPic AI",
           aboutLead: "MotionPic AI 专注把静态照片变成短视频，而不是复杂的视频剪辑软件。它更适合想快速发布、测试素材和提高内容产出的个人与卖家。",
           about1Score: "更聚焦",
@@ -1931,9 +1952,11 @@
         const row = document.querySelectorAll(".table tbody tr")[index];
         const cells = row?.querySelectorAll("td");
         if (!cells || cells.length < 4) return;
-        cells[1].textContent = values[0];
-        cells[2].textContent = values[1];
-        cells[3].textContent = values[2];
+        const title = cells[0].querySelector("strong");
+        if (title) title.textContent = values[0];
+        cells[1].textContent = values[1];
+        cells[2].textContent = values[2];
+        cells[3].textContent = values[3];
       };
       const applyLanguage = (lang) => {
         currentLang = lang;
@@ -1993,10 +2016,10 @@
         setText("#templates .section-head h2", currentCopy.templateSectionTitle);
         setText("#templates .section-head p", currentCopy.templateSectionLead);
         setAllText(".table th", [currentCopy.tableTemplate, currentCopy.tableUsers, currentCopy.tablePaid, currentCopy.tableTraffic]);
-        setTableRow(0, [currentCopy.tableRow1Upload, currentCopy.tableRow1Result, currentCopy.tableRow1Use]);
-        setTableRow(1, [currentCopy.tableRow2Upload, currentCopy.tableRow2Result, currentCopy.tableRow2Use]);
-        setTableRow(2, [currentCopy.tableRow3Upload, currentCopy.tableRow3Result, currentCopy.tableRow3Use]);
-        setTableRow(3, [currentCopy.tableRow4Upload, currentCopy.tableRow4Result, currentCopy.tableRow4Use]);
+        setTableRow(0, [currentCopy.tableRow1Name, currentCopy.tableRow1Upload, currentCopy.tableRow1Result, currentCopy.tableRow1Use]);
+        setTableRow(1, [currentCopy.tableRow2Name, currentCopy.tableRow2Upload, currentCopy.tableRow2Result, currentCopy.tableRow2Use]);
+        setTableRow(2, [currentCopy.tableRow3Name, currentCopy.tableRow3Upload, currentCopy.tableRow3Result, currentCopy.tableRow3Use]);
+        setTableRow(3, [currentCopy.tableRow4Name, currentCopy.tableRow4Upload, currentCopy.tableRow4Result, currentCopy.tableRow4Use]);
         setText("#about-motionpic .section-head h2", currentCopy.aboutTitle);
         setText("#about-motionpic .section-head p", currentCopy.aboutLead);
         setAllText("#about-motionpic .score", [currentCopy.about1Score, currentCopy.about2Score, currentCopy.about3Score]);
