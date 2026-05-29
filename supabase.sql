@@ -75,6 +75,9 @@ create index if not exists idx_analytics_events_name_created
 create index if not exists idx_analytics_events_user_created
   on analytics_events(user_id, created_at desc);
 
+grant usage on schema public to anon, authenticated, service_role;
+grant select, insert, update, delete on table analytics_events to anon, authenticated, service_role;
+
 alter table video_jobs
   add column if not exists input_url text;
 
