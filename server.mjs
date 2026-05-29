@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL(".", import.meta.url));
 const dataDir = join(root, "data");
 const dbPath = join(dataDir, "db.json");
+const analyticsCookieName = "motionpic_analytics_admin";
 
 loadDotEnv();
 ensureDb();
@@ -89,6 +90,14 @@ const server = createServer(async (req, res) => {
 
     if (req.method === "GET" && url.pathname === "/admin/analytics") {
       return await handleGetAnalyticsDashboard(req, res, url);
+    }
+
+    if (req.method === "POST" && url.pathname === "/admin/analytics/login") {
+      return await handleAnalyticsAdminLogin(req, res);
+    }
+
+    if (req.method === "GET" && url.pathname === "/admin/analytics/logout") {
+      return handleAnalyticsAdminLogout(req, res);
     }
 
     if (req.method === "POST" && url.pathname === "/api/checkout/mock-confirm") {
@@ -267,18 +276,37 @@ async function handleGetAnalyticsSummary(req, res, url) {
 }
 
 async function handleGetAnalyticsDashboard(req, res, url) {
+  const queryToken = url.searchParams.get("token") || "";
+  if (config.analyticsAdminToken && queryToken && queryToken === config.analyticsAdminToken) {
+    setAnalyticsAdminCookie(req, res);
+    return redirect(res, "/admin/analytics");
+  }
+
   if (!canReadAdminAnalytics(req, url)) {
-    return sendHtml(
-      res,
-      403,
-      renderAdminMessage("Analytics access denied", "Add your private ANALYTICS_ADMIN_TOKEN as ?token=... to view this dashboard.")
-    );
+    return sendHtml(res, 403, renderAnalyticsLoginPage(Boolean(queryToken)));
   }
 
   const limit = Math.min(1000, Math.max(50, Number(url.searchParams.get("limit") || 500)));
   const events = await getRecentAnalyticsEvents(limit);
   const summary = summarizeAnalyticsEvents(events);
   return sendHtml(res, 200, renderAnalyticsDashboard(summary, url));
+}
+
+async function handleAnalyticsAdminLogin(req, res) {
+  const raw = await readRaw(req);
+  const form = new URLSearchParams(raw);
+  const token = String(form.get("token") || "");
+  if (config.analyticsAdminToken && token === config.analyticsAdminToken) {
+    setAnalyticsAdminCookie(req, res);
+    return redirect(res, "/admin/analytics");
+  }
+
+  return sendHtml(res, 403, renderAnalyticsLoginPage(true));
+}
+
+function handleAnalyticsAdminLogout(req, res) {
+  clearAnalyticsAdminCookie(req, res);
+  return redirect(res, "/admin/analytics");
 }
 
 async function handleGetVideoJob(req, res, id) {
@@ -781,10 +809,8 @@ function summarizeAnalyticsEvents(events) {
 }
 
 function renderAnalyticsDashboard(summary, url) {
-  const token = url.searchParams.get("token") || "";
-  const query = token ? `?token=${encodeURIComponent(token)}` : "";
-  const apiUrl = `/api/admin/analytics${query}`;
-  const refreshUrl = `/admin/analytics${query}`;
+  const apiUrl = "/api/admin/analytics";
+  const refreshUrl = "/admin/analytics";
   const generatedAt = new Date().toLocaleString("en-US", { hour12: false });
   const uploadSuccessRate = ratio(summary.byName.upload_success, summary.byName.upload_click);
   const generationSuccessRate = ratio(summary.byName.generate_success, summary.byName.generate_click);
@@ -916,6 +942,7 @@ function renderAnalyticsDashboard(summary, url) {
     <div class="actions">
       <a class="button" href="${escapeHtml(apiUrl)}">JSON API</a>
       <a class="button primary" href="${escapeHtml(refreshUrl)}">Refresh</a>
+      <a class="button" href="/admin/analytics/logout">Logout</a>
     </div>
   </header>
   <main>
@@ -950,6 +977,80 @@ function renderAnalyticsDashboard(summary, url) {
       ${renderRecentEventsTable(summary.recent)}
       <p class="footer-note">Generated at ${escapeHtml(generatedAt)}. This page is noindex and protected by your analytics token.</p>
     </section>
+  </main>
+</body>
+</html>`;
+}
+
+function renderAnalyticsLoginPage(hasError = false) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Analytics Login - MotionPic AI</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #faf8f3;
+      color: #16231d;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main {
+      width: min(460px, calc(100vw - 32px));
+      padding: 28px;
+      background: white;
+      border: 1px solid #ded8ce;
+      border-radius: 8px;
+      box-shadow: 0 18px 45px rgba(22, 35, 29, 0.08);
+    }
+    h1 { margin: 0 0 8px; font-size: 32px; letter-spacing: 0; }
+    p { margin: 0 0 22px; color: #66756f; line-height: 1.5; }
+    label { display: block; margin-bottom: 8px; font-weight: 800; }
+    input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 12px;
+      border: 1px solid #ded8ce;
+      border-radius: 8px;
+      font: inherit;
+    }
+    button {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #0f9a8a;
+      color: white;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .error {
+      margin: 0 0 16px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #fff0eb;
+      color: #9f321f;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Analytics Login</h1>
+    <p>Enter your private analytics token. After login, the dashboard URL will not expose the token.</p>
+    ${hasError ? `<div class="error">Invalid or missing analytics token.</div>` : ""}
+    <form method="post" action="/admin/analytics/login">
+      <label for="token">Analytics token</label>
+      <input id="token" name="token" type="password" autocomplete="current-password" required autofocus>
+      <button type="submit">Open Dashboard</button>
+    </form>
   </main>
 </body>
 </html>`;
@@ -1136,8 +1237,40 @@ function useSupabase() {
 
 function canReadAdminAnalytics(req, url) {
   if (!config.analyticsAdminToken) return isLocalRequest(req);
-  const token = req.headers["x-motionpic-admin-token"] || url.searchParams.get("token") || "";
+  const cookies = parseCookies(req.headers.cookie || "");
+  const token =
+    req.headers["x-motionpic-admin-token"] ||
+    url.searchParams.get("token") ||
+    cookies[analyticsCookieName] ||
+    "";
   return String(token) === config.analyticsAdminToken;
+}
+
+function setAnalyticsAdminCookie(req, res) {
+  const secure = isHttpsRequest(req) ? "; Secure" : "";
+  res.setHeader(
+    "Set-Cookie",
+    `${analyticsCookieName}=${encodeURIComponent(config.analyticsAdminToken)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000${secure}`
+  );
+}
+
+function clearAnalyticsAdminCookie(req, res) {
+  const secure = isHttpsRequest(req) ? "; Secure" : "";
+  res.setHeader("Set-Cookie", `${analyticsCookieName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`);
+}
+
+function parseCookies(cookieHeader) {
+  const cookies = {};
+  for (const part of String(cookieHeader || "").split(";")) {
+    const [key, ...rest] = part.trim().split("=");
+    if (!key) continue;
+    cookies[key] = decodeURIComponent(rest.join("=") || "");
+  }
+  return cookies;
+}
+
+function isHttpsRequest(req) {
+  return String(req.headers["x-forwarded-proto"] || "").split(",")[0].trim() === "https" || Boolean(req.socket?.encrypted);
 }
 
 function isLocalRequest(req) {
@@ -1759,6 +1892,14 @@ function sendHtml(res, status, html) {
     "Cache-Control": "no-store",
   });
   res.end(html);
+}
+
+function redirect(res, location) {
+  res.writeHead(302, {
+    Location: location,
+    "Cache-Control": "no-store",
+  });
+  res.end();
 }
 
 function escapeHtml(value) {

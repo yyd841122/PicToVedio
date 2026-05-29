@@ -140,6 +140,8 @@ For a readable dashboard, open:
 https://video.cozyguidehub.com/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
 ```
 
+After the first successful login, the dashboard redirects to a clean `/admin/analytics` URL and stores access in an HttpOnly cookie. Use `/admin/analytics/logout` to clear it.
+
 ## 5. Optional: Add Cloudflare R2 Object Storage
 
 Use this before real traffic so uploaded photos and generated videos are stored by MotionPic instead of only relying on temporary provider URLs.

@@ -168,6 +168,8 @@ For a readable internal dashboard, open:
 /admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
 ```
 
+The dashboard stores the token in an HttpOnly cookie and redirects to `/admin/analytics`, so future screenshots and refreshes do not expose the token in the URL. You can also open `/admin/analytics` and paste the token into the login form.
+
 If `ANALYTICS_ADMIN_TOKEN` is not set, the summary endpoint is only available from localhost. The public tracking endpoint is fire-and-forget from the browser, so failed analytics writes do not block upload, generation, or checkout.
 
 ## Multilingual URLs
