@@ -794,6 +794,17 @@ function summarizeAnalyticsEvents(events) {
   const topPages = Object.entries(byPage)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 12);
+  const riskSignals = [
+    "generate_failed",
+    "checkout_error",
+    "generate_blocked_low_credits",
+    "upload_invalid_file",
+  ].map((name) => ({
+    name,
+    label: analyticsEventLabel(name),
+    count: byName[name] || 0,
+    tone: eventTone(name),
+  }));
 
   return {
     total: events.length,
@@ -804,6 +815,7 @@ function summarizeAnalyticsEvents(events) {
     funnel,
     topEvents,
     topPages,
+    riskSignals,
     recent: events.slice(0, 50),
   };
 }
@@ -835,6 +847,11 @@ function renderAnalyticsDashboard(summary, url) {
       --accent: #0f9a8a;
       --accent-soft: #dff7f1;
       --danger: #ef6f5b;
+      --danger-soft: #fff0eb;
+      --warning: #8a5d00;
+      --warning-soft: #fff6dc;
+      --info: #334a9f;
+      --info-soft: #ecf1ff;
     }
     * { box-sizing: border-box; }
     body {
@@ -910,6 +927,82 @@ function renderAnalyticsDashboard(summary, url) {
     .count { font-weight: 900; font-size: 20px; }
     .rate { color: var(--muted); font-size: 13px; text-align: right; }
     .columns { grid-template-columns: 1fr 1fr; }
+    .signal-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .signal {
+      background: #fbfaf7;
+      border: 1px solid #eee8de;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .signal strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .signal p { margin-top: 8px; font-size: 13px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .tone-success { background: var(--accent-soft); color: #0c6f64; }
+    .tone-danger { background: var(--danger-soft); color: #9f321f; }
+    .tone-warning { background: var(--warning-soft); color: var(--warning); }
+    .tone-info { background: var(--info-soft); color: var(--info); }
+    .tone-neutral { background: #f3efe7; color: #48564f; }
+    .event-name {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      min-width: 140px;
+    }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      word-break: break-all;
+    }
+    .details-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 520px;
+    }
+    .chip {
+      display: inline-flex;
+      max-width: 100%;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: #f3efe7;
+      color: #32423b;
+      font-size: 12px;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+    details { margin-top: 8px; }
+    summary {
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    details code {
+      display: block;
+      max-width: 520px;
+      margin-top: 6px;
+      padding: 8px;
+    }
+    .events-table td:first-child { min-width: 130px; }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px 10px; border-bottom: 1px solid #eee8de; text-align: left; vertical-align: top; }
     th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
@@ -927,9 +1020,10 @@ function renderAnalyticsDashboard(summary, url) {
     @media (max-width: 900px) {
       header { align-items: flex-start; flex-direction: column; padding: 22px; }
       .actions { justify-content: flex-start; }
-      .metrics, .columns { grid-template-columns: 1fr; }
+      .metrics, .columns, .signal-grid { grid-template-columns: 1fr; }
       .funnel-row { grid-template-columns: 1fr; gap: 6px; }
       .rate { text-align: left; }
+      table { display: block; overflow-x: auto; }
     }
   </style>
 </head>
@@ -959,6 +1053,14 @@ function renderAnalyticsDashboard(summary, url) {
         ${summary.funnel.map(renderFunnelRow).join("")}
       </div>
       <p class="footer-note">Payment-credit rate: ${formatPercent(paidCreditRate)} from checkout clicks to credited payments.</p>
+    </section>
+
+    <section class="section card">
+      <h2>Risk Signals</h2>
+      <div class="grid signal-grid">
+        ${summary.riskSignals.map(renderRiskSignal).join("")}
+      </div>
+      <p class="footer-note">These are the first places to check when users get stuck before payment or video generation.</p>
     </section>
 
     <section class="section grid columns">
@@ -1102,21 +1204,113 @@ function renderPairTable(pairs, label, labelFormatter = (value) => value) {
   </tbody></table>`;
 }
 
+function renderRiskSignal(signal) {
+  const note = signal.count
+    ? "Needs review in recent events."
+    : "No recent issues found.";
+  return `<div class="signal">
+    <span class="badge ${escapeHtml(signal.tone)}">${escapeHtml(signal.label)}</span>
+    <strong>${signal.count}</strong>
+    <p>${escapeHtml(note)}</p>
+  </div>`;
+}
+
 function renderRecentEventsTable(events) {
   if (!events.length) return `<div class="empty">No recent events yet.</div>`;
-  return `<table><thead><tr><th>Time</th><th>Event</th><th>User</th><th>Page</th><th>Properties</th></tr></thead><tbody>
+  return `<table class="events-table"><thead><tr><th>Time</th><th>Event</th><th>User</th><th>Page</th><th>Details</th></tr></thead><tbody>
     ${events
       .map(
         (event) => `<tr>
           <td>${escapeHtml(formatDateTime(event.createdAt))}</td>
-          <td>${escapeHtml(analyticsEventLabel(event.name))}<br><code>${escapeHtml(event.name)}</code></td>
-          <td><code>${escapeHtml(event.userId || "")}</code></td>
+          <td><div class="event-name"><span class="badge ${escapeHtml(eventTone(event.name))}">${escapeHtml(analyticsEventLabel(event.name))}</span><code>${escapeHtml(event.name)}</code></div></td>
+          <td><span class="mono small" title="${escapeHtml(event.userId || "")}">${escapeHtml(shortId(event.userId || ""))}</span></td>
           <td>${escapeHtml(event.page || "/")}</td>
-          <td><code>${escapeHtml(JSON.stringify(event.properties || {}))}</code></td>
+          <td>${renderEventDetails(event)}</td>
         </tr>`
       )
       .join("")}
   </tbody></table>`;
+}
+
+function renderEventDetails(event) {
+  const details = summarizeEventProperties(event);
+  const raw = JSON.stringify(event.properties || {}, null, 2);
+  return `<div class="details-list">
+    ${details.length ? details.map((item) => `<span class="chip">${escapeHtml(item)}</span>`).join("") : `<span class="muted small">No properties</span>`}
+  </div>
+  <details>
+    <summary>Raw properties</summary>
+    <code>${escapeHtml(raw)}</code>
+  </details>`;
+}
+
+function summarizeEventProperties(event) {
+  const props = event.properties || {};
+  const keys = [
+    "plan",
+    "provider",
+    "template",
+    "ratio",
+    "resolution",
+    "seconds",
+    "credits",
+    "balance",
+    "uploaded",
+    "source",
+    "jobId",
+    "error",
+    "fileType",
+    "fileSize",
+    "fileNameLength",
+  ];
+  const items = [];
+
+  for (const key of keys) {
+    if (props[key] === undefined || props[key] === null || props[key] === "") continue;
+    items.push(`${formatPropertyKey(key)}: ${formatPropertyValue(props[key])}`);
+  }
+
+  return items.slice(0, 9);
+}
+
+function formatPropertyKey(key) {
+  const labels = {
+    jobId: "job",
+    fileType: "file",
+    fileSize: "size",
+    fileNameLength: "name length",
+  };
+  return labels[key] || key.replace(/_/g, " ");
+}
+
+function formatPropertyValue(value) {
+  if (typeof value === "boolean") return value ? "yes" : "no";
+  if (typeof value === "number") return String(value);
+  if (typeof value === "string") return value.length > 84 ? `${value.slice(0, 81)}...` : value;
+  const text = JSON.stringify(value);
+  return text.length > 84 ? `${text.slice(0, 81)}...` : text;
+}
+
+function shortId(value) {
+  if (!value) return "";
+  if (value.length <= 18) return value;
+  return `${value.slice(0, 10)}...${value.slice(-6)}`;
+}
+
+function eventTone(name) {
+  if (["upload_success", "generate_success", "checkout_return_success", "payment_credit_granted"].includes(name)) {
+    return "tone-success";
+  }
+  if (["generate_failed", "checkout_error", "upload_invalid_file"].includes(name)) {
+    return "tone-danger";
+  }
+  if (["generate_blocked_no_upload", "generate_blocked_low_credits"].includes(name)) {
+    return "tone-warning";
+  }
+  if (["checkout_click", "checkout_created", "checkout_redirect", "generate_click", "generate_job_created"].includes(name)) {
+    return "tone-info";
+  }
+  return "tone-neutral";
 }
 
 function analyticsEventLabel(name) {
