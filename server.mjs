@@ -92,6 +92,14 @@ const server = createServer(async (req, res) => {
       return await handleGetAnalyticsDashboard(req, res, url);
     }
 
+    if (req.method === "GET" && url.pathname === "/api/admin/ops") {
+      return await handleGetOpsSummary(req, res, url);
+    }
+
+    if (req.method === "GET" && url.pathname === "/admin/ops") {
+      return await handleGetOpsDashboard(req, res, url);
+    }
+
     if (req.method === "POST" && url.pathname === "/admin/analytics/login") {
       return await handleAnalyticsAdminLogin(req, res);
     }
@@ -290,6 +298,31 @@ async function handleGetAnalyticsDashboard(req, res, url) {
   const events = await getRecentAnalyticsEvents(limit);
   const summary = summarizeAnalyticsEvents(events);
   return sendHtml(res, 200, renderAnalyticsDashboard(summary, url));
+}
+
+async function handleGetOpsSummary(req, res, url) {
+  if (!canReadAdminAnalytics(req, url)) {
+    return sendJson(res, 403, { error: "Admin access denied" });
+  }
+
+  const limit = Math.min(200, Math.max(10, Number(url.searchParams.get("limit") || 50)));
+  return sendJson(res, 200, await getAdminOpsData(limit));
+}
+
+async function handleGetOpsDashboard(req, res, url) {
+  const queryToken = url.searchParams.get("token") || "";
+  if (config.analyticsAdminToken && queryToken && queryToken === config.analyticsAdminToken) {
+    setAnalyticsAdminCookie(req, res);
+    return redirect(res, "/admin/ops");
+  }
+
+  if (!canReadAdminAnalytics(req, url)) {
+    return sendHtml(res, 403, renderAnalyticsLoginPage(Boolean(queryToken)));
+  }
+
+  const limit = Math.min(200, Math.max(10, Number(url.searchParams.get("limit") || 50)));
+  const data = await getAdminOpsData(limit);
+  return sendHtml(res, 200, renderOpsDashboard(data));
 }
 
 async function handleAnalyticsAdminLogin(req, res) {
@@ -751,6 +784,81 @@ async function getRecentAnalyticsEvents(limit) {
   return db.analyticsEvents.slice(-limit).reverse();
 }
 
+async function getAdminOpsData(limit) {
+  if (useSupabase()) {
+    const [users, jobs, payments, ledger, webhooks] = await Promise.all([
+      supabaseRequest(`app_users?select=id,credits,created_at,updated_at&order=updated_at.desc&limit=${limit}`),
+      supabaseRequest(`video_jobs?select=*&order=created_at.desc&limit=${limit}`),
+      supabaseRequest(`payments?select=id,provider,event_id,user_id,plan,credits,created_at&order=created_at.desc&limit=${limit}`),
+      supabaseRequest(`credit_ledger?select=id,user_id,amount,source,external_id,plan,balance_after,created_at&order=created_at.desc&limit=${limit}`),
+      supabaseRequest(`webhook_events?select=id,provider,type,received_at&order=received_at.desc&limit=${limit}`),
+    ]);
+    return summarizeOpsData({
+      users: users.map(rowToAdminUser),
+      jobs: jobs.map(rowToJob),
+      payments: payments.map(rowToPayment),
+      ledger: ledger.map(ledgerRowToEntry),
+      webhooks: webhooks.map(rowToWebhookEvent),
+    });
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  return summarizeOpsData({
+    users: Object.entries(db.users)
+      .map(([id, user]) => ({
+        id,
+        credits: Number(user.credits || 0),
+        createdAt: user.createdAt || "",
+        updatedAt: user.updatedAt || "",
+      }))
+      .sort((a, b) => Number(b.credits || 0) - Number(a.credits || 0))
+      .slice(0, limit),
+    jobs: Object.values(db.jobs)
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+      .slice(0, limit),
+    payments: Object.values(db.payments)
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+      .slice(0, limit),
+    ledger: db.creditLedger
+      .slice()
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+      .slice(0, limit),
+    webhooks: Object.values(db.webhookEvents)
+      .sort((a, b) => String(b.receivedAt || "").localeCompare(String(a.receivedAt || "")))
+      .slice(0, limit),
+  });
+}
+
+function summarizeOpsData(data) {
+  const jobStatus = {};
+  for (const job of data.jobs) {
+    jobStatus[job.status || "unknown"] = (jobStatus[job.status || "unknown"] || 0) + 1;
+  }
+
+  const paymentCredits = data.payments.reduce((total, payment) => total + Number(payment.credits || 0), 0);
+  const ledgerCredits = data.ledger.reduce((total, entry) => total + Number(entry.amount || 0), 0);
+  const totalBalances = data.users.reduce((total, user) => total + Number(user.credits || 0), 0);
+  const failedJobs = data.jobs.filter((job) => job.status === "failed");
+  const pendingJobs = data.jobs.filter((job) => ["queued", "processing", "in_progress"].includes(job.status));
+
+  return {
+    ...data,
+    totals: {
+      users: data.users.length,
+      jobs: data.jobs.length,
+      payments: data.payments.length,
+      webhooks: data.webhooks.length,
+      paymentCredits,
+      ledgerCredits,
+      totalBalances,
+      failedJobs: failedJobs.length,
+      pendingJobs: pendingJobs.length,
+      jobStatus,
+    },
+  };
+}
+
 function summarizeAnalyticsEvents(events) {
   const byName = {};
   const byPage = {};
@@ -1035,6 +1143,7 @@ function renderAnalyticsDashboard(summary, url) {
     </div>
     <div class="actions">
       <a class="button" href="${escapeHtml(apiUrl)}">JSON API</a>
+      <a class="button" href="/admin/ops">Ops Dashboard</a>
       <a class="button primary" href="${escapeHtml(refreshUrl)}">Refresh</a>
       <a class="button" href="/admin/analytics/logout">Logout</a>
     </div>
@@ -1077,6 +1186,181 @@ function renderAnalyticsDashboard(summary, url) {
     <section class="section card">
       <h2>Recent Events</h2>
       ${renderRecentEventsTable(summary.recent)}
+      <p class="footer-note">Generated at ${escapeHtml(generatedAt)}. This page is noindex and protected by your analytics token.</p>
+    </section>
+  </main>
+</body>
+</html>`;
+}
+
+function renderOpsDashboard(data) {
+  const generatedAt = new Date().toLocaleString("en-US", { hour12: false });
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>MotionPic Ops Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #16231d;
+      --muted: #66756f;
+      --line: #ded8ce;
+      --paper: #faf8f3;
+      --card: #ffffff;
+      --accent: #0f9a8a;
+      --accent-soft: #dff7f1;
+      --danger-soft: #fff0eb;
+      --warning-soft: #fff6dc;
+      --info-soft: #ecf1ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 26px 36px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(250, 248, 243, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      backdrop-filter: blur(14px);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 24px 56px; }
+    h1 { margin: 0; font-size: clamp(28px, 4vw, 44px); letter-spacing: 0; }
+    h2 { margin: 0 0 16px; font-size: 22px; }
+    p { color: var(--muted); margin: 6px 0 0; }
+    a { color: var(--accent); font-weight: 800; text-decoration: none; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--ink);
+      font-weight: 850;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: white; }
+    .grid { display: grid; gap: 16px; }
+    .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 24px; }
+    .columns { grid-template-columns: 1fr 1fr; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 14px 35px rgba(22, 35, 29, 0.06);
+    }
+    .section { margin-top: 24px; }
+    .metric-label { color: var(--muted); font-size: 13px; font-weight: 850; text-transform: uppercase; }
+    .metric-value { font-size: 34px; font-weight: 900; margin-top: 8px; letter-spacing: 0; }
+    .metric-note { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .tone-success { background: var(--accent-soft); color: #0c6f64; }
+    .tone-danger { background: var(--danger-soft); color: #9f321f; }
+    .tone-warning { background: var(--warning-soft); color: #8a5d00; }
+    .tone-info { background: var(--info-soft); color: #334a9f; }
+    .tone-neutral { background: #f3efe7; color: #48564f; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid #eee8de; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
+    td { font-size: 14px; }
+    code {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #32423b;
+      background: #f3efe7;
+      border-radius: 6px;
+      padding: 2px 5px;
+    }
+    .empty { color: var(--muted); padding: 22px 0; }
+    .footer-note { color: var(--muted); font-size: 13px; margin-top: 18px; }
+    @media (max-width: 900px) {
+      header { align-items: flex-start; flex-direction: column; padding: 22px; }
+      .actions { justify-content: flex-start; }
+      .metrics, .columns { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MotionPic Ops</h1>
+      <p>Private operations view for credits, payments, video jobs, and webhooks.</p>
+    </div>
+    <div class="actions">
+      <a class="button" href="/api/admin/ops">JSON API</a>
+      <a class="button" href="/admin/analytics">Analytics</a>
+      <a class="button primary" href="/admin/ops">Refresh</a>
+      <a class="button" href="/admin/analytics/logout">Logout</a>
+    </div>
+  </header>
+  <main>
+    <section class="grid metrics">
+      ${renderMetricCard("Users", data.totals.users, `${data.totals.totalBalances} credits in visible balances`)}
+      ${renderMetricCard("Video Jobs", data.totals.jobs, `${data.totals.pendingJobs} pending / ${data.totals.failedJobs} failed`)}
+      ${renderMetricCard("Payments", data.totals.payments, `${data.totals.paymentCredits} paid credits in recent records`)}
+      ${renderMetricCard("Ledger Net", data.totals.ledgerCredits, "Recent credit ledger net amount")}
+    </section>
+
+    <section class="section grid columns">
+      <div class="card">
+        <h2>Job Status</h2>
+        ${renderPairTable(Object.entries(data.totals.jobStatus), "Status", statusLabel)}
+      </div>
+      <div class="card">
+        <h2>Recent Webhooks</h2>
+        ${renderWebhookTable(data.webhooks)}
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>Recent Video Jobs</h2>
+      ${renderJobsTable(data.jobs)}
+    </section>
+
+    <section class="section grid columns">
+      <div class="card">
+        <h2>Recent Payments</h2>
+        ${renderPaymentsTable(data.payments)}
+      </div>
+      <div class="card">
+        <h2>Credit Ledger</h2>
+        ${renderLedgerTable(data.ledger)}
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>User Balances</h2>
+      ${renderUsersTable(data.users)}
       <p class="footer-note">Generated at ${escapeHtml(generatedAt)}. This page is noindex and protected by your analytics token.</p>
     </section>
   </main>
@@ -1204,6 +1488,93 @@ function renderPairTable(pairs, label, labelFormatter = (value) => value) {
   </tbody></table>`;
 }
 
+function renderJobsTable(jobs) {
+  if (!jobs.length) return `<div class="empty">No video jobs yet.</div>`;
+  return `<table><thead><tr><th>Time</th><th>Status</th><th>User</th><th>Template</th><th>Cost</th><th>Provider</th><th>Output</th><th>Error</th></tr></thead><tbody>
+    ${jobs
+      .map(
+        (job) => `<tr>
+          <td>${escapeHtml(formatDateTime(job.createdAt))}</td>
+          <td><span class="badge ${escapeHtml(statusTone(job.status))}">${escapeHtml(statusLabel(job.status))}</span><br><code>${escapeHtml(shortId(job.id || ""))}</code></td>
+          <td><code title="${escapeHtml(job.userId || "")}">${escapeHtml(shortId(job.userId || ""))}</code></td>
+          <td>${escapeHtml(job.template || "")}<br><span class="muted small">${escapeHtml([job.ratio, job.resolution, job.seconds ? `${job.seconds}s` : ""].filter(Boolean).join(" / "))}</span></td>
+          <td>${Number(job.credits || 0)} credits</td>
+          <td>${escapeHtml(job.provider || "")}<br><code>${escapeHtml(shortId(job.providerJobId || ""))}</code></td>
+          <td>${job.outputUrl ? `<a href="${escapeHtml(job.outputUrl)}" target="_blank" rel="noopener noreferrer nofollow">Open</a>` : `<span class="muted small">No output</span>`}</td>
+          <td>${job.error ? `<code>${escapeHtml(job.error)}</code>` : `<span class="muted small">None</span>`}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
+function renderPaymentsTable(payments) {
+  if (!payments.length) return `<div class="empty">No payments yet.</div>`;
+  return `<table><thead><tr><th>Time</th><th>Provider</th><th>Plan</th><th>Credits</th><th>User</th><th>Payment</th></tr></thead><tbody>
+    ${payments
+      .map(
+        (payment) => `<tr>
+          <td>${escapeHtml(formatDateTime(payment.createdAt))}</td>
+          <td>${escapeHtml(payment.provider || "")}</td>
+          <td>${escapeHtml(payment.plan || "")}</td>
+          <td>${Number(payment.credits || 0)}</td>
+          <td><code title="${escapeHtml(payment.userId || "")}">${escapeHtml(shortId(payment.userId || ""))}</code></td>
+          <td><code title="${escapeHtml(payment.id || "")}">${escapeHtml(shortId(payment.id || ""))}</code></td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
+function renderLedgerTable(entries) {
+  if (!entries.length) return `<div class="empty">No ledger entries yet.</div>`;
+  return `<table><thead><tr><th>Time</th><th>Amount</th><th>Source</th><th>User</th><th>Balance</th></tr></thead><tbody>
+    ${entries
+      .map(
+        (entry) => `<tr>
+          <td>${escapeHtml(formatDateTime(entry.createdAt))}</td>
+          <td><span class="badge ${Number(entry.amount || 0) >= 0 ? "tone-success" : "tone-warning"}">${Number(entry.amount || 0)}</span></td>
+          <td>${escapeHtml(entry.source || "")}<br><code>${escapeHtml(shortId(entry.externalId || ""))}</code></td>
+          <td><code title="${escapeHtml(entry.userId || "")}">${escapeHtml(shortId(entry.userId || ""))}</code></td>
+          <td>${Number(entry.balanceAfter || 0)}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
+function renderWebhookTable(events) {
+  if (!events.length) return `<div class="empty">No webhooks yet.</div>`;
+  return `<table><thead><tr><th>Time</th><th>Provider</th><th>Type</th><th>ID</th></tr></thead><tbody>
+    ${events
+      .map(
+        (event) => `<tr>
+          <td>${escapeHtml(formatDateTime(event.receivedAt))}</td>
+          <td>${escapeHtml(event.provider || "")}</td>
+          <td>${escapeHtml(event.type || "")}</td>
+          <td><code title="${escapeHtml(event.id || "")}">${escapeHtml(shortId(event.id || ""))}</code></td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
+function renderUsersTable(users) {
+  if (!users.length) return `<div class="empty">No users yet.</div>`;
+  return `<table><thead><tr><th>User</th><th>Credits</th><th>Created</th><th>Updated</th></tr></thead><tbody>
+    ${users
+      .map(
+        (user) => `<tr>
+          <td><code title="${escapeHtml(user.id || "")}">${escapeHtml(shortId(user.id || ""))}</code></td>
+          <td>${Number(user.credits || 0)}</td>
+          <td>${escapeHtml(formatDateTime(user.createdAt))}</td>
+          <td>${escapeHtml(formatDateTime(user.updatedAt))}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
 function renderRiskSignal(signal) {
   const note = signal.count
     ? "Needs review in recent events."
@@ -1310,6 +1681,24 @@ function eventTone(name) {
   if (["checkout_click", "checkout_created", "checkout_redirect", "generate_click", "generate_job_created"].includes(name)) {
     return "tone-info";
   }
+  return "tone-neutral";
+}
+
+function statusLabel(status) {
+  const labels = {
+    queued: "Queued",
+    processing: "Processing",
+    in_progress: "Processing",
+    succeeded: "Succeeded",
+    failed: "Failed",
+  };
+  return labels[status] || status || "Unknown";
+}
+
+function statusTone(status) {
+  if (status === "succeeded") return "tone-success";
+  if (status === "failed") return "tone-danger";
+  if (["queued", "processing", "in_progress"].includes(status)) return "tone-info";
   return "tone-neutral";
 }
 
@@ -1578,6 +1967,36 @@ function rowToAnalyticsEvent(row) {
     language: row.language,
     properties: row.properties || {},
     createdAt: row.created_at,
+  };
+}
+
+function rowToAdminUser(row) {
+  return {
+    id: row.id,
+    credits: Number(row.credits || 0),
+    createdAt: row.created_at || "",
+    updatedAt: row.updated_at || "",
+  };
+}
+
+function rowToPayment(row) {
+  return {
+    id: row.id,
+    provider: row.provider,
+    eventId: row.event_id || "",
+    userId: row.user_id,
+    plan: row.plan,
+    credits: Number(row.credits || 0),
+    createdAt: row.created_at || "",
+  };
+}
+
+function rowToWebhookEvent(row) {
+  return {
+    id: row.id,
+    provider: row.provider,
+    type: row.type || "",
+    receivedAt: row.received_at || "",
   };
 }
 

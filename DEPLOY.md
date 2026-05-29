@@ -142,6 +142,14 @@ https://video.cozyguidehub.com/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
 
 After the first successful login, the dashboard redirects to a clean `/admin/analytics` URL and stores access in an HttpOnly cookie. Use `/admin/analytics/logout` to clear it.
 
+For operations data, open:
+
+```text
+https://video.cozyguidehub.com/admin/ops
+```
+
+This uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, and webhook events.
+
 ## 5. Optional: Add Cloudflare R2 Object Storage
 
 Use this before real traffic so uploaded photos and generated videos are stored by MotionPic instead of only relying on temporary provider URLs.

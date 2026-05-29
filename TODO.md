@@ -34,6 +34,7 @@ Last updated: 2026-05-28
 - [x] Kept legal pages and template landing pages English-only to avoid partial-translation confusion.
 - [x] Added analytics event tracking for page views, uploads, generation, checkout, and paid credit grants.
 - [x] Added private analytics summary endpoint and Supabase `analytics_events` schema.
+- [x] Added private ops dashboard for users, credits, payments, video jobs, ledger, and webhooks.
 
 ## In Progress
 
@@ -90,7 +91,7 @@ Last updated: 2026-05-28
 
 - [ ] Add email login.
 - [ ] Add account page.
-- [ ] Add admin view for payments and generation jobs.
+- [x] Add admin view for payments and generation jobs.
 - [ ] Add A/B tests for hero copy and pricing.
 - [ ] Add referral or watermark-sharing growth loop.
 - [ ] Publish blog posts around photo-to-video use cases.

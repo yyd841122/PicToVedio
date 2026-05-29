@@ -170,6 +170,14 @@ For a readable internal dashboard, open:
 
 The dashboard stores the token in an HttpOnly cookie and redirects to `/admin/analytics`, so future screenshots and refreshes do not expose the token in the URL. You can also open `/admin/analytics` and paste the token into the login form.
 
+For business operations, open:
+
+```text
+/admin/ops
+```
+
+The ops dashboard uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, and Creem webhook events.
+
 If `ANALYTICS_ADMIN_TOKEN` is not set, the summary endpoint is only available from localhost. The public tracking endpoint is fire-and-forget from the browser, so failed analytics writes do not block upload, generation, or checkout.
 
 ## Multilingual URLs
