@@ -24,6 +24,7 @@ const config = {
   dashscopeApiKey: process.env.DASHSCOPE_API_KEY || "",
   dashscopeVideoModel: process.env.DASHSCOPE_VIDEO_MODEL || "wan2.6-i2v-flash",
   dashscopeAudio: process.env.DASHSCOPE_AUDIO === "true",
+  estimatedVideoCostCny: Number(process.env.ESTIMATED_VIDEO_COST_CNY || process.env.DASHSCOPE_ESTIMATED_COST_CNY || 0.6),
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",
@@ -841,12 +842,23 @@ function summarizeOpsData(data) {
   const totalBalances = data.users.reduce((total, user) => total + Number(user.credits || 0), 0);
   const failedJobs = data.jobs.filter((job) => job.status === "failed");
   const pendingJobs = data.jobs.filter((job) => ["queued", "processing", "in_progress"].includes(job.status));
+  const succeededJobs = data.jobs.filter((job) => job.status === "succeeded");
+  const estimatedProviderCostCny = roundMoney(
+    succeededJobs.reduce((total, job) => total + estimateJobProviderCostCny(job), 0)
+  );
+  const jobCreditsSpent = data.ledger
+    .filter((entry) => entry.source === "video-debit")
+    .reduce((total, entry) => total + Math.abs(Number(entry.amount || 0)), 0);
+  const refundEntries = data.ledger.filter((entry) => entry.source === "video-refund");
+  const refundedCredits = refundEntries.reduce((total, entry) => total + Math.max(0, Number(entry.amount || 0)), 0);
+  const averageCreditsPerSucceededJob = succeededJobs.length ? jobCreditsSpent / succeededJobs.length : 0;
 
   return {
     ...data,
     totals: {
       users: data.users.length,
       jobs: data.jobs.length,
+      succeededJobs: succeededJobs.length,
       payments: data.payments.length,
       webhooks: data.webhooks.length,
       paymentCredits,
@@ -854,6 +866,12 @@ function summarizeOpsData(data) {
       totalBalances,
       failedJobs: failedJobs.length,
       pendingJobs: pendingJobs.length,
+      refundEntries: refundEntries.length,
+      refundedCredits,
+      jobCreditsSpent,
+      averageCreditsPerSucceededJob,
+      estimatedProviderCostCny,
+      estimatedCostPerSucceededJobCny: succeededJobs.length ? roundMoney(estimatedProviderCostCny / succeededJobs.length) : 0,
       jobStatus,
     },
   };
@@ -1331,6 +1349,13 @@ function renderOpsDashboard(data) {
       ${renderMetricCard("Ledger Net", data.totals.ledgerCredits, "Recent credit ledger net amount")}
     </section>
 
+    <section class="grid metrics">
+      ${renderMetricCard("Succeeded Jobs", data.totals.succeededJobs, `${formatCny(data.totals.estimatedCostPerSucceededJobCny)} est. per succeeded job`)}
+      ${renderMetricCard("Est. Provider Cost", formatCny(data.totals.estimatedProviderCostCny), "Succeeded DashScope jobs only")}
+      ${renderMetricCard("Credits Spent", data.totals.jobCreditsSpent, `${formatNumber(data.totals.averageCreditsPerSucceededJob)} credits per succeeded job`)}
+      ${renderMetricCard("Refunded Credits", data.totals.refundedCredits, `${data.totals.refundEntries} refund ledger entries`)}
+    </section>
+
     <section class="section grid columns">
       <div class="card">
         <h2>Job Status</h2>
@@ -1490,7 +1515,7 @@ function renderPairTable(pairs, label, labelFormatter = (value) => value) {
 
 function renderJobsTable(jobs) {
   if (!jobs.length) return `<div class="empty">No video jobs yet.</div>`;
-  return `<table><thead><tr><th>Time</th><th>Status</th><th>User</th><th>Template</th><th>Cost</th><th>Provider</th><th>Output</th><th>Error</th></tr></thead><tbody>
+  return `<table><thead><tr><th>Time</th><th>Status</th><th>User</th><th>Template</th><th>Credits</th><th>Est. Cost</th><th>Provider</th><th>Output</th><th>Error</th></tr></thead><tbody>
     ${jobs
       .map(
         (job) => `<tr>
@@ -1499,6 +1524,7 @@ function renderJobsTable(jobs) {
           <td><code title="${escapeHtml(job.userId || "")}">${escapeHtml(shortId(job.userId || ""))}</code></td>
           <td>${escapeHtml(job.template || "")}<br><span class="muted small">${escapeHtml([job.ratio, job.resolution, job.seconds ? `${job.seconds}s` : ""].filter(Boolean).join(" / "))}</span></td>
           <td>${Number(job.credits || 0)} credits</td>
+          <td>${formatCny(estimateJobProviderCostCny(job))}<br><span class="muted small">planning estimate</span></td>
           <td>${escapeHtml(job.provider || "")}<br><code>${escapeHtml(shortId(job.providerJobId || ""))}</code></td>
           <td>${job.outputUrl ? `<a href="${escapeHtml(job.outputUrl)}" target="_blank" rel="noopener noreferrer nofollow">Open</a>` : `<span class="muted small">No output</span>`}</td>
           <td>${job.error ? `<code>${escapeHtml(job.error)}</code>` : `<span class="muted small">None</span>`}</td>
@@ -1700,6 +1726,27 @@ function statusTone(status) {
   if (status === "failed") return "tone-danger";
   if (["queued", "processing", "in_progress"].includes(status)) return "tone-info";
   return "tone-neutral";
+}
+
+function estimateJobProviderCostCny(job) {
+  if (job.status !== "succeeded" || job.provider !== "dashscope") return 0;
+  const seconds = Math.max(4, Number(job.seconds || 4));
+  const durationMultiplier = seconds / 4;
+  const resolutionMultiplier = String(job.resolution || "").toLowerCase().includes("1080") ? 1.8 : 1;
+  return roundMoney(config.estimatedVideoCostCny * durationMultiplier * resolutionMultiplier);
+}
+
+function roundMoney(value) {
+  return Math.round((Number(value) || 0) * 100) / 100;
+}
+
+function formatCny(value) {
+  return `CNY ${roundMoney(value).toFixed(2)}`;
+}
+
+function formatNumber(value) {
+  const number = Number(value) || 0;
+  return Number.isInteger(number) ? String(number) : number.toFixed(1);
 }
 
 function analyticsEventLabel(name) {

@@ -32,6 +32,17 @@ Assumptions for planning:
 - Failed provider jobs should refund credits.
 - User-disliked but technically successful jobs should not automatically refund credits.
 
+## Ops Dashboard Tracking
+
+The private `/admin/ops` dashboard now shows internal cost and refund signals:
+
+- Estimated provider cost for succeeded DashScope jobs.
+- Credits spent on video generation jobs.
+- Refunded credits from `video-refund` ledger entries.
+- Estimated cost per succeeded job.
+
+The estimate defaults to `ESTIMATED_VIDEO_COST_CNY=0.6` for one 4-second 720p silent DashScope job. Update this Render environment variable if the real Alibaba Cloud bill shows a different average. This number is only for planning and does not affect provider billing or user credits.
+
 ## Recommended Credit Rules
 
 Do not price one real generation as one paid credit in live mode.

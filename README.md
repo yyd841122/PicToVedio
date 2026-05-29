@@ -176,7 +176,9 @@ For business operations, open:
 /admin/ops
 ```
 
-The ops dashboard uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, and Creem webhook events.
+The ops dashboard uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, Creem webhook events, refund signals, and estimated DashScope provider cost.
+
+Set `ESTIMATED_VIDEO_COST_CNY` in Render if the observed DashScope unit cost changes. The default is `0.6`, based on the current 4s / 720p / audio-off test cost. This is only an internal planning estimate and does not change the real provider bill.
 
 If `ANALYTICS_ADMIN_TOKEN` is not set, the summary endpoint is only available from localhost. The public tracking endpoint is fire-and-forget from the browser, so failed analytics writes do not block upload, generation, or checkout.
 

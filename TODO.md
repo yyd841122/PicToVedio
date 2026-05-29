@@ -35,6 +35,7 @@ Last updated: 2026-05-28
 - [x] Added analytics event tracking for page views, uploads, generation, checkout, and paid credit grants.
 - [x] Added private analytics summary endpoint and Supabase `analytics_events` schema.
 - [x] Added private ops dashboard for users, credits, payments, video jobs, ledger, and webhooks.
+- [x] Added private ops cost/refund signals for estimated DashScope spend and credit refunds.
 
 ## In Progress
 
@@ -55,6 +56,7 @@ Last updated: 2026-05-28
 - [x] Run one real DashScope image-to-video test.
 - [x] Revise first-pass credit economics before charging real users.
 - [ ] Revisit visible Creem package amounts before switching to live mode.
+- [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
 - [x] Replace `demo-user` with anonymous device IDs.
