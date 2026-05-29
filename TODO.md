@@ -84,7 +84,7 @@ Last updated: 2026-05-28
   - Product Video Ad.
   - Pet Animation.
   - Old Photo Alive.
-- [ ] Add FAQ and comparison copy to each template page.
+- [x] Add FAQ and comparison copy to each template page.
 - [ ] Create fully translated legal and template pages for EN/ZH/DE/IT/FR/ES/JA/KO.
 - [ ] Submit sitemap to Google Search Console and Bing Webmaster Tools.
 - [ ] Prepare Baidu submission if targeting Chinese search.

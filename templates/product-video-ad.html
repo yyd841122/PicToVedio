@@ -37,9 +37,10 @@
       .badge { display: inline-flex; padding: 8px 12px; border-radius: 999px; background: var(--soft); color: #08796f; font-weight: 900; margin-bottom: 18px; }
       .panel { padding: 26px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: 0 18px 40px rgba(23, 35, 31, .06); }
       .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+      .two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
       .cta { display: inline-flex; margin-top: 22px; padding: 14px 18px; border-radius: 8px; background: var(--accent); color: #fff; }
       section { margin-top: 54px; }
-      @media (max-width: 820px) { .hero, .grid { grid-template-columns: 1fr; } h1 { font-size: 44px; } }
+      @media (max-width: 820px) { .hero, .grid, .two-col { grid-template-columns: 1fr; } h1 { font-size: 44px; } }
       @media (max-width: 640px) { .bar { align-items: flex-start; flex-direction: column; } }
     </style>
   </head>
@@ -68,6 +69,21 @@
           <div class="panel"><strong>1. Upload</strong><p>Use a clear image with the product fully visible.</p></div>
           <div class="panel"><strong>2. Motion</strong><p>Choose subtle push-in or product spin prompts for stable output.</p></div>
           <div class="panel"><strong>3. Export</strong><p>Create multiple short variants and use the best one in your store or ad.</p></div>
+        </div>
+      </section>
+      <section>
+        <h2>MotionPic AI vs General AI Video Tools</h2>
+        <div class="two-col">
+          <div class="panel"><strong>Made for fast ad variants</strong><p>MotionPic turns a single product image into short creative tests for stores, marketplaces, and paid social.</p></div>
+          <div class="panel"><strong>Focused on product clarity</strong><p>Product prompts favor subtle motion, visible objects, and clean framing instead of dramatic camera effects.</p></div>
+        </div>
+      </section>
+      <section>
+        <h2>Product Video Ad FAQ</h2>
+        <div class="grid">
+          <div class="panel"><strong>What images work best?</strong><p>Use sharp product photos, model shots, or lifestyle images where the product is fully visible.</p></div>
+          <div class="panel"><strong>Can I use it for Shopify or Amazon?</strong><p>Yes, generated clips are useful for product pages, ads, and short social posts if you own the image rights.</p></div>
+          <div class="panel"><strong>How do I reduce distortion?</strong><p>Use short clips, simple prompts, and avoid asking the product to transform or move unnaturally.</p></div>
         </div>
       </section>
     </main>

@@ -37,9 +37,10 @@
       .badge { display: inline-flex; padding: 8px 12px; border-radius: 999px; background: var(--soft); color: #08796f; font-weight: 900; margin-bottom: 18px; }
       .panel { padding: 26px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: 0 18px 40px rgba(23, 35, 31, .06); }
       .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+      .two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
       .cta { display: inline-flex; margin-top: 22px; padding: 14px 18px; border-radius: 8px; background: var(--accent); color: #fff; }
       section { margin-top: 54px; }
-      @media (max-width: 820px) { .hero, .grid { grid-template-columns: 1fr; } h1 { font-size: 44px; } }
+      @media (max-width: 820px) { .hero, .grid, .two-col { grid-template-columns: 1fr; } h1 { font-size: 44px; } }
       @media (max-width: 640px) { .bar { align-items: flex-start; flex-direction: column; } }
     </style>
   </head>
@@ -68,6 +69,21 @@
           <div class="panel"><strong>1. Upload</strong><p>Start with a clear couple photo where faces are not blocked.</p></div>
           <div class="panel"><strong>2. Prompt</strong><p>Use gentle romantic motion and low face movement to reduce distortion.</p></div>
           <div class="panel"><strong>3. Export</strong><p>Preview first, then use credits for HD or no-watermark export.</p></div>
+        </div>
+      </section>
+      <section>
+        <h2>MotionPic AI vs General AI Video Tools</h2>
+        <div class="two-col">
+          <div class="panel"><strong>Built for one-photo social clips</strong><p>MotionPic focuses on short outputs for couples, memories, and creator posts instead of long cinematic scenes.</p></div>
+          <div class="panel"><strong>Lower motion, safer faces</strong><p>Romantic templates use subtle camera movement and identity-preserving prompts to reduce face distortion.</p></div>
+        </div>
+      </section>
+      <section>
+        <h2>AI Kiss Video FAQ</h2>
+        <div class="grid">
+          <div class="panel"><strong>What photo works best?</strong><p>Use a clear couple photo with both faces visible, natural lighting, and no heavy blur or occlusion.</p></div>
+          <div class="panel"><strong>Can I use it commercially?</strong><p>You can use generated videos if you own the photo rights and follow the platform rules where you publish.</p></div>
+          <div class="panel"><strong>Why can faces distort?</strong><p>AI video can change details when motion is too strong. Short, gentle prompts usually produce more stable results.</p></div>
         </div>
       </section>
     </main>
