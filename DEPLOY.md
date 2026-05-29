@@ -134,6 +134,12 @@ After deployment, you can check recent events at:
 https://video.cozyguidehub.com/api/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
 ```
 
+For a readable dashboard, open:
+
+```text
+https://video.cozyguidehub.com/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
+```
+
 ## 5. Optional: Add Cloudflare R2 Object Storage
 
 Use this before real traffic so uploaded photos and generated videos are stored by MotionPic instead of only relying on temporary provider URLs.

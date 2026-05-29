@@ -87,6 +87,10 @@ const server = createServer(async (req, res) => {
       return await handleGetAnalyticsSummary(req, res, url);
     }
 
+    if (req.method === "GET" && url.pathname === "/admin/analytics") {
+      return await handleGetAnalyticsDashboard(req, res, url);
+    }
+
     if (req.method === "POST" && url.pathname === "/api/checkout/mock-confirm") {
       return await handleMockConfirmPayment(req, res);
     }
@@ -252,21 +256,29 @@ async function handleGetAnalyticsSummary(req, res, url) {
 
   const limit = Math.min(500, Math.max(10, Number(url.searchParams.get("limit") || 200)));
   const events = await getRecentAnalyticsEvents(limit);
-  const byName = {};
-  const byPage = {};
-
-  for (const event of events) {
-    byName[event.name] = (byName[event.name] || 0) + 1;
-    const page = event.page || "/";
-    byPage[page] = (byPage[page] || 0) + 1;
-  }
+  const summary = summarizeAnalyticsEvents(events);
 
   return sendJson(res, 200, {
-    total: events.length,
-    byName,
-    byPage,
+    total: summary.total,
+    byName: summary.byName,
+    byPage: summary.byPage,
     recent: events.slice(0, 50),
   });
+}
+
+async function handleGetAnalyticsDashboard(req, res, url) {
+  if (!canReadAdminAnalytics(req, url)) {
+    return sendHtml(
+      res,
+      403,
+      renderAdminMessage("Analytics access denied", "Add your private ANALYTICS_ADMIN_TOKEN as ?token=... to view this dashboard.")
+    );
+  }
+
+  const limit = Math.min(1000, Math.max(50, Number(url.searchParams.get("limit") || 500)));
+  const events = await getRecentAnalyticsEvents(limit);
+  const summary = summarizeAnalyticsEvents(events);
+  return sendHtml(res, 200, renderAnalyticsDashboard(summary, url));
 }
 
 async function handleGetVideoJob(req, res, id) {
@@ -709,6 +721,344 @@ async function getRecentAnalyticsEvents(limit) {
   const db = readDb();
   normalizeDb(db);
   return db.analyticsEvents.slice(-limit).reverse();
+}
+
+function summarizeAnalyticsEvents(events) {
+  const byName = {};
+  const byPage = {};
+  const users = new Set();
+  const sessions = new Set();
+
+  for (const event of events) {
+    byName[event.name] = (byName[event.name] || 0) + 1;
+    const page = event.page || "/";
+    byPage[page] = (byPage[page] || 0) + 1;
+    if (event.userId) users.add(event.userId);
+    if (event.sessionId) sessions.add(event.sessionId);
+  }
+
+  const funnel = [
+    "page_view",
+    "upload_click",
+    "upload_success",
+    "generate_click",
+    "generate_job_created",
+    "generate_success",
+    "checkout_click",
+    "checkout_redirect",
+    "checkout_return_success",
+    "payment_credit_granted",
+  ].map((name, index, names) => {
+    const count = byName[name] || 0;
+    const previous = index ? byName[names[index - 1]] || 0 : count;
+    return {
+      name,
+      label: analyticsEventLabel(name),
+      count,
+      previousRate: previous ? count / previous : 0,
+      totalRate: events.length ? count / events.length : 0,
+    };
+  });
+
+  const topEvents = Object.entries(byName)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12);
+  const topPages = Object.entries(byPage)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12);
+
+  return {
+    total: events.length,
+    byName,
+    byPage,
+    uniqueUsers: users.size,
+    uniqueSessions: sessions.size,
+    funnel,
+    topEvents,
+    topPages,
+    recent: events.slice(0, 50),
+  };
+}
+
+function renderAnalyticsDashboard(summary, url) {
+  const token = url.searchParams.get("token") || "";
+  const query = token ? `?token=${encodeURIComponent(token)}` : "";
+  const apiUrl = `/api/admin/analytics${query}`;
+  const refreshUrl = `/admin/analytics${query}`;
+  const generatedAt = new Date().toLocaleString("en-US", { hour12: false });
+  const uploadSuccessRate = ratio(summary.byName.upload_success, summary.byName.upload_click);
+  const generationSuccessRate = ratio(summary.byName.generate_success, summary.byName.generate_click);
+  const checkoutRate = ratio(summary.byName.checkout_click, summary.byName.page_view);
+  const paidCreditRate = ratio(summary.byName.payment_credit_granted, summary.byName.checkout_click);
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>MotionPic Analytics Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #16231d;
+      --muted: #66756f;
+      --line: #ded8ce;
+      --paper: #faf8f3;
+      --card: #ffffff;
+      --accent: #0f9a8a;
+      --accent-soft: #dff7f1;
+      --danger: #ef6f5b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 26px 36px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(250, 248, 243, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      backdrop-filter: blur(14px);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 24px 56px; }
+    h1 { margin: 0; font-size: clamp(28px, 4vw, 44px); letter-spacing: 0; }
+    h2 { margin: 0 0 16px; font-size: 22px; }
+    p { color: var(--muted); margin: 6px 0 0; }
+    a { color: var(--accent); font-weight: 700; text-decoration: none; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--ink);
+      font-weight: 800;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: white; }
+    .grid { display: grid; gap: 16px; }
+    .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 24px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 14px 35px rgba(22, 35, 29, 0.06);
+    }
+    .metric-label { color: var(--muted); font-size: 13px; font-weight: 800; text-transform: uppercase; }
+    .metric-value { font-size: 34px; font-weight: 900; margin-top: 8px; letter-spacing: 0; }
+    .metric-note { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .section { margin-top: 24px; }
+    .funnel { gap: 10px; }
+    .funnel-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) 80px 1fr 90px;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid #eee8de;
+    }
+    .funnel-row:first-child { border-top: 0; }
+    .bar {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #eee9df;
+    }
+    .bar span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+    .label { font-weight: 850; }
+    .count { font-weight: 900; font-size: 20px; }
+    .rate { color: var(--muted); font-size: 13px; text-align: right; }
+    .columns { grid-template-columns: 1fr 1fr; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid #eee8de; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
+    td { font-size: 14px; }
+    code {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #32423b;
+      background: #f3efe7;
+      border-radius: 6px;
+      padding: 2px 5px;
+    }
+    .empty { color: var(--muted); padding: 22px 0; }
+    .footer-note { color: var(--muted); font-size: 13px; margin-top: 18px; }
+    @media (max-width: 900px) {
+      header { align-items: flex-start; flex-direction: column; padding: 22px; }
+      .actions { justify-content: flex-start; }
+      .metrics, .columns { grid-template-columns: 1fr; }
+      .funnel-row { grid-template-columns: 1fr; gap: 6px; }
+      .rate { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MotionPic Analytics</h1>
+      <p>Private product analytics for upload, generation, and checkout behavior.</p>
+    </div>
+    <div class="actions">
+      <a class="button" href="${escapeHtml(apiUrl)}">JSON API</a>
+      <a class="button primary" href="${escapeHtml(refreshUrl)}">Refresh</a>
+    </div>
+  </header>
+  <main>
+    <section class="grid metrics">
+      ${renderMetricCard("Total Events", summary.total, `${summary.uniqueUsers} users / ${summary.uniqueSessions} sessions`)}
+      ${renderMetricCard("Upload Success", formatPercent(uploadSuccessRate), `${summary.byName.upload_success || 0} success / ${summary.byName.upload_click || 0} clicks`)}
+      ${renderMetricCard("Generation Success", formatPercent(generationSuccessRate), `${summary.byName.generate_success || 0} success / ${summary.byName.generate_click || 0} clicks`)}
+      ${renderMetricCard("Checkout Click Rate", formatPercent(checkoutRate), `${summary.byName.checkout_click || 0} checkout clicks / ${summary.byName.page_view || 0} page views`)}
+    </section>
+
+    <section class="section card">
+      <h2>Conversion Funnel</h2>
+      <div class="funnel">
+        ${summary.funnel.map(renderFunnelRow).join("")}
+      </div>
+      <p class="footer-note">Payment-credit rate: ${formatPercent(paidCreditRate)} from checkout clicks to credited payments.</p>
+    </section>
+
+    <section class="section grid columns">
+      <div class="card">
+        <h2>Top Events</h2>
+        ${renderPairTable(summary.topEvents, "Event", analyticsEventLabel)}
+      </div>
+      <div class="card">
+        <h2>Top Pages</h2>
+        ${renderPairTable(summary.topPages, "Page")}
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2>Recent Events</h2>
+      ${renderRecentEventsTable(summary.recent)}
+      <p class="footer-note">Generated at ${escapeHtml(generatedAt)}. This page is noindex and protected by your analytics token.</p>
+    </section>
+  </main>
+</body>
+</html>`;
+}
+
+function renderAdminMessage(title, message) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>${escapeHtml(title)} - MotionPic AI</title>
+  <style>
+    body { margin: 0; background: #faf8f3; color: #16231d; font-family: system-ui, sans-serif; }
+    main { max-width: 680px; margin: 14vh auto; padding: 28px; background: white; border: 1px solid #ded8ce; border-radius: 8px; }
+    h1 { margin: 0 0 10px; font-size: 34px; }
+    p { color: #66756f; font-size: 18px; }
+  </style>
+</head>
+<body><main><h1>${escapeHtml(title)}</h1><p>${escapeHtml(message)}</p></main></body>
+</html>`;
+}
+
+function renderMetricCard(label, value, note) {
+  return `<div class="card">
+    <div class="metric-label">${escapeHtml(label)}</div>
+    <div class="metric-value">${escapeHtml(value)}</div>
+    <div class="metric-note">${escapeHtml(note)}</div>
+  </div>`;
+}
+
+function renderFunnelRow(item) {
+  const width = Math.max(2, Math.round(item.previousRate * 100));
+  return `<div class="funnel-row">
+    <div class="label">${escapeHtml(item.label)}</div>
+    <div class="count">${item.count}</div>
+    <div class="bar"><span style="width: ${width}%"></span></div>
+    <div class="rate">${formatPercent(item.previousRate)} from previous</div>
+  </div>`;
+}
+
+function renderPairTable(pairs, label, labelFormatter = (value) => value) {
+  if (!pairs.length) return `<div class="empty">No data yet.</div>`;
+  return `<table><thead><tr><th>${escapeHtml(label)}</th><th>Count</th></tr></thead><tbody>
+    ${pairs
+      .map(([key, count]) => `<tr><td>${escapeHtml(labelFormatter(key))}<br><code>${escapeHtml(key)}</code></td><td>${count}</td></tr>`)
+      .join("")}
+  </tbody></table>`;
+}
+
+function renderRecentEventsTable(events) {
+  if (!events.length) return `<div class="empty">No recent events yet.</div>`;
+  return `<table><thead><tr><th>Time</th><th>Event</th><th>User</th><th>Page</th><th>Properties</th></tr></thead><tbody>
+    ${events
+      .map(
+        (event) => `<tr>
+          <td>${escapeHtml(formatDateTime(event.createdAt))}</td>
+          <td>${escapeHtml(analyticsEventLabel(event.name))}<br><code>${escapeHtml(event.name)}</code></td>
+          <td><code>${escapeHtml(event.userId || "")}</code></td>
+          <td>${escapeHtml(event.page || "/")}</td>
+          <td><code>${escapeHtml(JSON.stringify(event.properties || {}))}</code></td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
+function analyticsEventLabel(name) {
+  const labels = {
+    page_view: "Page View",
+    upload_click: "Upload Click",
+    upload_success: "Upload Success",
+    upload_invalid_file: "Invalid Upload",
+    template_filter_click: "Template Filter",
+    template_select: "Template Select",
+    duration_select: "Duration Select",
+    ratio_select: "Ratio Select",
+    resolution_select: "Resolution Select",
+    generate_click: "Generate Click",
+    generate_blocked_no_upload: "Generate Blocked: No Upload",
+    generate_blocked_low_credits: "Generate Blocked: Low Credits",
+    generate_job_created: "Generation Job Created",
+    generate_success: "Generation Success",
+    generate_failed: "Generation Failed",
+    download_click: "Download Click",
+    checkout_click: "Checkout Click",
+    checkout_created: "Checkout Created",
+    checkout_redirect: "Checkout Redirect",
+    checkout_error: "Checkout Error",
+    checkout_modal_open: "Checkout Modal Open",
+    checkout_return_success: "Checkout Return Success",
+    mock_payment_success: "Mock Payment Success",
+    payment_credit_granted: "Payment Credits Granted",
+  };
+  return labels[name] || name;
+}
+
+function ratio(numerator = 0, denominator = 0) {
+  return denominator ? numerator / denominator : 0;
+}
+
+function formatPercent(value) {
+  return `${Math.round((Number(value) || 0) * 100)}%`;
+}
+
+function formatDateTime(value) {
+  if (!value) return "";
+  return new Date(value).toLocaleString("en-US", { hour12: false });
 }
 
 async function grantCredits({ userId, amount, source, externalId, plan, provider = "mock", eventId = "" }) {
@@ -1401,6 +1751,22 @@ function getPaymentId(event) {
 function sendJson(res, status, data) {
   res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(data));
+}
+
+function sendHtml(res, status, html) {
+  res.writeHead(status, {
+    "Content-Type": "text/html; charset=utf-8",
+    "Cache-Control": "no-store",
+  });
+  res.end(html);
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 async function readJson(req) {

@@ -162,6 +162,12 @@ Local development stores these events in `data/db.json`. Render/Supabase stores 
 /api/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
 ```
 
+For a readable internal dashboard, open:
+
+```text
+/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
+```
+
 If `ANALYTICS_ADMIN_TOKEN` is not set, the summary endpoint is only available from localhost. The public tracking endpoint is fire-and-forget from the browser, so failed analytics writes do not block upload, generation, or checkout.
 
 ## Multilingual URLs
