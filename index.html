@@ -1737,6 +1737,50 @@
         ...(json ? { "Content-Type": "application/json" } : {}),
         "X-MotionPic-User-ID": userId,
       });
+      const canUseBackend = () => window.location.protocol !== "file:";
+      const isLocalDemo = () => window.location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(window.location.hostname);
+
+      const getSessionId = () => {
+        const stored = sessionStorage.getItem("motionpic-session-id");
+        if (stored) return stored;
+        const randomPart = window.crypto?.randomUUID
+          ? window.crypto.randomUUID().replace(/-/g, "")
+          : `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
+        const id = `mps_${randomPart.slice(0, 32)}`;
+        sessionStorage.setItem("motionpic-session-id", id);
+        return id;
+      };
+
+      const currentEventProperties = (extra = {}) => ({
+        template: state.template,
+        ratio: state.ratio,
+        resolution: state.resolution,
+        seconds: Number.parseInt(state.length, 10),
+        credits: currentCost(),
+        balance: state.balance,
+        uploaded: state.uploaded,
+        language: document.documentElement.lang || languageSelect?.value || "en",
+        ...extra,
+      });
+
+      const trackEvent = (name, properties = {}) => {
+        if (!canUseBackend()) return;
+        const payload = {
+          userId,
+          sessionId: getSessionId(),
+          name,
+          page: `${window.location.pathname}${window.location.search}`,
+          referrer: document.referrer,
+          language: document.documentElement.lang || languageSelect?.value || "en",
+          properties: currentEventProperties(properties),
+        };
+        fetch("/api/analytics/events", {
+          method: "POST",
+          headers: apiHeaders(true),
+          body: JSON.stringify(payload),
+          keepalive: true,
+        }).catch(() => {});
+      };
 
       const translations = {
         en: {
@@ -2141,6 +2185,7 @@
 
       const handleFile = (file) => {
         if (!file || !file.type.startsWith("image/")) {
+          trackEvent("upload_invalid_file", { fileType: file?.type || "" });
           uploadHint.textContent = "请上传 JPG、PNG 或 WebP 图片。";
           return;
         }
@@ -2155,12 +2200,20 @@
           state.imageData = String(reader.result);
           state.uploaded = true;
           uploadHint.textContent = `${file.name} 已上传，可以开始选择模板生成。`;
+          trackEvent("upload_success", {
+            fileType: file.type,
+            fileSize: file.size,
+            fileNameLength: file.name.length,
+          });
           bumpEvent();
         };
         reader.readAsDataURL(file);
       };
 
-      uploadButton.addEventListener("click", () => fileInput.click());
+      uploadButton.addEventListener("click", () => {
+        trackEvent("upload_click");
+        fileInput.click();
+      });
       fileInput.addEventListener("change", () => handleFile(fileInput.files && fileInput.files[0]));
 
       ["dragenter", "dragover"].forEach((eventName) => {
@@ -2190,6 +2243,7 @@
             const visible = filter === "all" || template.dataset.audience.includes(filter);
             template.hidden = !visible;
           });
+          trackEvent("template_filter_click", { filter });
           bumpEvent();
         });
       });
@@ -2201,6 +2255,7 @@
           state.template = template.dataset.template;
           previewTemplate.textContent = `${state.template} template`;
           promptField.value = templatePrompts[state.template];
+          trackEvent("template_select", { selectedTemplate: state.template });
           bumpEvent();
         });
       });
@@ -2211,6 +2266,7 @@
           tab.classList.add("active");
           state.length = tab.textContent.trim();
           updateEstimate();
+          trackEvent("duration_select", { selectedDuration: state.length });
           bumpEvent();
         });
       });
@@ -2221,6 +2277,7 @@
           option.classList.add("active");
           state.ratio = option.dataset.ratio;
           updateEstimate();
+          trackEvent("ratio_select", { selectedRatio: state.ratio });
           bumpEvent();
         });
       });
@@ -2232,6 +2289,7 @@
           state.resolution = option.dataset.resolution;
           state.baseCost = Number(option.dataset.cost);
           updateEstimate();
+          trackEvent("resolution_select", { selectedResolution: state.resolution });
           bumpEvent();
         });
       });
@@ -2252,9 +2310,6 @@
         queueList.prepend(item);
         return item.querySelector(".pill");
       };
-
-      const canUseBackend = () => window.location.protocol !== "file:";
-      const isLocalDemo = () => window.location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
       const createBackendJob = async () => {
         const response = await fetch("/api/video/jobs", {
@@ -2309,7 +2364,9 @@
       };
 
       generateButton.addEventListener("click", async () => {
+        trackEvent("generate_click");
         if (!state.uploaded) {
+          trackEvent("generate_blocked_no_upload");
           uploadHint.textContent = "先上传一张图片，再生成预览。";
           fileInput.click();
           return;
@@ -2317,7 +2374,8 @@
 
         const cost = currentCost();
         if (state.balance < cost) {
-          await openCheckout();
+          trackEvent("generate_blocked_low_credits", { requiredCredits: cost });
+          await openCheckout("low_credits");
           return;
         }
 
@@ -2328,6 +2386,7 @@
         if (canUseBackend()) {
           try {
             const job = await createBackendJob();
+            trackEvent("generate_job_created", { jobId: job.id || "", provider: job.provider || "" });
             state.jobId = job.id || "";
             if (typeof job.remainingCredits === "number") state.balance = job.remainingCredits;
             const pill = addQueueItem(job.status === "succeeded" ? "Done" : "Queued");
@@ -2348,6 +2407,7 @@
               : "Video job completed.";
             progressBar.style.width = "100%";
             updateEstimate();
+            trackEvent("generate_success", { jobId: finishedJob.id || job.id || "", provider: finishedJob.provider || job.provider || "" });
             bumpEvent();
             return;
             state.generated = true;
@@ -2367,6 +2427,7 @@
             generateButton.disabled = false;
             generateButton.textContent = "Generate preview";
             creditNote.textContent = error.message;
+            trackEvent("generate_failed", { error: error.message });
             return;
           }
         }
@@ -2386,6 +2447,7 @@
             creditNote.textContent = "预览已生成。高清无水印下载是付费转化点。";
             addQueueItem();
             updateEstimate();
+            trackEvent("generate_success", { provider: "local-demo" });
             bumpEvent();
           }
         }, 240);
@@ -2393,6 +2455,7 @@
 
       downloadButton.addEventListener("click", () => {
         if (!state.generated) return;
+        trackEvent("download_click", { hasOutputUrl: Boolean(state.outputUrl) });
         if (state.outputUrl) {
           window.open(state.outputUrl, "_blank", "noopener,noreferrer");
           creditNote.textContent = "Download opened in a new tab.";
@@ -2402,8 +2465,10 @@
         bumpEvent();
       });
 
-      const openCheckout = async () => {
+      const openCheckout = async (source = "unknown") => {
         updateEstimate();
+        const plan = state.resolution === "Pro" ? "commerce" : "creator";
+        trackEvent("checkout_click", { source, plan });
         if (canUseBackend()) {
           try {
             const response = await fetch("/api/checkout", {
@@ -2411,29 +2476,33 @@
               headers: apiHeaders(true),
               body: JSON.stringify({
                 userId,
-                plan: state.resolution === "Pro" ? "commerce" : "creator",
+                plan,
                 returnUrl: window.location.href,
               }),
             });
             const checkout = await response.json();
             if (checkout.url) {
+              trackEvent("checkout_redirect", { source, plan });
               window.location.href = checkout.url;
               return;
             }
             if (checkout.error) {
               creditNote.textContent = checkout.error;
+              trackEvent("checkout_error", { source, plan, error: checkout.error });
             }
           } catch (error) {
             creditNote.textContent = "支付接口暂不可用，请检查 Render 环境变量和 Creem 配置。";
+            trackEvent("checkout_error", { source, plan, error: error.message });
           }
         }
         if (!isLocalDemo()) return;
         checkoutModal.classList.add("open");
+        trackEvent("checkout_modal_open", { source, plan });
         bumpEvent();
       };
 
-      upgradeButton.addEventListener("click", openCheckout);
-      buyCreditsButton.addEventListener("click", openCheckout);
+      upgradeButton.addEventListener("click", () => openCheckout("unlock_hd_button"));
+      buyCreditsButton.addEventListener("click", () => openCheckout("buy_credits_button"));
       languageSelect.addEventListener("change", () => {
         const nextUrl = new URL(window.location.href);
         nextUrl.searchParams.set("lang", languageSelect.value);
@@ -2447,18 +2516,20 @@
 
       mockPayButton.addEventListener("click", async () => {
         if (canUseBackend()) {
-          await openCheckout();
+          await openCheckout("mock_modal_button");
           return;
         }
         state.balance += 100;
         checkoutModal.classList.remove("open");
         creditNote.textContent = "已记录一次模拟支付事件，并给账户增加 100 credits。";
         updateEstimate();
+        trackEvent("mock_payment_success");
         bumpEvent();
       });
 
       const handleCheckoutReturn = async () => {
         if (query.get("checkout") !== "success") return;
+        trackEvent("checkout_return_success", { plan: query.get("plan") || "creator" });
         creditNote.textContent = "检测到 Creem 测试支付成功返回。正在等待 webhook 入账，稍后刷新余额。";
 
         if (!canUseBackend() || window.location.hostname !== "localhost") {
@@ -2485,6 +2556,7 @@
       };
 
       applyLanguage(initialLanguage());
+      trackEvent("page_view", { checkout: query.get("checkout") || "" });
       refreshAccount();
       handleCheckoutReturn();
     </script>

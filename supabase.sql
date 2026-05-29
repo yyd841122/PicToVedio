@@ -52,8 +52,28 @@ create table if not exists credit_ledger (
   created_at timestamptz not null default now()
 );
 
+create table if not exists analytics_events (
+  id text primary key,
+  user_id text not null references app_users(id) on delete cascade,
+  session_id text,
+  name text not null,
+  page text,
+  referrer text,
+  language text,
+  properties jsonb not null default '{}'::jsonb,
+  user_agent text,
+  ip_hash text,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists idx_credit_ledger_user_created
   on credit_ledger(user_id, created_at desc);
+
+create index if not exists idx_analytics_events_name_created
+  on analytics_events(name, created_at desc);
+
+create index if not exists idx_analytics_events_user_created
+  on analytics_events(user_id, created_at desc);
 
 alter table video_jobs
   add column if not exists input_url text;
@@ -67,3 +87,4 @@ alter table video_jobs disable row level security;
 alter table payments disable row level security;
 alter table webhook_events disable row level security;
 alter table credit_ledger disable row level security;
+alter table analytics_events disable row level security;

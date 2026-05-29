@@ -35,6 +35,7 @@ const config = {
   r2SecretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || "",
   r2Bucket: process.env.CLOUDFLARE_R2_BUCKET || "",
   r2PublicBaseUrl: (process.env.CLOUDFLARE_R2_PUBLIC_BASE_URL || "").replace(/\/$/, ""),
+  analyticsAdminToken: process.env.ANALYTICS_ADMIN_TOKEN || "",
   stripeSecretKey: process.env.STRIPE_SECRET_KEY || "",
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
   stripeCreatorPrice: process.env.STRIPE_PRICE_CREATOR || "",
@@ -76,6 +77,14 @@ const server = createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/api/checkout") {
       return await handleCheckout(req, res);
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/analytics/events") {
+      return await handleRecordAnalyticsEvent(req, res);
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/admin/analytics") {
+      return await handleGetAnalyticsSummary(req, res, url);
     }
 
     if (req.method === "POST" && url.pathname === "/api/checkout/mock-confirm") {
@@ -205,6 +214,61 @@ async function handleGetAccount(req, res) {
   });
 }
 
+async function handleRecordAnalyticsEvent(req, res) {
+  const body = await readJson(req);
+  const name = sanitizeText(body.name, 80);
+  if (!/^[a-z][a-z0-9_.:-]{1,79}$/i.test(name)) {
+    return sendJson(res, 400, { error: "Invalid event name" });
+  }
+
+  const userId = getRequestUserId(req, body);
+  const event = {
+    id: randomUUID(),
+    userId,
+    sessionId: sanitizeText(body.sessionId, 120),
+    name,
+    page: sanitizeText(body.page, 500),
+    referrer: sanitizeText(body.referrer, 500),
+    language: sanitizeText(body.language, 12),
+    properties: sanitizeProperties(body.properties),
+    userAgent: sanitizeText(req.headers["user-agent"], 500),
+    ipHash: hashClientIp(req),
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    await recordAnalyticsEvent(event);
+    return sendJson(res, 200, { ok: true, recorded: true });
+  } catch (error) {
+    console.warn("Analytics event failed", error.message);
+    return sendJson(res, 200, { ok: true, recorded: false });
+  }
+}
+
+async function handleGetAnalyticsSummary(req, res, url) {
+  if (!canReadAdminAnalytics(req, url)) {
+    return sendJson(res, 403, { error: "Analytics admin access denied" });
+  }
+
+  const limit = Math.min(500, Math.max(10, Number(url.searchParams.get("limit") || 200)));
+  const events = await getRecentAnalyticsEvents(limit);
+  const byName = {};
+  const byPage = {};
+
+  for (const event of events) {
+    byName[event.name] = (byName[event.name] || 0) + 1;
+    const page = event.page || "/";
+    byPage[page] = (byPage[page] || 0) + 1;
+  }
+
+  return sendJson(res, 200, {
+    total: events.length,
+    byName,
+    byPage,
+    recent: events.slice(0, 50),
+  });
+}
+
 async function handleGetVideoJob(req, res, id) {
   const job = await getJob(id);
 
@@ -289,6 +353,13 @@ async function handleCheckout(req, res) {
     return sendJson(res, response.status, { error: checkout.error?.message || "Stripe checkout failed" });
   }
 
+  await recordAnalyticsEventSafe({
+    userId,
+    name: "checkout_created",
+    page: sanitizeText(body.returnUrl, 500),
+    properties: { provider: "stripe", plan },
+  });
+
   return sendJson(res, 200, { url: checkout.url });
 }
 
@@ -364,6 +435,13 @@ async function handleCreemCheckout(res, body, plan, userId) {
     return sendJson(res, response.status, { error: checkout.error || checkout.message || "Creem checkout failed" });
   }
 
+  await recordAnalyticsEventSafe({
+    userId,
+    name: "checkout_created",
+    page: sanitizeText(body.returnUrl, 500),
+    properties: { provider: "creem", plan, testMode: config.creemTestMode },
+  });
+
   return sendJson(res, 200, { url: checkout.checkout_url || checkout.url });
 }
 
@@ -398,6 +476,11 @@ async function handleCreemWebhook(req, res) {
         provider: "creem",
         eventId,
       });
+      await recordAnalyticsEventSafe({
+        userId,
+        name: "payment_credit_granted",
+        properties: { provider: "creem", plan, credits: payment.credits, eventId },
+      });
     }
   }
 
@@ -426,6 +509,11 @@ async function handleStripeWebhook(req, res) {
       plan,
       provider: "stripe",
       eventId: getEventId(event),
+    });
+    await recordAnalyticsEventSafe({
+      userId,
+      name: "payment_credit_granted",
+      properties: { provider: "stripe", plan, credits: payment.credits, eventId: getEventId(event) },
     });
   }
 
@@ -572,6 +660,57 @@ async function recordWebhookEvent({ id, provider, type }) {
   return true;
 }
 
+async function recordAnalyticsEvent(event) {
+  if (useSupabase()) {
+    await ensureSupabaseUser(event.userId);
+    await supabaseRequest("analytics_events", {
+      method: "POST",
+      body: analyticsEventToRow(event),
+      prefer: "return=minimal",
+    });
+    return;
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  db.analyticsEvents.push(event);
+  db.analyticsEvents = db.analyticsEvents.slice(-5000);
+  writeDb(db);
+}
+
+async function recordAnalyticsEventSafe(event) {
+  try {
+    await recordAnalyticsEvent({
+      id: event.id || randomUUID(),
+      userId: event.userId || "demo-user",
+      sessionId: event.sessionId || "",
+      name: event.name,
+      page: event.page || "",
+      referrer: event.referrer || "",
+      language: event.language || "",
+      properties: sanitizeProperties(event.properties || {}),
+      userAgent: event.userAgent || "",
+      ipHash: event.ipHash || "",
+      createdAt: event.createdAt || new Date().toISOString(),
+    });
+  } catch (error) {
+    console.warn("Analytics event failed", error.message);
+  }
+}
+
+async function getRecentAnalyticsEvents(limit) {
+  if (useSupabase()) {
+    const rows = await supabaseRequest(
+      `analytics_events?select=id,user_id,session_id,name,page,referrer,language,properties,created_at&order=created_at.desc&limit=${limit}`
+    );
+    return rows.map(rowToAnalyticsEvent);
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  return db.analyticsEvents.slice(-limit).reverse();
+}
+
 async function grantCredits({ userId, amount, source, externalId, plan, provider = "mock", eventId = "" }) {
   if (useSupabase()) {
     await ensureSupabaseUser(userId);
@@ -645,6 +784,12 @@ function useSupabase() {
   return config.dataProvider === "supabase" && Boolean(config.supabaseUrl && config.supabaseServiceRoleKey);
 }
 
+function canReadAdminAnalytics(req, url) {
+  if (!config.analyticsAdminToken) return isLocalRequest(req);
+  const token = req.headers["x-motionpic-admin-token"] || url.searchParams.get("token") || "";
+  return String(token) === config.analyticsAdminToken;
+}
+
 function isLocalRequest(req) {
   const host = String(req.headers.host || "");
   return host.startsWith("localhost") || host.startsWith("127.0.0.1") || host.startsWith("[::1]");
@@ -696,6 +841,67 @@ function getRequestUserId(req, body = {}) {
   const userId = String(candidate).trim();
   if (/^mp_[a-z0-9_-]{12,80}$/i.test(userId)) return userId;
   return "demo-user";
+}
+
+function sanitizeText(value, maxLength) {
+  return String(value || "")
+    .replace(/[\u0000-\u001f\u007f]/g, " ")
+    .trim()
+    .slice(0, maxLength);
+}
+
+function sanitizeProperties(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const result = {};
+  for (const [key, raw] of Object.entries(value).slice(0, 30)) {
+    const cleanKey = sanitizeText(key, 80);
+    if (!cleanKey) continue;
+    if (typeof raw === "number" || typeof raw === "boolean") {
+      result[cleanKey] = raw;
+    } else if (raw === null) {
+      result[cleanKey] = null;
+    } else {
+      result[cleanKey] = sanitizeText(raw, 500);
+    }
+  }
+  return result;
+}
+
+function hashClientIp(req) {
+  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  const ip = forwarded || req.socket?.remoteAddress || "";
+  if (!ip) return "";
+  return createHash("sha256").update(ip).digest("hex").slice(0, 32);
+}
+
+function analyticsEventToRow(event) {
+  return {
+    id: event.id,
+    user_id: event.userId,
+    session_id: event.sessionId || null,
+    name: event.name,
+    page: event.page || null,
+    referrer: event.referrer || null,
+    language: event.language || null,
+    properties: event.properties || {},
+    user_agent: event.userAgent || null,
+    ip_hash: event.ipHash || null,
+    created_at: event.createdAt,
+  };
+}
+
+function rowToAnalyticsEvent(row) {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    sessionId: row.session_id,
+    name: row.name,
+    page: row.page,
+    referrer: row.referrer,
+    language: row.language,
+    properties: row.properties || {},
+    createdAt: row.created_at,
+  };
 }
 
 function filterValue(value) {
@@ -1130,6 +1336,7 @@ function createEmptyDb() {
     payments: {},
     webhookEvents: {},
     creditLedger: [],
+    analyticsEvents: [],
   };
 }
 
@@ -1140,6 +1347,7 @@ function normalizeDb(db) {
   db.payments ||= {};
   db.webhookEvents ||= {};
   db.creditLedger ||= [];
+  db.analyticsEvents ||= [];
   return db;
 }
 

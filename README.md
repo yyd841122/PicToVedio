@@ -15,6 +15,8 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Creem webhook endpoint for paid credit top-ups
 - Webhook event deduplication
 - Credit ledger entries for top-ups
+- Lightweight analytics events for page views, uploads, generation, checkout, and paid credit grants
+- Private analytics summary endpoint for checking recent conversion events
 - UI language switcher for English, Chinese, German, Italian, French, Spanish, Japanese, and Korean
 - SEO alternate links for multilingual launch URLs
 - SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and custom 404 page
@@ -81,6 +83,7 @@ Required on Render after creating Supabase:
 DATA_PROVIDER=supabase
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
+ANALYTICS_ADMIN_TOKEN=
 ```
 
 Optional for real video generation later:
@@ -136,6 +139,30 @@ The server recalculates the credit cost for each generation request. It does not
 ## Anonymous Users
 
 MotionPic creates a browser-local anonymous user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
+
+## Analytics
+
+MotionPic records lightweight product events in `analytics_events`:
+
+- `page_view`
+- `upload_click`
+- `upload_success`
+- `generate_click`
+- `generate_job_created`
+- `generate_success`
+- `generate_failed`
+- `checkout_click`
+- `checkout_redirect`
+- `checkout_return_success`
+- `payment_credit_granted`
+
+Local development stores these events in `data/db.json`. Render/Supabase stores them in the `analytics_events` table. A private summary endpoint is available at:
+
+```text
+/api/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
+```
+
+If `ANALYTICS_ADMIN_TOKEN` is not set, the summary endpoint is only available from localhost. The public tracking endpoint is fire-and-forget from the browser, so failed analytics writes do not block upload, generation, or checkout.
 
 ## Multilingual URLs
 

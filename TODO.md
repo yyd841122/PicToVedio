@@ -32,6 +32,8 @@ Last updated: 2026-05-28
 - [x] Added Privacy Policy, Terms of Service, Refund Policy, and footer contact links.
 - [x] Added first SEO template pages for AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
 - [x] Kept legal pages and template landing pages English-only to avoid partial-translation confusion.
+- [x] Added analytics event tracking for page views, uploads, generation, checkout, and paid credit grants.
+- [x] Added private analytics summary endpoint and Supabase `analytics_events` schema.
 
 ## In Progress
 
@@ -66,7 +68,7 @@ Last updated: 2026-05-28
 - [x] Add Terms of Service.
 - [x] Add Refund Policy.
 - [x] Add contact email in footer.
-- [ ] Add analytics events:
+- [x] Add analytics events:
   - Page view.
   - Upload.
   - Generate click.

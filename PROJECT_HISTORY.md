@@ -132,16 +132,16 @@ The project is a deployed, payment-enabled MVP. It can:
 - Accept Creem test checkout payments.
 - Receive Creem webhook events.
 - Persist credit changes in Supabase.
+- Run real DashScope image-to-video jobs and refund credits on technical failure.
+- Track page views, uploads, generation clicks, generation outcomes, checkout clicks, checkout returns, and paid credit grants.
 - Serve the site from `https://video.cozyguidehub.com`.
 - Present multilingual UI copy.
-- Provide a basic SEO/GEO foundation.
+- Provide a basic SEO/GEO foundation with legal pages and first template pages.
 
 The project does not yet:
 
-- Generate real videos from a paid model API.
 - Store uploaded files and generated videos in object storage.
-- Support real user accounts.
+- Support full email accounts.
 - Accept live Creem payments.
-- Provide production legal pages.
-- Run analytics or conversion tracking.
-- Publish SEO template pages and blog content.
+- Provide a polished analytics dashboard beyond the raw summary endpoint and Supabase table.
+- Publish deeper blog content and directory submissions.
