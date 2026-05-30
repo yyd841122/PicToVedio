@@ -2542,7 +2542,10 @@ function getPaymentId(event) {
 }
 
 function sendJson(res, status, data) {
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+    "X-Robots-Tag": "noindex, nofollow",
+  });
   res.end(JSON.stringify(data));
 }
 

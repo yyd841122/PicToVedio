@@ -38,6 +38,7 @@ Last updated: 2026-05-28
 - [x] Added private ops cost/refund signals for estimated DashScope spend and credit refunds.
 - [x] Added template page deep links that preselect the matching generator template.
 - [x] Added FAQPage and BreadcrumbList schema to template SEO pages.
+- [x] Blocked admin and API surfaces from search indexing.
 
 ## In Progress
 
