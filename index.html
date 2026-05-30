@@ -2183,6 +2183,48 @@
             : `${currentCopy.cost} ${cost} credit${cost > 1 ? "s" : ""}. ${currentCopy.noWatermark}.`;
       };
 
+      const templateParamMap = {
+        portrait: "Portrait",
+        natural: "Portrait",
+        product: "Product",
+        "product-video-ad": "Product",
+        pet: "Pet",
+        "pet-animation": "Pet",
+        kiss: "Kiss",
+        "ai-kiss-video": "Kiss",
+        "old-photo": "Old Photo",
+        "old-photo-alive": "Old Photo",
+      };
+
+      const selectTemplate = (templateName, source = "manual") => {
+        const target = Array.from(templates).find((template) => template.dataset.template === templateName);
+        if (!target) return false;
+
+        templates.forEach((template) => {
+          template.hidden = false;
+          template.classList.remove("active");
+        });
+        chips.forEach((chip) => chip.classList.toggle("active", chip.dataset.filter === "all"));
+
+        target.classList.add("active");
+        state.template = target.dataset.template;
+        previewTemplate.textContent = `${state.template} template`;
+        promptField.value = templatePrompts[state.template];
+        updateEstimate();
+        trackEvent(source === "deeplink" ? "template_deeplink" : "template_select", { selectedTemplate: state.template });
+        return true;
+      };
+
+      const applyTemplateDeepLink = () => {
+        const rawTemplate = query.get("template") || query.get("scene") || "";
+        const templateName = templateParamMap[rawTemplate.trim().toLowerCase()];
+        if (!templateName || !selectTemplate(templateName, "deeplink")) return;
+
+        if (window.location.hash === "#generator") {
+          window.setTimeout(() => document.querySelector("#generator")?.scrollIntoView({ block: "start" }), 50);
+        }
+      };
+
       const handleFile = (file) => {
         if (!file || !file.type.startsWith("image/")) {
           trackEvent("upload_invalid_file", { fileType: file?.type || "" });
@@ -2250,12 +2292,7 @@
 
       templates.forEach((template) => {
         template.addEventListener("click", () => {
-          templates.forEach((item) => item.classList.remove("active"));
-          template.classList.add("active");
-          state.template = template.dataset.template;
-          previewTemplate.textContent = `${state.template} template`;
-          promptField.value = templatePrompts[state.template];
-          trackEvent("template_select", { selectedTemplate: state.template });
+          selectTemplate(template.dataset.template);
           bumpEvent();
         });
       });
@@ -2556,6 +2593,7 @@
       };
 
       applyLanguage(initialLanguage());
+      applyTemplateDeepLink();
       trackEvent("page_view", { checkout: query.get("checkout") || "" });
       refreshAccount();
       handleCheckoutReturn();

@@ -36,6 +36,8 @@ Last updated: 2026-05-28
 - [x] Added private analytics summary endpoint and Supabase `analytics_events` schema.
 - [x] Added private ops dashboard for users, credits, payments, video jobs, ledger, and webhooks.
 - [x] Added private ops cost/refund signals for estimated DashScope spend and credit refunds.
+- [x] Added template page deep links that preselect the matching generator template.
+- [x] Added FAQPage and BreadcrumbList schema to template SEO pages.
 
 ## In Progress
 
@@ -85,6 +87,8 @@ Last updated: 2026-05-28
   - Pet Animation.
   - Old Photo Alive.
 - [x] Add FAQ and comparison copy to each template page.
+- [x] Add structured FAQ and breadcrumb schema to each template page.
+- [x] Let template SEO pages open the generator with the matching template selected.
 - [ ] Create fully translated legal and template pages for EN/ZH/DE/IT/FR/ES/JA/KO.
 - [ ] Submit sitemap to Google Search Console and Bing Webmaster Tools.
 - [ ] Prepare Baidu submission if targeting Chinese search.
