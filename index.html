@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,15 +15,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href="https://video.cozyguidehub.com/" />
-    <link rel="alternate" hreflang="en" href="https://video.cozyguidehub.com/?lang=en" />
-    <link rel="alternate" hreflang="zh" href="https://video.cozyguidehub.com/?lang=zh" />
-    <link rel="alternate" hreflang="de" href="https://video.cozyguidehub.com/?lang=de" />
-    <link rel="alternate" hreflang="it" href="https://video.cozyguidehub.com/?lang=it" />
-    <link rel="alternate" hreflang="fr" href="https://video.cozyguidehub.com/?lang=fr" />
-    <link rel="alternate" hreflang="es" href="https://video.cozyguidehub.com/?lang=es" />
-    <link rel="alternate" hreflang="ja" href="https://video.cozyguidehub.com/?lang=ja" />
-    <link rel="alternate" hreflang="ko" href="https://video.cozyguidehub.com/?lang=ko" />
-    <link rel="alternate" hreflang="x-default" href="https://video.cozyguidehub.com/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://video.cozyguidehub.com/" />
     <meta property="og:title" content="AI Photo to Video Generator - MotionPic AI" />
     <meta
       property="og:description"
@@ -225,16 +217,6 @@
         display: flex;
         align-items: center;
         gap: 10px;
-      }
-
-      .language-select {
-        min-height: 40px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: white;
-        color: var(--ink);
-        padding: 0 10px;
-        font-weight: 700;
       }
 
       .button {
@@ -1223,16 +1205,6 @@
             <a href="#pricing">价格</a>
           </nav>
           <div class="nav-actions">
-            <select class="language-select" id="languageSelect" aria-label="Language">
-              <option value="en">EN</option>
-              <option value="zh">中文</option>
-              <option value="de">DE</option>
-              <option value="it">IT</option>
-              <option value="fr">FR</option>
-              <option value="es">ES</option>
-              <option value="ja">日本語</option>
-              <option value="ko">한국어</option>
-            </select>
             <a class="button secondary" href="#tool">Start free</a>
           </div>
         </div>
@@ -1694,7 +1666,6 @@
       const downloadButton = document.querySelector("#downloadButton");
       const upgradeButton = document.querySelector("#upgradeButton");
       const buyCreditsButton = document.querySelector("#buyCreditsButton");
-      const languageSelect = document.querySelector("#languageSelect");
       const progressBar = document.querySelector("#progressBar");
       const previewTemplate = document.querySelector("#previewTemplate");
       const creditNote = document.querySelector("#creditNote");
@@ -1759,7 +1730,7 @@
         credits: currentCost(),
         balance: state.balance,
         uploaded: state.uploaded,
-        language: document.documentElement.lang || languageSelect?.value || "en",
+        language: document.documentElement.lang || "en",
         ...extra,
       });
 
@@ -1771,7 +1742,7 @@
           name,
           page: `${window.location.pathname}${window.location.search}`,
           referrer: document.referrer,
-          language: document.documentElement.lang || languageSelect?.value || "en",
+          language: document.documentElement.lang || "en",
           properties: currentEventProperties(properties),
         };
         fetch("/api/analytics/events", {
@@ -2003,18 +1974,11 @@
         ko: { title: "MotionPic AI - AI 사진 영상 생성기", description: "사진 한 장으로 TikTok, Reels, 커머스, 반려동물, 커플, 추억용 AI 숏폼 영상을 만드세요.", navDemand: "활용 사례", h1: "사진 한 장을 공유되는 AI 숏폼 영상으로", lead: "TikTok, Reels, 크리에이터와 커머스 셀러를 위한 가벼운 도구입니다. 사진을 올리고 템플릿을 선택해 짧은 영상을 내보내세요.", startFree: "무료 시작", generate: "미리보기 생성", buy: "크레딧 구매", pricingTitle: "추천 유료 플랜", demandTitle: "만들 수 있는 영상", templateSectionTitle: "인기 템플릿", modalTitle: "HD 워터마크 제거 잠금 해제" }
       };
 
-      let currentLang = "zh";
-      let currentCopy = translations.zh;
+      let currentLang = "en";
+      let currentCopy = translations.en;
 
-      const supportedLanguages = ["en", "zh", "de", "it", "fr", "es", "ja", "ko"];
-      const browserLanguage = () => {
-        const code = (navigator.language || "zh").slice(0, 2).toLowerCase();
-        return supportedLanguages.includes(code) ? code : "en";
-      };
-      const initialLanguage = () => {
-        const requested = (query.get("lang") || localStorage.getItem("motionpic-lang") || browserLanguage()).toLowerCase();
-        return supportedLanguages.includes(requested) ? requested : "en";
-      };
+      const supportedLanguages = ["en"];
+      const initialLanguage = () => "en";
       const copyFor = (lang) => ({
         ...translations.en,
         ...(lang === "zh" ? translations.zh : {}),
@@ -2052,8 +2016,6 @@
         document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
         document.title = currentCopy.title;
         document.querySelector('meta[name="description"]')?.setAttribute("content", currentCopy.description);
-        if (languageSelect) languageSelect.value = lang;
-
         setText('.nav-links a[href="#tool"]', currentCopy.navTool);
         setText('.nav-links a[href="#demand"]', currentCopy.navDemand);
         setText('.nav-links a[href="#pricing"]', currentCopy.navPricing);
@@ -2540,12 +2502,6 @@
 
       upgradeButton.addEventListener("click", () => openCheckout("unlock_hd_button"));
       buyCreditsButton.addEventListener("click", () => openCheckout("buy_credits_button"));
-      languageSelect.addEventListener("change", () => {
-        const nextUrl = new URL(window.location.href);
-        nextUrl.searchParams.set("lang", languageSelect.value);
-        window.history.replaceState({}, "", nextUrl);
-        applyLanguage(languageSelect.value);
-      });
       closeModalButton.addEventListener("click", () => checkoutModal.classList.remove("open"));
       checkoutModal.addEventListener("click", (event) => {
         if (event.target === checkoutModal) checkoutModal.classList.remove("open");
