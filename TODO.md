@@ -41,6 +41,7 @@ Last updated: 2026-05-28
 - [x] Blocked admin and API surfaces from search indexing.
 - [x] Removed the misleading language selector and consolidated the first indexed release around English canonical URLs.
 - [x] Added first SEO guide pages for photo quality, distortion reduction, and generation cost.
+- [x] Centralized credit pack amounts and price labels behind Render environment variables.
 
 ## In Progress
 
@@ -60,7 +61,8 @@ Last updated: 2026-05-28
 - [x] Default DashScope output to silent video and identity-preserving prompts to reduce cost and distortion.
 - [x] Run one real DashScope image-to-video test.
 - [x] Revise first-pass credit economics before charging real users.
-- [ ] Revisit visible Creem package amounts before switching to live mode.
+- [x] Revisit visible Creem package amounts before switching to live mode.
+- [ ] Edit Creem product descriptions and Render credit pack variables together before live mode.
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.

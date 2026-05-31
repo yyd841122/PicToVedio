@@ -31,6 +31,10 @@ const config = {
   creemWebhookSecret: process.env.CREEM_WEBHOOK_SECRET || "",
   creemCreatorProduct: process.env.CREEM_PRODUCT_CREATOR || "",
   creemCommerceProduct: process.env.CREEM_PRODUCT_COMMERCE || "",
+  creatorPackCredits: readPositiveIntEnv(["CREATOR_PACK_CREDITS", "CREEM_CREATOR_CREDITS"], 100),
+  commercePackCredits: readPositiveIntEnv(["COMMERCE_PACK_CREDITS", "CREEM_COMMERCE_CREDITS"], 400),
+  creatorPackPriceLabel: process.env.CREATOR_PACK_PRICE_LABEL || "$9",
+  commercePackPriceLabel: process.env.COMMERCE_PACK_PRICE_LABEL || "$29",
   storageProvider: process.env.STORAGE_PROVIDER || "none",
   r2AccountId: process.env.CLOUDFLARE_R2_ACCOUNT_ID || "",
   r2AccessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || "",
@@ -233,6 +237,7 @@ async function handleGetAccount(req, res) {
     userId,
     credits: account.credits,
     recentCredits: account.recentCredits,
+    plans: packPlans(),
   });
 }
 
@@ -2495,9 +2500,22 @@ function normalizeDb(db) {
 }
 
 function creditAmountForPlan(plan) {
-  return plan === "commerce"
-    ? { credits: 400, label: "Commerce Pack" }
-    : { credits: 100, label: "Creator Pack" };
+  return plan === "commerce" ? packPlans().commerce : packPlans().creator;
+}
+
+function packPlans() {
+  return {
+    creator: { credits: config.creatorPackCredits, label: "Creator Pack", price: config.creatorPackPriceLabel },
+    commerce: { credits: config.commercePackCredits, label: "Commerce Pack", price: config.commercePackPriceLabel },
+  };
+}
+
+function readPositiveIntEnv(names, fallback) {
+  for (const name of names) {
+    const value = Number(process.env[name]);
+    if (Number.isInteger(value) && value > 0) return value;
+  }
+  return fallback;
 }
 
 function addCredits(db, { userId, amount, source, externalId, plan }) {

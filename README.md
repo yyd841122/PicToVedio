@@ -125,6 +125,17 @@ When R2 is enabled, uploaded photos are saved under `uploads/{userId}/{jobId}` a
 - Creator Pack: `$9` for `100 credits`
 - Commerce Pack: `$29` for `400 credits`
 
+These visible pack amounts and backend credit grants can be configured without a code change:
+
+```env
+CREATOR_PACK_CREDITS=100
+COMMERCE_PACK_CREDITS=400
+CREATOR_PACK_PRICE_LABEL=$9
+COMMERCE_PACK_PRICE_LABEL=$29
+```
+
+Keep these Render values aligned with the active Creem product descriptions before switching to live payments.
+
 Current generation credit rules:
 
 - 4s / 720p: `2 credits`

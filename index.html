@@ -1650,6 +1650,10 @@
         imageData: "",
         jobId: "",
         outputUrl: "",
+        plans: {
+          creator: { credits: 100, label: "Creator Pack", price: "$9" },
+          commerce: { credits: 400, label: "Commerce Pack", price: "$29" },
+        },
       };
 
       const templatePrompts = {
@@ -2110,8 +2114,11 @@
           const account = await response.json();
           if (typeof account.credits === "number") {
             state.balance = account.credits;
-            updateEstimate();
           }
+          if (account.plans?.creator && account.plans?.commerce) {
+            state.plans = account.plans;
+          }
+          updateEstimate();
         } catch (error) {
           console.warn("Account refresh failed", error);
         }
@@ -2132,6 +2139,32 @@
 
       const currentCost = () => state.baseCost * lengthMultiplier() + templateSurcharge();
 
+      const planClipCount = (credits) => Math.max(1, Math.floor(Number(credits || 0) / Math.max(1, currentCost())));
+
+      const updatePlanCopy = () => {
+        const priceCards = document.querySelectorAll(".price-card");
+        const creatorCard = priceCards[1];
+        const commerceCard = priceCards[2];
+        const creatorItems = creatorCard?.querySelectorAll("li");
+        const commerceItems = commerceCard?.querySelectorAll("li");
+        const creatorPrice = creatorCard?.querySelector(".price");
+        const commercePrice = commerceCard?.querySelector(".price");
+
+        if (creatorPrice) creatorPrice.textContent = state.plans.creator.price || "$9";
+        if (commercePrice) commercePrice.textContent = state.plans.commerce.price || "$29";
+        if (creatorItems?.[0]) {
+          creatorItems[0].textContent = `${state.plans.creator.credits} credits, about ${planClipCount(state.plans.creator.credits)} standard clips`;
+        }
+        if (commerceItems?.[0]) {
+          commerceItems[0].textContent = `${state.plans.commerce.credits} credits, about ${planClipCount(state.plans.commerce.credits)} standard clips`;
+        }
+
+        const recommended = document.querySelector(".checkout-list li:nth-child(3) strong");
+        if (recommended) {
+          recommended.textContent = `${state.plans.creator.label || "Creator Pack"} ${state.plans.creator.price || "$9"}`;
+        }
+      };
+
       const updateEstimate = () => {
         const cost = currentCost();
         creditCost.textContent = `${cost} credit${cost > 1 ? "s" : ""}`;
@@ -2146,6 +2179,7 @@
           state.resolution === "720p"
             ? `${currentCopy.cost} ${cost} credit${cost > 1 ? "s" : ""}.`
             : `${currentCopy.cost} ${cost} credit${cost > 1 ? "s" : ""}. ${currentCopy.noWatermark}.`;
+        updatePlanCopy();
       };
 
       const templateParamMap = {

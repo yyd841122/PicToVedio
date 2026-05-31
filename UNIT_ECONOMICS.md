@@ -20,6 +20,15 @@ The current site package display is still:
 
 At an estimated FX rate of roughly CN¥7.2 per US$1, Creator Pack revenue is about CN¥64.8 before Creem/payment fees. If one real generation costs 1 credit and each generation costs CN¥0.60, then 100 generations cost about CN¥60 before failed generations, retries, payment fees, server costs, and support. That margin is too thin for live launch.
 
+The backend now reads package credits and price labels from Render environment variables:
+
+- `CREATOR_PACK_CREDITS`
+- `COMMERCE_PACK_CREDITS`
+- `CREATOR_PACK_PRICE_LABEL`
+- `COMMERCE_PACK_PRICE_LABEL`
+
+Defaults remain `100 / 400 credits` and `$9 / $29` until the Creem product copy is edited. Before live launch, update both Creem and Render together so the checkout page, visible site copy, and webhook credit grants match.
+
 ## Margin Target
 
 Target gross margin before fixed costs: 60% or more.
