@@ -40,6 +40,7 @@ Last updated: 2026-05-28
 - [x] Added FAQPage and BreadcrumbList schema to template SEO pages.
 - [x] Blocked admin and API surfaces from search indexing.
 - [x] Removed the misleading language selector and consolidated the first indexed release around English canonical URLs.
+- [x] Added first SEO guide pages for photo quality, distortion reduction, and generation cost.
 
 ## In Progress
 
