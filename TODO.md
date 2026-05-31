@@ -42,6 +42,9 @@ Last updated: 2026-05-28
 - [x] Removed the misleading language selector and consolidated the first indexed release around English canonical URLs.
 - [x] Added first SEO guide pages for photo quality, distortion reduction, and generation cost.
 - [x] Centralized credit pack amounts and price labels behind Render environment variables.
+- [x] Rewrote homepage source copy to English for SEO and no-JS visitors.
+- [x] Added photo quality guidance near upload to reduce distorted generations and wasted credits.
+- [x] Fixed SEO guide and template CTAs to jump directly to the generator.
 
 ## In Progress
 
