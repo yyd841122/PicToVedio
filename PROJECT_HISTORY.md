@@ -134,14 +134,21 @@ The project is a deployed, payment-enabled MVP. It can:
 - Persist credit changes in Supabase.
 - Run real DashScope image-to-video jobs and refund credits on technical failure.
 - Track page views, uploads, generation clicks, generation outcomes, checkout clicks, checkout returns, and paid credit grants.
+- Show private analytics and operations dashboards for funnel, users, jobs, payments, webhooks, credit ledger, refunds, and estimated provider cost.
+- Let an anonymous browser user view their own `/account` balance, recent credit activity, and recent video jobs.
 - Serve the site from `https://video.cozyguidehub.com`.
-- Present multilingual UI copy.
-- Provide a basic SEO/GEO foundation with legal pages and first template pages.
+- Provide an English-first SEO/GEO foundation with legal pages, template pages, guide pages, a guide hub, and `llms.txt`.
 
 The project does not yet:
 
 - Store uploaded files and generated videos in object storage.
 - Support full email accounts.
 - Accept live Creem payments.
-- Provide a polished analytics dashboard beyond the raw summary endpoint and Supabase table.
-- Publish deeper blog content and directory submissions.
+- Publish directory submissions and the first public launch posts.
+
+## 2026-06-02: User Account Utility
+
+- Added `/account` for the current anonymous browser user.
+- Extended `/api/account` to return recent video jobs alongside credits and credit ledger entries.
+- Added a homepage credit-panel link to the account page.
+- Marked the account page as `noindex` and blocked `/account` in `robots.txt` because it is not an SEO page.

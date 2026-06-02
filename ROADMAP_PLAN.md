@@ -81,6 +81,7 @@ Phase 1:
 - Persist it in local storage.
 - Send it to account, checkout, and generation APIs.
 - Bind Supabase credits to that ID.
+- Provide a browser-local account page for credits, credit ledger entries, and recent video jobs.
 
 Phase 2:
 
@@ -92,6 +93,7 @@ Acceptance:
 - Different browsers have separate credit balances.
 - Creem checkout credits return to the correct user ID.
 - Refreshing does not lose credits.
+- Users can self-check their current balance and recent jobs from `/account`.
 
 ## Milestone 5: Real Payments
 

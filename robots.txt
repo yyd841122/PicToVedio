@@ -3,5 +3,6 @@ Allow: /
 Allow: /llms.txt
 Disallow: /api/
 Disallow: /admin/
+Disallow: /account
 
 Sitemap: https://video.cozyguidehub.com/sitemap.xml

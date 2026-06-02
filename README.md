@@ -11,12 +11,14 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Aspect ratio and quality controls
 - Credit cost estimates and anonymous account balance
 - Generation history and real or mock video jobs
+- Account page for current anonymous credits, credit ledger entries, and video jobs
 - Creem checkout integration for credit packs
 - Creem webhook endpoint for paid credit top-ups
 - Webhook event deduplication
 - Credit ledger entries for top-ups
 - Lightweight analytics events for page views, uploads, generation, checkout, and paid credit grants
-- Private analytics summary endpoint for checking recent conversion events
+- Private analytics dashboard for checking recent conversion events
+- Private ops dashboard for checking users, credits, jobs, payments, refunds, and webhooks
 - SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and custom 404 page
 - `llms.txt` for GEO and AI-search discovery
 - Privacy Policy, Terms of Service, Refund Policy, and footer contact links
@@ -149,6 +151,8 @@ The server recalculates the credit cost for each generation request. It does not
 ## Anonymous Users
 
 MotionPic creates a browser-local anonymous user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
+
+Users can open `/account` from the homepage credit panel to view their current browser-local account ID, credit balance, recent credit ledger entries, and recent video generation jobs. This page is marked `noindex` and excluded from `robots.txt` because it is an account utility page, not a public SEO landing page.
 
 ## Analytics
 

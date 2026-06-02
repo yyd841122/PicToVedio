@@ -241,6 +241,7 @@ async function handleGetAccount(req, res) {
     userId,
     credits: account.credits,
     recentCredits: account.recentCredits,
+    recentJobs: account.recentJobs,
     plans: packPlans(),
   });
 }
@@ -665,6 +666,7 @@ async function getAccount(userId) {
     return {
       credits: Number(users[0]?.credits || 0),
       recentCredits: ledger.map(ledgerRowToEntry),
+      recentJobs: await getRecentUserJobs(userId, 5),
     };
   }
 
@@ -676,7 +678,27 @@ async function getAccount(userId) {
   return {
     credits: user.credits,
     recentCredits: db.creditLedger.filter((entry) => entry.userId === userId).slice(-5).reverse(),
+    recentJobs: Object.values(db.jobs)
+      .filter((job) => job.userId === userId)
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+      .slice(0, 5),
   };
+}
+
+async function getRecentUserJobs(userId, limit = 5) {
+  if (useSupabase()) {
+    const rows = await supabaseRequest(
+      `video_jobs?user_id=eq.${filterValue(userId)}&select=*&order=created_at.desc&limit=${limit}`
+    );
+    return rows.map(rowToJob);
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  return Object.values(db.jobs)
+    .filter((job) => job.userId === userId)
+    .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
+    .slice(0, limit);
 }
 
 async function createJobAndDebit(job, cost) {

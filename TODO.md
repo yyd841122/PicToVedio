@@ -56,6 +56,7 @@ Last updated: 2026-06-02
 - [x] Added first-revenue operating playbook for the live-payment transition.
 - [x] Added a `/guides` hub page and directory-index serving for SEO guide discovery.
 - [x] Added a Cloudflare R2 setup guide for deferred object-storage setup.
+- [x] Added an anonymous `/account` page for credits, credit ledger history, and recent video jobs.
 
 ## In Progress
 
@@ -120,7 +121,7 @@ Last updated: 2026-06-02
 ## Later: P2
 
 - [ ] Add email login.
-- [ ] Add account page.
+- [x] Add account page.
 - [x] Add admin view for payments and generation jobs.
 - [ ] Add A/B tests for hero copy and pricing.
 - [ ] Add referral or watermark-sharing growth loop.
