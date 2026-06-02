@@ -808,6 +808,41 @@
         background: #fffdfa;
       }
 
+      .queue-actions {
+        display: grid;
+        justify-items: end;
+        gap: 7px;
+      }
+
+      .feedback-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .queue-item:not([data-complete="true"]) .feedback-row {
+        display: none;
+      }
+
+      .feedback-button {
+        min-height: 28px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--paper);
+        color: var(--muted);
+        padding: 3px 9px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .feedback-button.active {
+        border-color: rgba(15, 140, 127, 0.45);
+        background: var(--green-soft);
+        color: #11665c;
+      }
+
       .thumb {
         width: 42px;
         height: 42px;
@@ -2330,22 +2365,62 @@
         });
       });
 
-      const addQueueItem = (label = "Done") => {
+      const addQueueItem = (label = "Done", job = {}) => {
         state.generations += 1;
         if (state.generations === 1) queueList.innerHTML = "";
         const item = document.createElement("div");
         item.className = "queue-item";
+        item.dataset.jobId = job.id || state.jobId || "";
+        item.dataset.provider = job.provider || "";
+        item.dataset.template = state.template;
+        item.dataset.ratio = state.ratio;
+        item.dataset.resolution = state.resolution;
+        item.dataset.seconds = Number.parseInt(state.length, 10);
+        item.dataset.complete = label === "Done" ? "true" : "false";
         item.innerHTML = `
           <div class="thumb" aria-hidden="true"></div>
           <div>
             <div class="queue-title">${state.template} video #${state.generations}</div>
             <div class="queue-meta">${state.length} / ${state.ratio} / ${state.resolution} / ${currentCost()} credits</div>
           </div>
-          <span class="pill">${label}</span>
+          <div class="queue-actions">
+            <span class="pill">${label}</span>
+            <div class="feedback-row" aria-label="Result feedback">
+              <button class="feedback-button" type="button" data-feedback="good">Good</button>
+              <button class="feedback-button" type="button" data-feedback="distorted">Distorted</button>
+            </div>
+          </div>
         `;
         queueList.prepend(item);
         return item.querySelector(".pill");
       };
+
+      queueList.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-feedback]");
+        if (!button) return;
+
+        const item = button.closest(".queue-item");
+        if (!item) return;
+
+        item.querySelectorAll("[data-feedback]").forEach((candidate) => candidate.classList.remove("active"));
+        button.classList.add("active");
+
+        const rating = button.dataset.feedback;
+        trackEvent("result_feedback", {
+          rating,
+          jobId: item.dataset.jobId || "",
+          provider: item.dataset.provider || "",
+          template: item.dataset.template || state.template,
+          ratio: item.dataset.ratio || state.ratio,
+          resolution: item.dataset.resolution || state.resolution,
+          seconds: Number.parseInt(item.dataset.seconds || state.length, 10),
+        });
+        creditNote.textContent =
+          rating === "distorted"
+            ? "Feedback saved. Try a clearer photo, shorter motion, or the Natural Portrait template to reduce distortion."
+            : "Feedback saved. This helps us learn which templates produce usable results.";
+        bumpEvent();
+      });
 
       const createBackendJob = async () => {
         const response = await fetch("/api/video/jobs", {
@@ -2425,7 +2500,7 @@
             trackEvent("generate_job_created", { jobId: job.id || "", provider: job.provider || "" });
             state.jobId = job.id || "";
             if (typeof job.remainingCredits === "number") state.balance = job.remainingCredits;
-            const pill = addQueueItem(job.status === "succeeded" ? "Done" : "Queued");
+            const pill = addQueueItem(job.status === "succeeded" ? "Done" : "Queued", job);
             creditNote.textContent = job.provider === "mock"
               ? "Mock backend job created. Configure a real API key to submit video generation."
               : "Real video job submitted. Waiting for provider result...";
@@ -2439,6 +2514,7 @@
             generateButton.disabled = false;
             generateButton.textContent = "Generate another";
             if (pill) pill.textContent = "Done";
+            pill?.closest(".queue-item")?.setAttribute("data-complete", "true");
             creditNote.textContent = state.outputUrl
               ? "Video is ready. You can download the generated MP4."
               : "Video job completed.";
@@ -2470,7 +2546,7 @@
             downloadButton.disabled = false;
             downloadButton.textContent = currentCopy.download;
             creditNote.textContent = "Preview generated. HD no-watermark export is the paid upgrade point.";
-            addQueueItem();
+            addQueueItem("Done", { provider: "local-demo" });
             updateEstimate();
             trackEvent("generate_success", { provider: "local-demo" });
             bumpEvent();

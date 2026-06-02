@@ -159,3 +159,9 @@ The project does not yet:
 - Included official submission links, UTM tracking URLs, reusable English descriptions, and Chinese social copy.
 - Linked the launch kit from the protected Ops dashboard so promotion work is easier to run after deployment.
 - Marked the launch kit as `noindex` and blocked `/launch-kit` in `robots.txt`.
+
+## 2026-06-02: Result Quality Feedback
+
+- Added lightweight feedback buttons to completed generation records.
+- Users can mark a result as `Good` or `Distorted`.
+- The feedback is tracked as `result_feedback` in analytics so future template and model decisions can use quality signals, not just job success.

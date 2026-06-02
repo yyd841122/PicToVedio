@@ -165,12 +165,15 @@ MotionPic records lightweight product events in `analytics_events`:
 - `generate_job_created`
 - `generate_success`
 - `generate_failed`
+- `result_feedback`
 - `checkout_click`
 - `checkout_redirect`
 - `checkout_return_success`
 - `payment_credit_granted`
 
 Local development stores these events in `data/db.json`. Render/Supabase stores them in the `analytics_events` table. A private summary endpoint is available at:
+
+`result_feedback` is fired from the generation history after a completed clip. It records whether the user marked the output as usable or distorted, which helps compare templates, prompts, and provider costs.
 
 ```text
 /api/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN
