@@ -50,6 +50,7 @@ Last updated: 2026-06-02
 - [x] Rebuilt promotion copy with clean English and Chinese launch snippets.
 - [x] Added search engine submission guide and directory submission pack.
 - [x] Added second-wave SEO guide pages for ecommerce product videos, pet photo animation, and old photo animation.
+- [x] Added protected IndexNow submission endpoint and public verification file.
 
 ## In Progress
 
@@ -104,6 +105,7 @@ Last updated: 2026-06-02
 - [x] Let template SEO pages open the generator with the matching template selected.
 - [ ] Create fully translated legal and template pages for EN/ZH/DE/IT/FR/ES/JA/KO.
 - [ ] Submit sitemap to Google Search Console and Bing Webmaster Tools.
+- [x] Add protected IndexNow submit helper for sitemap URLs.
 - [x] Check `/llms.txt` after deploy and keep it aligned with new public pages.
 - [x] Prepare copy-and-paste submission fields for AI tool directories and launch communities.
 - [ ] Prepare Baidu submission if targeting Chinese search.

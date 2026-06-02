@@ -78,8 +78,33 @@ Steps:
 
 Notes:
 
-- Bing recommends IndexNow for fast URL discovery. We can add IndexNow later after the current launch flow is stable.
+- MotionPic now includes a protected IndexNow helper. After a public-page deploy, open `/admin/analytics`, log in, and click `IndexNow`. The JSON result should show `ok: true` or an upstream status/error to review.
+- The public verification key is available at `https://video.cozyguidehub.com/indexnow-key.txt`.
 - Bing can be useful because it also feeds parts of the Microsoft search ecosystem.
+
+## IndexNow Quick Submit
+
+Use this after adding or changing public pages:
+
+```text
+https://video.cozyguidehub.com/admin/analytics
+```
+
+Steps:
+
+1. Open the analytics dashboard.
+2. Log in with the private analytics token if needed.
+3. Click `IndexNow`.
+4. Confirm the JSON response includes the number of submitted URLs.
+5. If the response is not successful, wait a few minutes and retry once from the same button.
+
+What it submits:
+
+- The endpoint reads `sitemap.xml`.
+- It submits public URLs for `video.cozyguidehub.com`.
+- It uses `indexnow-key.txt` as the public verification file.
+
+This does not replace Google Search Console or Bing Webmaster Tools. It is an extra discovery signal for engines that support IndexNow.
 
 ## AI Search / GEO Checks
 

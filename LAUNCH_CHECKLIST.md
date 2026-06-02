@@ -56,9 +56,11 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `/robots.txt` returns 200.
 - [x] `/sitemap.xml` returns 200.
 - [x] `/llms.txt` returns 200.
+- [ ] `/indexnow-key.txt` returns 200.
 - [ ] Homepage source contains title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
 - [x] Create a search submission guide.
 - [x] Create a directory submission pack.
+- [ ] After the latest deploy, click `IndexNow` in `/admin/analytics` and confirm the JSON response.
 - [ ] Submit `https://video.cozyguidehub.com/sitemap.xml` to Google Search Console.
 - [ ] Submit the same sitemap to Bing Webmaster Tools.
 - [ ] Submit the homepage and template pages to AI tool directories.

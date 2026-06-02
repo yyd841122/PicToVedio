@@ -101,6 +101,10 @@ const server = createServer(async (req, res) => {
       return await handleGetOpsSummary(req, res, url);
     }
 
+    if (req.method === "GET" && url.pathname === "/api/admin/indexnow") {
+      return await handleSubmitIndexNow(req, res, url);
+    }
+
     if (req.method === "GET" && url.pathname === "/admin/ops") {
       return await handleGetOpsDashboard(req, res, url);
     }
@@ -329,6 +333,58 @@ async function handleGetOpsDashboard(req, res, url) {
   const limit = Math.min(200, Math.max(10, Number(url.searchParams.get("limit") || 50)));
   const data = await getAdminOpsData(limit);
   return sendHtml(res, 200, renderOpsDashboard(data));
+}
+
+async function handleSubmitIndexNow(req, res, url) {
+  if (!canReadAdminAnalytics(req, url)) {
+    return sendJson(res, 403, { error: "Admin access denied" });
+  }
+
+  const origin = getPublicOrigin(req);
+  const key = getIndexNowKey();
+  const urls = getSitemapUrls()
+    .filter((entry) => entry.startsWith(origin))
+    .slice(0, 10000);
+
+  if (!urls.length) {
+    return sendJson(res, 400, {
+      ok: false,
+      error: "No public URLs found in sitemap.xml for this origin",
+      origin,
+    });
+  }
+
+  const payload = {
+    host: new URL(origin).host,
+    key,
+    keyLocation: `${origin}/indexnow-key.txt`,
+    urlList: urls,
+  };
+
+  try {
+    const response = await fetch("https://api.indexnow.org/IndexNow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const body = await response.text();
+    return sendJson(res, response.ok ? 200 : 502, {
+      ok: response.ok,
+      status: response.status,
+      submitted: urls.length,
+      keyLocation: payload.keyLocation,
+      body: body.slice(0, 1000),
+      urls,
+    });
+  } catch (error) {
+    return sendJson(res, 502, {
+      ok: false,
+      error: error.message,
+      submitted: urls.length,
+      keyLocation: payload.keyLocation,
+      urls,
+    });
+  }
 }
 
 async function handleAnalyticsAdminLogin(req, res) {
@@ -1167,6 +1223,7 @@ function renderAnalyticsDashboard(summary, url) {
     <div class="actions">
       <a class="button" href="${escapeHtml(apiUrl)}">JSON API</a>
       <a class="button" href="/admin/ops">Ops Dashboard</a>
+      <a class="button" href="/api/admin/indexnow">IndexNow</a>
       <a class="button primary" href="${escapeHtml(refreshUrl)}">Refresh</a>
       <a class="button" href="/admin/analytics/logout">Logout</a>
     </div>
@@ -1342,6 +1399,7 @@ function renderOpsDashboard(data) {
     <div class="actions">
       <a class="button" href="/api/admin/ops">JSON API</a>
       <a class="button" href="/admin/analytics">Analytics</a>
+      <a class="button" href="/api/admin/indexnow">IndexNow</a>
       <a class="button primary" href="/admin/ops">Refresh</a>
       <a class="button" href="/admin/analytics/logout">Logout</a>
     </div>
@@ -1911,6 +1969,30 @@ function isHttpsRequest(req) {
 function isLocalRequest(req) {
   const host = String(req.headers.host || "");
   return host.startsWith("localhost") || host.startsWith("127.0.0.1") || host.startsWith("[::1]");
+}
+
+function getPublicOrigin(req) {
+  const protocol = isHttpsRequest(req) ? "https" : "http";
+  const host = String(req.headers["x-forwarded-host"] || req.headers.host || "localhost:8787").split(",")[0].trim();
+  if (host && !host.startsWith("localhost") && !host.startsWith("127.0.0.1") && !host.startsWith("[::1]")) {
+    return `${protocol}://${host}`;
+  }
+  return (config.appUrl || "http://localhost:8787").replace(/\/$/, "");
+}
+
+function getIndexNowKey() {
+  const keyPath = resolve(join(root, "indexnow-key.txt"));
+  if (!existsSync(keyPath)) return "motionpic-ai-indexnow-2026-06-02";
+  return readFileSync(keyPath, "utf8").trim();
+}
+
+function getSitemapUrls() {
+  const sitemapPath = resolve(join(root, "sitemap.xml"));
+  if (!existsSync(sitemapPath)) return [];
+  const xml = readFileSync(sitemapPath, "utf8");
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map((match) => match[1].trim())
+    .filter(Boolean);
 }
 
 function isHttpHeaderValue(value) {

@@ -224,6 +224,11 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [SEARCH_SUBMISSION_GUIDE.md](./SEARCH_SUBMISSION_GUIDE.md): Google, Bing, sitemap, and AI-search submission steps.
 - [DIRECTORY_SUBMISSION_PACK.md](./DIRECTORY_SUBMISSION_PACK.md): copy-and-paste fields for AI tool directories and launch communities.
 
+## Search Discovery Helpers
+
+- `/indexnow-key.txt`: public IndexNow verification key.
+- `/api/admin/indexnow`: protected admin endpoint that reads `sitemap.xml` and submits public URLs to IndexNow. Open it from the `IndexNow` button in `/admin/analytics` or `/admin/ops` after important public-page deploys.
+
 ## Legal Pages
 
 - `/privacy`: privacy policy for uploads, generated assets, payments, and support data.
