@@ -47,6 +47,7 @@ Last updated: 2026-06-02
 - [x] Fixed SEO guide and template CTAs to jump directly to the generator.
 - [x] Added `llms.txt` for GEO and AI-search discovery.
 - [x] Added a production launch checklist for payment, SEO, storage, and first-revenue validation.
+- [x] Rebuilt promotion copy with clean English and Chinese launch snippets.
 
 ## In Progress
 

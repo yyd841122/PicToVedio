@@ -30,6 +30,12 @@ Name:
 MotionPic AI
 ```
 
+Website:
+
+```text
+https://video.cozyguidehub.com
+```
+
 Short description:
 
 ```text
@@ -57,6 +63,12 @@ Keywords:
 
 ```text
 AI photo to video, photo to video generator, image to video AI, AI video generator, product video maker, pet animation, old photo animation, AI kiss video
+```
+
+Suggested tags:
+
+```text
+AI video, image to video, social media, ecommerce, creator tools, video ads, pet animation, old photo animation
 ```
 
 ## Product Hunt
@@ -98,9 +110,9 @@ Build-in-public angle:
 ```text
 I am building MotionPic AI, an AI photo-to-video generator.
 
-The first version started as a simple static page with mock generation. Then I added Creem test payments, Supabase credit persistence, Render deployment, Cloudflare custom domain, and multilingual UI.
+The first version started as a simple static page with mock generation. Then I added Creem test payments, Supabase credit persistence, Render deployment, Cloudflare custom domain, DashScope real generation, analytics, and ops dashboards.
 
-The next hard part is moving from mock generation to real video generation while keeping the credit and payment flow reliable.
+The hardest part is balancing generation quality, provider cost, and a credit model that can actually survive real users.
 
 What I am trying to learn:
 - Which photo-to-video templates people actually pay for.
@@ -126,7 +138,7 @@ Soft post:
 I am building a small AI photo-to-video tool and trying to validate which use case matters most.
 
 The current templates are:
-- Couple / kiss-style short video
+- Couple / romantic short video
 - Product image to video ad
 - Pet photo animation
 - Old photo alive
@@ -137,9 +149,9 @@ If you have used tools like this before, what made you pay: no watermark, HD exp
 Technical post:
 
 ```text
-I built the first MVP of an AI photo-to-video SaaS with a very small stack: plain HTML/CSS/JS, Node http server, Render, Cloudflare, Supabase, and Creem for test checkout.
+I built the first MVP of an AI photo-to-video SaaS with a small stack: plain HTML/CSS/JS, Node http server, Render, Cloudflare, Supabase, DashScope, and Creem for checkout.
 
-The hardest part so far was not the UI. It was getting credits, webhook dedupe, payment return flow, and persistence to work reliably before connecting a real video API.
+The hardest part so far was not the UI. It was getting credits, webhook dedupe, payment return flow, persistence, analytics, and provider cost tracking to work reliably before going live.
 
 Happy to share details if anyone is building a similar small AI tool.
 ```
@@ -167,15 +179,16 @@ Post 2:
 ```text
 Tiny SaaS lesson:
 
-Before spending money on real video generation APIs, I wired:
+Before pushing traffic to an AI video product, I wired:
 - credits
 - checkout
 - webhook dedupe
 - Supabase persistence
-- deployment
+- analytics
+- ops dashboard
 - custom domain
 
-Now the product can validate payment intent before scaling generation cost.
+The product has to survive payment and cost reality, not just look good.
 ```
 
 Post 3:
@@ -209,11 +222,11 @@ Post copy:
 
 它的逻辑很简单：
 1. 上传一张照片
-2. 选择模板
+2. 选择一个模板
 3. 生成适合发布的短视频
 
 目前最适合的场景：
-- 人物照变短视频
+- 人物照片变短视频
 - 宠物照片动起来
 - 产品图变广告视频
 - 老照片做纪念视频
