@@ -75,9 +75,6 @@ create index if not exists idx_analytics_events_name_created
 create index if not exists idx_analytics_events_user_created
   on analytics_events(user_id, created_at desc);
 
-grant usage on schema public to anon, authenticated, service_role;
-grant select, insert, update, delete on table analytics_events to anon, authenticated, service_role;
-
 alter table video_jobs
   add column if not exists input_url text;
 
@@ -85,9 +82,30 @@ insert into app_users(id, credits)
 values ('demo-user', 12)
 on conflict (id) do nothing;
 
-alter table app_users disable row level security;
-alter table video_jobs disable row level security;
-alter table payments disable row level security;
-alter table webhook_events disable row level security;
-alter table credit_ledger disable row level security;
-alter table analytics_events disable row level security;
+-- Security hardening:
+-- MotionPic AI never needs browser clients to access Supabase directly.
+-- The public site talks to the Render backend, and Render uses SUPABASE_SERVICE_ROLE_KEY.
+-- Keep RLS enabled and revoke public API-role access from all product tables.
+revoke all on schema public from anon, authenticated;
+revoke all on all tables in schema public from anon, authenticated;
+revoke all on all sequences in schema public from anon, authenticated;
+revoke all on all functions in schema public from anon, authenticated;
+
+alter default privileges in schema public revoke all on tables from anon, authenticated;
+alter default privileges in schema public revoke all on sequences from anon, authenticated;
+alter default privileges in schema public revoke all on functions from anon, authenticated;
+
+alter table app_users enable row level security;
+alter table video_jobs enable row level security;
+alter table payments enable row level security;
+alter table webhook_events enable row level security;
+alter table credit_ledger enable row level security;
+alter table analytics_events enable row level security;
+
+grant usage on schema public to service_role;
+grant select, insert, update, delete on table app_users to service_role;
+grant select, insert, update, delete on table video_jobs to service_role;
+grant select, insert, update, delete on table payments to service_role;
+grant select, insert, update, delete on table webhook_events to service_role;
+grant select, insert, update, delete on table credit_ledger to service_role;
+grant select, insert, update, delete on table analytics_events to service_role;

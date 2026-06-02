@@ -172,3 +172,10 @@ The project does not yet:
 - Added UTM capture for launch links such as `utm_source`, `utm_medium`, and `utm_campaign`.
 - Saved first-touch attribution in the browser so upload, generation, checkout, and payment events can stay connected to the original promotion channel.
 - Added Channel Attribution to the private analytics dashboard for page views, upload success, generation success, checkout redirects, and paid credits.
+
+## 2026-06-03: Supabase Security Hardening
+
+- Reviewed a Supabase critical warning about public table access and sensitive columns.
+- Identified that earlier MVP testing SQL had disabled Row Level Security and granted direct table access to public API roles.
+- Updated `supabase.sql` so future database setup enables RLS, revokes `anon` / `authenticated` access, and keeps backend-only `service_role` access.
+- Added `SUPABASE_SECURITY_FIX.sql` as a one-time live database repair script for clearing Supabase advisor warnings.

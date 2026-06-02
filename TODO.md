@@ -39,6 +39,8 @@ Last updated: 2026-06-02
 - [x] Added UTM/channel attribution tracking for launch links and promotion sources.
 - [x] Added private ops dashboard for users, credits, payments, video jobs, ledger, and webhooks.
 - [x] Added private ops cost/refund signals for estimated DashScope spend and credit refunds.
+- [x] Hardened Supabase SQL defaults by enabling RLS and revoking direct `anon` / `authenticated` table access.
+- [x] Added `SUPABASE_SECURITY_FIX.sql` for clearing Supabase public-access security warnings.
 - [x] Added template page deep links that preselect the matching generator template.
 - [x] Added FAQPage and BreadcrumbList schema to template SEO pages.
 - [x] Blocked admin and API surfaces from search indexing.
@@ -68,6 +70,7 @@ Last updated: 2026-06-02
 - [x] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
 - [ ] Create Cloudflare R2 bucket and access keys.
+- [ ] Run `SUPABASE_SECURITY_FIX.sql` in the live Supabase project and confirm the Supabase advisor warning clears.
 - [ ] Keep Creem in test mode until real generation works.
 - [x] Build the first SEO/GEO content layer around the homepage and templates.
 

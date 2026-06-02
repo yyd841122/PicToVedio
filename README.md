@@ -195,6 +195,27 @@ For business operations, open:
 /admin/ops
 ```
 
+## Supabase Security
+
+The browser must not connect to Supabase directly. All public pages call the Render backend, and the backend uses `SUPABASE_SERVICE_ROLE_KEY` to read and write data.
+
+If Supabase sends warnings such as `rls_disabled_in_public` or `sensitive_columns_exposed`, run `SUPABASE_SECURITY_FIX.sql` in the Supabase SQL Editor. This migration:
+
+- Enables Row Level Security on all MotionPic tables.
+- Revokes direct `anon` and `authenticated` access to public tables, sequences, and functions.
+- Keeps `service_role` access for the Render backend.
+
+After running it, test:
+
+```text
+/health
+/api/account
+/admin/analytics
+/admin/ops
+```
+
+Then re-run the Supabase security advisor or click Resolve issue in the warning email.
+
 The ops dashboard uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, Creem webhook events, refund signals, and estimated DashScope provider cost.
 
 For copy-and-paste launch fields, directory submission links, community post drafts, and UTM tracking URLs, open:
