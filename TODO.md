@@ -49,6 +49,7 @@ Last updated: 2026-06-02
 - [x] Added a production launch checklist for payment, SEO, storage, and first-revenue validation.
 - [x] Rebuilt promotion copy with clean English and Chinese launch snippets.
 - [x] Added search engine submission guide and directory submission pack.
+- [x] Added second-wave SEO guide pages for ecommerce product videos, pet photo animation, and old photo animation.
 
 ## In Progress
 
@@ -115,6 +116,7 @@ Last updated: 2026-06-02
 - [ ] Add A/B tests for hero copy and pricing.
 - [ ] Add referral or watermark-sharing growth loop.
 - [ ] Publish blog posts around photo-to-video use cases.
+- [x] Publish first static guide pages around photo-to-video use cases.
 - [ ] Submit to AI tool directories.
 - [ ] Launch on Product Hunt.
 - [ ] Post build-in-public updates on Indie Hackers and X.

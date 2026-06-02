@@ -172,9 +172,9 @@ Homepage should answer:
 Future GEO pages:
 
 - MotionPic AI vs general AI video generator.
-- Best AI photo to video generator for ecommerce.
-- How to turn pet photos into short AI videos.
-- How to animate old photos with AI.
+- Best AI photo to video generator for ecommerce. Implemented as `/guides/ecommerce-product-video-ads`.
+- How to turn pet photos into short AI videos. Implemented as `/guides/pet-photo-animation`.
+- How to animate old photos with AI. Implemented as `/guides/old-photo-animation`.
 - AI kiss video generator use cases.
 
 ## 7. First SEO Landing Pages

@@ -241,6 +241,17 @@ The footer currently uses `support@cozyguidehub.com` as the public support email
 
 These pages give the first long-tail keywords dedicated entry points for search engines, AI search, and directory submissions.
 
+## SEO Guide Pages
+
+- `/guides/best-photos-for-ai-video`
+- `/guides/reduce-ai-video-distortion`
+- `/guides/photo-to-video-cost`
+- `/guides/ecommerce-product-video-ads`
+- `/guides/pet-photo-animation`
+- `/guides/old-photo-animation`
+
+These guide pages answer practical questions around input quality, provider cost, distortion, ecommerce ads, pet clips, and old photo memories.
+
 ## AI Discovery
 
 - `/llms.txt`: concise MotionPic AI context for AI search, answer engines, and directory reviewers.

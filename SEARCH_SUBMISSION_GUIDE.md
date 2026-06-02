@@ -19,6 +19,9 @@ https://video.cozyguidehub.com/templates/old-photo-alive
 https://video.cozyguidehub.com/guides/best-photos-for-ai-video
 https://video.cozyguidehub.com/guides/reduce-ai-video-distortion
 https://video.cozyguidehub.com/guides/photo-to-video-cost
+https://video.cozyguidehub.com/guides/ecommerce-product-video-ads
+https://video.cozyguidehub.com/guides/pet-photo-animation
+https://video.cozyguidehub.com/guides/old-photo-animation
 ```
 
 ## Google Search Console
@@ -135,5 +138,7 @@ Priority 3:
 ```text
 https://video.cozyguidehub.com/guides/best-photos-for-ai-video
 https://video.cozyguidehub.com/guides/reduce-ai-video-distortion
+https://video.cozyguidehub.com/guides/ecommerce-product-video-ads
+https://video.cozyguidehub.com/guides/pet-photo-animation
+https://video.cozyguidehub.com/guides/old-photo-animation
 ```
-

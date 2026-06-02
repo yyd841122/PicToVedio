@@ -69,6 +69,7 @@ Use this checklist before moving from test mode to real public launch.
 - [ ] Homepage explains what the site does, who it is for, and how credits work.
 - [ ] Template pages have one clear H1, FAQ schema, and a CTA back to the generator.
 - [ ] Guide pages explain photo quality, distortion reduction, and cost.
+- [x] Second-wave guide pages cover ecommerce, pet, and old-photo use cases.
 - [ ] Privacy, Terms, and Refund pages are visible from the footer.
 - [ ] Support email is final and monitored.
 
