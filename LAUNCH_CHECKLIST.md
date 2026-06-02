@@ -69,6 +69,7 @@ Use this checklist before moving from test mode to real public launch.
 ## 7. Public Pages
 
 - [x] Homepage explains what the site does, who it is for, and how credits work.
+- [x] Homepage links to photo quality, distortion, cost, ecommerce, pet, and old-photo guides from a visible resource section.
 - [x] Template pages have one clear H1, FAQ schema, and a CTA back to the generator.
 - [x] Guide pages explain photo quality, distortion reduction, and cost.
 - [x] Second-wave guide pages cover ecommerce, pet, and old-photo use cases.

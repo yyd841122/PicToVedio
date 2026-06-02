@@ -51,6 +51,7 @@ Last updated: 2026-06-02
 - [x] Added search engine submission guide and directory submission pack.
 - [x] Added second-wave SEO guide pages for ecommerce product videos, pet photo animation, and old photo animation.
 - [x] Added protected IndexNow submission endpoint and public verification file.
+- [x] Added visible homepage resource links to the SEO guide pages.
 
 ## In Progress
 
