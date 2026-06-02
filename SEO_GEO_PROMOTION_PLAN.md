@@ -127,6 +127,7 @@ Implemented:
 
 - `robots.txt`
 - `sitemap.xml`
+- `llms.txt`
 - `404.html`
 - Canonical URL.
 - Hreflang links.
@@ -136,6 +137,7 @@ Next:
 
 - Submit sitemap to Google Search Console.
 - Submit sitemap to Bing Webmaster Tools.
+- Verify `/llms.txt` after each major public-page update.
 - Add Baidu Search Resource Platform if targeting Chinese search.
 - Add route-based language URLs later:
   - `/en/`

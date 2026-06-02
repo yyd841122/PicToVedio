@@ -9,17 +9,16 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Photo upload UI with click and drag-and-drop support
 - Template selection for creator, commerce, and emotional use cases
 - Aspect ratio and quality controls
-- Credit cost estimates and demo account balance
-- Generation history and mock video jobs
+- Credit cost estimates and anonymous account balance
+- Generation history and real or mock video jobs
 - Creem checkout integration for credit packs
 - Creem webhook endpoint for paid credit top-ups
 - Webhook event deduplication
 - Credit ledger entries for top-ups
 - Lightweight analytics events for page views, uploads, generation, checkout, and paid credit grants
 - Private analytics summary endpoint for checking recent conversion events
-- UI language switcher for English, Chinese, German, Italian, French, Spanish, Japanese, and Korean
-- SEO alternate links for multilingual launch URLs
 - SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and custom 404 page
+- `llms.txt` for GEO and AI-search discovery
 - Privacy Policy, Terms of Service, Refund Policy, and footer contact links
 - SEO template landing pages for AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive
 - OpenAI video provider adapter placeholder
@@ -193,22 +192,11 @@ Set `ESTIMATED_VIDEO_COST_CNY` in Render if the observed DashScope unit cost cha
 
 If `ANALYTICS_ADMIN_TOKEN` is not set, the summary endpoint is only available from localhost. The public tracking endpoint is fire-and-forget from the browser, so failed analytics writes do not block upload, generation, or checkout.
 
-## Multilingual URLs
+## Language Strategy
 
-```text
-/?lang=en
-/?lang=zh
-/?lang=de
-/?lang=it
-/?lang=fr
-/?lang=es
-/?lang=ja
-/?lang=ko
-```
+The first indexed release is English-only. This avoids misleading visitors with a language selector while only some product, legal, template, and guide pages are translated.
 
-The selector stores the visitor's language locally and updates page title, description, hero, tool, pricing, use cases, FAQ, and checkout copy.
-
-Legal pages and template landing pages are intentionally English-only in this first stage to avoid misleading visitors with partial translations. Fully translated legal and template pages can be added later as dedicated SEO pages.
+When full translations are ready, add dedicated static SEO paths such as `/de/`, `/fr/`, `/es/`, `/ja/`, `/ko/`, and `/zh/` instead of relying on query-string translations.
 
 ## Deployment
 
@@ -232,6 +220,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [SEO_GEO_PROMOTION_PLAN.md](./SEO_GEO_PROMOTION_PLAN.md): SEO, GEO, and promotion execution plan.
 - [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
 - [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
+- [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.
 
 ## Legal Pages
 
@@ -249,6 +238,10 @@ The footer currently uses `support@cozyguidehub.com` as the public support email
 - `/templates/old-photo-alive`
 
 These pages give the first long-tail keywords dedicated entry points for search engines, AI search, and directory submissions.
+
+## AI Discovery
+
+- `/llms.txt`: concise MotionPic AI context for AI search, answer engines, and directory reviewers.
 
 ## Important Notes
 

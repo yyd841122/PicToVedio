@@ -305,19 +305,26 @@ Supabase payments has the payment id
 Supabase webhook_events has checkout.completed
 ```
 
-## 10. Multilingual Launch URLs
+## 10. Search And AI Discovery
 
-The same app supports eight languages through the `lang` query parameter:
+The first indexed release is English-only so users do not see a language selector that only partially translates the product.
+
+Before public promotion, verify:
 
 ```text
-https://video.cozyguidehub.com/?lang=en
-https://video.cozyguidehub.com/?lang=zh
-https://video.cozyguidehub.com/?lang=de
-https://video.cozyguidehub.com/?lang=it
-https://video.cozyguidehub.com/?lang=fr
-https://video.cozyguidehub.com/?lang=es
-https://video.cozyguidehub.com/?lang=ja
-https://video.cozyguidehub.com/?lang=ko
+https://video.cozyguidehub.com/robots.txt
+https://video.cozyguidehub.com/sitemap.xml
+https://video.cozyguidehub.com/llms.txt
 ```
 
-For SEO, start with one language per traffic channel instead of publishing thin pages everywhere at once. English, Japanese, Korean, Spanish, French, German, Italian, and Chinese are wired into the UI language selector.
+Then submit:
+
+```text
+https://video.cozyguidehub.com/sitemap.xml
+```
+
+to Google Search Console and Bing Webmaster Tools.
+
+When fully translated pages are ready, add dedicated static paths such as `/de/`, `/fr/`, `/es/`, `/ja/`, `/ko/`, and `/zh/` instead of relying on query-string translations for SEO.
+
+See `LAUNCH_CHECKLIST.md` for the full launch checklist.

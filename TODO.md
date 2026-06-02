@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-05-28
+Last updated: 2026-06-02
 
 ## Done
 
@@ -45,6 +45,8 @@ Last updated: 2026-05-28
 - [x] Rewrote homepage source copy to English for SEO and no-JS visitors.
 - [x] Added photo quality guidance near upload to reduce distorted generations and wasted credits.
 - [x] Fixed SEO guide and template CTAs to jump directly to the generator.
+- [x] Added `llms.txt` for GEO and AI-search discovery.
+- [x] Added a production launch checklist for payment, SEO, storage, and first-revenue validation.
 
 ## In Progress
 
@@ -99,6 +101,7 @@ Last updated: 2026-05-28
 - [x] Let template SEO pages open the generator with the matching template selected.
 - [ ] Create fully translated legal and template pages for EN/ZH/DE/IT/FR/ES/JA/KO.
 - [ ] Submit sitemap to Google Search Console and Bing Webmaster Tools.
+- [ ] Check `/llms.txt` after deploy and keep it aligned with new public pages.
 - [ ] Prepare Baidu submission if targeting Chinese search.
 
 ## Later: P2
