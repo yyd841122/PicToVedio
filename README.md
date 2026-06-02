@@ -220,6 +220,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [SEO_GEO_PROMOTION_PLAN.md](./SEO_GEO_PROMOTION_PLAN.md): SEO, GEO, and promotion execution plan.
 - [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
 - [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
+- [FIRST_REVENUE_PLAYBOOK.md](./FIRST_REVENUE_PLAYBOOK.md): final live-payment, pricing, storage, and first-revenue operating checklist.
 - [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.
 - [SEARCH_SUBMISSION_GUIDE.md](./SEARCH_SUBMISSION_GUIDE.md): Google, Bing, sitemap, and AI-search submission steps.
 - [DIRECTORY_SUBMISSION_PACK.md](./DIRECTORY_SUBMISSION_PACK.md): copy-and-paste fields for AI tool directories and launch communities.

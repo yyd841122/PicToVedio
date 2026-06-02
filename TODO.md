@@ -53,6 +53,7 @@ Last updated: 2026-06-02
 - [x] Added protected IndexNow submission endpoint and public verification file.
 - [x] Added visible homepage resource links to the SEO guide pages.
 - [x] Reset stale generated-video state when a user uploads a new photo.
+- [x] Added first-revenue operating playbook for the live-payment transition.
 
 ## In Progress
 
