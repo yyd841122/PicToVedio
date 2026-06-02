@@ -55,6 +55,7 @@ Last updated: 2026-06-02
 - [x] Reset stale generated-video state when a user uploads a new photo.
 - [x] Added first-revenue operating playbook for the live-payment transition.
 - [x] Added a `/guides` hub page and directory-index serving for SEO guide discovery.
+- [x] Added a Cloudflare R2 setup guide for deferred object-storage setup.
 
 ## In Progress
 
@@ -79,6 +80,7 @@ Last updated: 2026-06-02
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
+- [ ] Follow `R2_SETUP_GUIDE.md` when enabling Cloudflare R2 in Render.
 - [x] Replace `demo-user` with anonymous device IDs.
 - [x] Bind credits to each anonymous user ID.
 - [x] Add safe credit refund behavior when real generation fails.

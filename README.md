@@ -224,6 +224,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.
 - [SEARCH_SUBMISSION_GUIDE.md](./SEARCH_SUBMISSION_GUIDE.md): Google, Bing, sitemap, and AI-search submission steps.
 - [DIRECTORY_SUBMISSION_PACK.md](./DIRECTORY_SUBMISSION_PACK.md): copy-and-paste fields for AI tool directories and launch communities.
+- [R2_SETUP_GUIDE.md](./R2_SETUP_GUIDE.md): Cloudflare R2 setup steps for storing uploaded photos and generated videos.
 
 ## Search Discovery Helpers
 
@@ -271,6 +272,7 @@ These guide pages answer practical questions around input quality, provider cost
 - Use `VIDEO_PROVIDER=dashscope` after adding `DASHSCOPE_API_KEY` to Render.
 - Use Supabase/Postgres on Render before real traffic so paid credits survive restarts and redeploys.
 - Store uploaded photos and generated videos in Cloudflare R2/S3 before real traffic.
+- Use [R2_SETUP_GUIDE.md](./R2_SETUP_GUIDE.md) when you are ready to enable object storage.
 - Keep webhook event ids and payment ids durable; they prevent duplicate credit grants when providers retry webhooks.
 
 ## Scripts
