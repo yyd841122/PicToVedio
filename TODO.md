@@ -116,6 +116,7 @@ Last updated: 2026-06-02
 - [x] Check `/llms.txt` after deploy and keep it aligned with new public pages.
 - [x] Add a guide hub so crawler and AI-search entry points are not only individual articles.
 - [x] Prepare copy-and-paste submission fields for AI tool directories and launch communities.
+- [x] Add an internal `/launch-kit` page with directory links, UTM links, and reusable launch copy.
 - [ ] Prepare Baidu submission if targeting Chinese search.
 
 ## Later: P2

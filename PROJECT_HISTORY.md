@@ -152,3 +152,10 @@ The project does not yet:
 - Extended `/api/account` to return recent video jobs alongside credits and credit ledger entries.
 - Added a homepage credit-panel link to the account page.
 - Marked the account page as `noindex` and blocked `/account` in `robots.txt` because it is not an SEO page.
+
+## 2026-06-02: Internal Launch Kit
+
+- Added `/launch-kit` as an internal copy-and-paste helper for directory submissions, Product Hunt, Indie Hackers, Reddit, X, and Xiaohongshu.
+- Included official submission links, UTM tracking URLs, reusable English descriptions, and Chinese social copy.
+- Linked the launch kit from the protected Ops dashboard so promotion work is easier to run after deployment.
+- Marked the launch kit as `noindex` and blocked `/launch-kit` in `robots.txt`.

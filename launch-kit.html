@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Launch Kit - MotionPic AI</title>
+    <style>
+      :root {
+        --ink: #14231d;
+        --muted: #64746e;
+        --line: #ded8ce;
+        --paper: #fbfaf6;
+        --panel: #ffffff;
+        --teal: #119989;
+        --soft: #f3efe8;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      a {
+        color: var(--teal);
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: rgba(251, 250, 246, 0.94);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        backdrop-filter: blur(14px);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .topbar .shell {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .nav {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        min-height: 42px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--ink);
+        padding: 0 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 850;
+      }
+
+      .button.primary {
+        background: var(--teal);
+        border-color: var(--teal);
+        color: white;
+      }
+
+      main {
+        padding: 54px 0 72px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 7vw, 76px);
+        line-height: 0.98;
+        margin: 0 0 14px;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 26px;
+        margin: 0 0 14px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+      }
+
+      p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .lead {
+        max-width: 760px;
+        font-size: 18px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 20px;
+        box-shadow: 0 18px 45px rgba(20, 35, 29, 0.06);
+      }
+
+      .copy-block {
+        display: grid;
+        gap: 10px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        color: var(--ink);
+        background: #fffefa;
+        font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      .small {
+        min-height: 54px;
+      }
+
+      .channel-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .channel-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 10px;
+      }
+
+      .pill {
+        display: inline-flex;
+        width: fit-content;
+        min-height: 26px;
+        align-items: center;
+        border-radius: 999px;
+        background: #dff7f1;
+        color: #087d70;
+        padding: 3px 9px;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .toast {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 160ms ease, transform 160ms ease;
+        border-radius: 8px;
+        background: var(--ink);
+        color: white;
+        padding: 12px 14px;
+        font-weight: 800;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 860px) {
+        .shell {
+          width: min(100% - 28px, 1120px);
+        }
+
+        .topbar .shell {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 16px 0;
+        }
+
+        .two,
+        .three {
+          grid-template-columns: 1fr;
+        }
+
+        .channel-list li {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell">
+        <a class="brand" href="/">MotionPic AI</a>
+        <nav class="nav" aria-label="Launch kit navigation">
+          <a class="button" href="/admin/ops">Ops Dashboard</a>
+          <a class="button" href="/guides">Guide Hub</a>
+          <a class="button primary" href="/">Generator</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="shell">
+        <span class="pill">Private launch helper</span>
+        <h1>MotionPic Launch Kit</h1>
+        <p class="lead">
+          Copy these fields when submitting MotionPic AI to directories, communities, and social platforms. Use tracking links so the analytics dashboard can show which channels create uploads, generations, and checkout clicks.
+        </p>
+
+        <section class="section grid three">
+          <article class="card copy-block">
+            <h2>Core Tagline</h2>
+            <textarea class="small" readonly>Turn one photo into short AI videos for creators, sellers, pets, couples, and memories.</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+          <article class="card copy-block">
+            <h2>Website</h2>
+            <textarea class="small" readonly>https://video.cozyguidehub.com</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+          <article class="card copy-block">
+            <h2>Category</h2>
+            <textarea class="small" readonly>AI Video Generator
+Image to Video
+Photo Animation
+Marketing Video
+Ecommerce Tools</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+        </section>
+
+        <section class="section grid two">
+          <article class="card copy-block">
+            <h2>Directory Short Description</h2>
+            <textarea readonly>MotionPic AI turns one uploaded photo into a short AI video for TikTok, Reels, product pages, pet animations, couple videos, and old photo memories.</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+          <article class="card copy-block">
+            <h2>Directory Long Description</h2>
+            <textarea readonly>MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a focused motion template, and create short videos for social posts, product pages, ads, or memories. The product uses credits for generation and export workflows and includes templates such as Product Video Ad, Pet Animation, AI Kiss Video, and Old Photo Alive.</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+        </section>
+
+        <section class="section grid two">
+          <article class="card copy-block">
+            <h2>Product Hunt Maker Comment</h2>
+            <textarea readonly>Hi Product Hunt! I built MotionPic AI to make photo-to-video creation feel simple and practical.
+
+The idea is straightforward: upload one photo, choose a focused motion template, and create a short AI video for social posts, product pages, pets, couples, or old memories.
+
+I started with the use cases that feel easiest to validate: creators need more short-form assets, ecommerce sellers need product motion ads, and many users love emotional formats like pet animations, couple videos, and old photo memories.
+
+Right now I am improving generation quality, cost control, and template coverage. I would love feedback on which template should be improved first.</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+          <article class="card copy-block">
+            <h2>Indie Hackers / Reddit Post</h2>
+            <textarea readonly>I am building a small AI photo-to-video SaaS and trying to validate which use case matters most.
+
+The current templates are:
+- Product image to video ad
+- Pet photo animation
+- Couple / romantic short video
+- Old photo alive
+
+The hardest parts so far have been credit accounting, webhook dedupe, payment return flow, generation quality, and provider cost control.
+
+If you have used photo-to-video tools before, what would make you pay: no watermark, HD export, better templates, faster generation, or fewer distorted outputs?</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+        </section>
+
+        <section class="section grid two">
+          <article class="card copy-block">
+            <h2>X / Twitter Post</h2>
+            <textarea readonly>Building MotionPic AI:
+
+Upload one photo -> choose a template -> generate a short AI video.
+
+Starting with:
+- Product Video Ad
+- Pet Animation
+- AI Kiss Video
+- Old Photo Alive
+
+Goal: help creators and sellers make usable short videos faster.</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+          <article class="card copy-block">
+            <h2>Chinese Social Post</h2>
+            <textarea readonly>我在做一个 AI 照片转视频工具：MotionPic AI。
+
+它的逻辑很简单：
+1. 上传一张照片
+2. 选择一个视频模板
+3. 生成适合发布的 AI 短视频
+
+现在优先做 4 个场景：产品图广告视频、宠物照片动起来、情侣/纪念日短视频、老照片动起来。
+
+如果你会用这类工具，你最愿意为什么付费：无水印、高清下载、生成更快，还是模板效果更稳定？</textarea>
+            <button class="button primary" type="button" data-copy>Copy</button>
+          </article>
+        </section>
+
+        <section class="section card">
+          <h2>Submission Links</h2>
+          <ul class="channel-list">
+            <li><span>Google Search Console</span><a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+            <li><span>Bing Webmaster Tools</span><a href="https://www.bing.com/webmasters" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+            <li><span>Toolify</span><a href="https://www.toolify.ai/submit" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+            <li><span>Futurepedia</span><a href="https://www.futurepedia.io/submit-tool" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+            <li><span>There Is An AI For That</span><a href="https://theresanaiforthat.com/submit/" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+            <li><span>SaaSHub</span><a href="https://www.saashub.com/submit" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+            <li><span>AI Top Tools</span><a href="https://aitoptools.com/submit-tool/" target="_blank" rel="noopener noreferrer nofollow">Open</a></li>
+          </ul>
+        </section>
+
+        <section class="section card copy-block">
+          <h2>Tracking URLs</h2>
+          <textarea readonly>https://video.cozyguidehub.com/?utm_source=toolify&utm_medium=directory&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=futurepedia&utm_medium=directory&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=theresanaiforthat&utm_medium=directory&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=saashub&utm_medium=directory&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=producthunt&utm_medium=launch&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=indiehackers&utm_medium=community&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=reddit&utm_medium=community&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=x&utm_medium=social&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=xiaohongshu&utm_medium=social&utm_campaign=motionpic-ai</textarea>
+          <button class="button primary" type="button" data-copy>Copy</button>
+        </section>
+      </div>
+    </main>
+
+    <div class="toast" id="toast">Copied</div>
+
+    <script>
+      const toast = document.querySelector("#toast");
+      let toastTimer;
+
+      const showToast = () => {
+        window.clearTimeout(toastTimer);
+        toast.classList.add("show");
+        toastTimer = window.setTimeout(() => toast.classList.remove("show"), 1400);
+      };
+
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const text = button.closest(".copy-block")?.querySelector("textarea")?.value || "";
+          try {
+            await navigator.clipboard.writeText(text);
+            showToast();
+          } catch {
+            const textarea = button.closest(".copy-block")?.querySelector("textarea");
+            textarea?.focus();
+            textarea?.select();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1422,6 +1422,7 @@ function renderOpsDashboard(data) {
       <a class="button" href="/api/admin/ops">JSON API</a>
       <a class="button" href="/admin/analytics">Analytics</a>
       <a class="button" href="/api/admin/indexnow">IndexNow</a>
+      <a class="button" href="/launch-kit">Launch Kit</a>
       <a class="button primary" href="/admin/ops">Refresh</a>
       <a class="button" href="/admin/analytics/logout">Logout</a>
     </div>
