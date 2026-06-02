@@ -221,6 +221,8 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
 - [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
 - [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.
+- [SEARCH_SUBMISSION_GUIDE.md](./SEARCH_SUBMISSION_GUIDE.md): Google, Bing, sitemap, and AI-search submission steps.
+- [DIRECTORY_SUBMISSION_PACK.md](./DIRECTORY_SUBMISSION_PACK.md): copy-and-paste fields for AI tool directories and launch communities.
 
 ## Legal Pages
 

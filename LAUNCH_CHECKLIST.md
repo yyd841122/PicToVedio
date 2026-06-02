@@ -53,10 +53,12 @@ Use this checklist before moving from test mode to real public launch.
 
 ## 6. SEO And GEO
 
-- [ ] `/robots.txt` returns 200.
-- [ ] `/sitemap.xml` returns 200.
-- [ ] `/llms.txt` returns 200.
+- [x] `/robots.txt` returns 200.
+- [x] `/sitemap.xml` returns 200.
+- [x] `/llms.txt` returns 200.
 - [ ] Homepage source contains title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
+- [x] Create a search submission guide.
+- [x] Create a directory submission pack.
 - [ ] Submit `https://video.cozyguidehub.com/sitemap.xml` to Google Search Console.
 - [ ] Submit the same sitemap to Bing Webmaster Tools.
 - [ ] Submit the homepage and template pages to AI tool directories.
