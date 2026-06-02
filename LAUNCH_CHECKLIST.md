@@ -57,7 +57,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `/sitemap.xml` returns 200.
 - [x] `/llms.txt` returns 200.
 - [ ] `/indexnow-key.txt` returns 200.
-- [ ] Homepage source contains title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
+- [x] Homepage source contains title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
 - [x] Create a search submission guide.
 - [x] Create a directory submission pack.
 - [ ] After the latest deploy, click `IndexNow` in `/admin/analytics` and confirm the JSON response.
@@ -68,11 +68,11 @@ Use this checklist before moving from test mode to real public launch.
 
 ## 7. Public Pages
 
-- [ ] Homepage explains what the site does, who it is for, and how credits work.
-- [ ] Template pages have one clear H1, FAQ schema, and a CTA back to the generator.
-- [ ] Guide pages explain photo quality, distortion reduction, and cost.
+- [x] Homepage explains what the site does, who it is for, and how credits work.
+- [x] Template pages have one clear H1, FAQ schema, and a CTA back to the generator.
+- [x] Guide pages explain photo quality, distortion reduction, and cost.
 - [x] Second-wave guide pages cover ecommerce, pet, and old-photo use cases.
-- [ ] Privacy, Terms, and Refund pages are visible from the footer.
+- [x] Privacy, Terms, and Refund pages are visible from the footer.
 - [ ] Support email is final and monitored.
 
 ## 8. First Promotion Wave
