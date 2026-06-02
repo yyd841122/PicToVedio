@@ -1014,6 +1014,28 @@ function summarizeAnalyticsEvents(events) {
     count: byName[name] || 0,
     tone: eventTone(name),
   }));
+  const feedbackEvents = events.filter((event) => event.name === "result_feedback");
+  const feedbackByRating = { good: 0, distorted: 0, other: 0 };
+  const feedbackByTemplate = {};
+
+  for (const event of feedbackEvents) {
+    const props = event.properties || {};
+    const rating = props.rating === "good" || props.rating === "distorted" ? props.rating : "other";
+    const template = props.template || "Unknown";
+
+    feedbackByRating[rating] += 1;
+    feedbackByTemplate[template] ||= { template, total: 0, good: 0, distorted: 0, other: 0 };
+    feedbackByTemplate[template].total += 1;
+    feedbackByTemplate[template][rating] += 1;
+  }
+
+  const feedbackTemplates = Object.values(feedbackByTemplate)
+    .map((item) => ({
+      ...item,
+      usableRate: item.total ? item.good / item.total : 0,
+    }))
+    .sort((a, b) => b.total - a.total || b.good - a.good)
+    .slice(0, 12);
 
   return {
     total: events.length,
@@ -1025,6 +1047,14 @@ function summarizeAnalyticsEvents(events) {
     topEvents,
     topPages,
     riskSignals,
+    feedback: {
+      total: feedbackEvents.length,
+      good: feedbackByRating.good,
+      distorted: feedbackByRating.distorted,
+      other: feedbackByRating.other,
+      usableRate: feedbackEvents.length ? feedbackByRating.good / feedbackEvents.length : 0,
+      templates: feedbackTemplates,
+    },
     recent: events.slice(0, 50),
   };
 }
@@ -1258,6 +1288,13 @@ function renderAnalyticsDashboard(summary, url) {
       ${renderMetricCard("Checkout Click Rate", formatPercent(checkoutRate), `${summary.byName.checkout_click || 0} checkout clicks / ${summary.byName.page_view || 0} page views`)}
     </section>
 
+    <section class="grid metrics">
+      ${renderMetricCard("Feedback Events", summary.feedback.total, "Completed outputs with user feedback")}
+      ${renderMetricCard("Usable Output Rate", formatPercent(summary.feedback.usableRate), `${summary.feedback.good} good / ${summary.feedback.distorted} distorted`)}
+      ${renderMetricCard("Good Outputs", summary.feedback.good, "User marked the result usable")}
+      ${renderMetricCard("Distorted Outputs", summary.feedback.distorted, "Needs prompt, photo, or template review")}
+    </section>
+
     <section class="section card">
       <h2>Conversion Funnel</h2>
       <div class="funnel">
@@ -1272,6 +1309,12 @@ function renderAnalyticsDashboard(summary, url) {
         ${summary.riskSignals.map(renderRiskSignal).join("")}
       </div>
       <p class="footer-note">These are the first places to check when users get stuck before payment or video generation.</p>
+    </section>
+
+    <section class="section card">
+      <h2>Result Feedback By Template</h2>
+      ${renderFeedbackTemplateTable(summary.feedback.templates)}
+      <p class="footer-note">Use this table to decide which templates deserve promotion and which prompts need quality tuning.</p>
     </section>
 
     <section class="section grid columns">
@@ -1715,6 +1758,23 @@ function renderRecentEventsTable(events) {
   </tbody></table>`;
 }
 
+function renderFeedbackTemplateTable(templates) {
+  if (!templates.length) return `<div class="empty">No result feedback yet. After a user clicks Good or Distorted, it will appear here.</div>`;
+  return `<table><thead><tr><th>Template</th><th>Total</th><th>Good</th><th>Distorted</th><th>Usable Rate</th></tr></thead><tbody>
+    ${templates
+      .map(
+        (item) => `<tr>
+          <td>${escapeHtml(item.template)}</td>
+          <td>${item.total}</td>
+          <td><span class="badge tone-success">${item.good}</span></td>
+          <td><span class="badge ${item.distorted ? "tone-danger" : "tone-neutral"}">${item.distorted}</span></td>
+          <td>${escapeHtml(formatPercent(item.usableRate))}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
 function renderEventDetails(event) {
   const details = summarizeEventProperties(event);
   const raw = JSON.stringify(event.properties || {}, null, 2);
@@ -1730,6 +1790,7 @@ function renderEventDetails(event) {
 function summarizeEventProperties(event) {
   const props = event.properties || {};
   const keys = [
+    "rating",
     "plan",
     "provider",
     "template",
@@ -1861,6 +1922,7 @@ function analyticsEventLabel(name) {
     checkout_return_success: "Checkout Return Success",
     mock_payment_success: "Mock Payment Success",
     payment_credit_granted: "Payment Credits Granted",
+    result_feedback: "Result Feedback",
   };
   return labels[name] || name;
 }

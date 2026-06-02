@@ -173,7 +173,7 @@ MotionPic records lightweight product events in `analytics_events`:
 
 Local development stores these events in `data/db.json`. Render/Supabase stores them in the `analytics_events` table. A private summary endpoint is available at:
 
-`result_feedback` is fired from the generation history after a completed clip. It records whether the user marked the output as usable or distorted, which helps compare templates, prompts, and provider costs.
+`result_feedback` is fired from the generation history after a completed clip. It records whether the user marked the output as usable or distorted, which helps compare templates, prompts, and provider costs. The private analytics dashboard summarizes these clicks as usable-output rate and template-level feedback, so quality tuning can be based on real user reactions rather than only provider success status.
 
 ```text
 /api/admin/analytics?token=YOUR_ANALYTICS_ADMIN_TOKEN

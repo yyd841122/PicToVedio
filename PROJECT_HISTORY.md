@@ -165,3 +165,4 @@ The project does not yet:
 - Added lightweight feedback buttons to completed generation records.
 - Users can mark a result as `Good` or `Distorted`.
 - The feedback is tracked as `result_feedback` in analytics so future template and model decisions can use quality signals, not just job success.
+- Extended the private analytics dashboard with feedback totals, usable-output rate, good/distorted counts, and template-level feedback rows.

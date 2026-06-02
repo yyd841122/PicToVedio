@@ -35,6 +35,7 @@ Last updated: 2026-06-02
 - [x] Added analytics event tracking for page views, uploads, generation, checkout, and paid credit grants.
 - [x] Added generation result feedback tracking for usable vs distorted outputs.
 - [x] Added private analytics summary endpoint and Supabase `analytics_events` schema.
+- [x] Added result-feedback quality metrics to the private analytics dashboard.
 - [x] Added private ops dashboard for users, credits, payments, video jobs, ledger, and webhooks.
 - [x] Added private ops cost/refund signals for estimated DashScope spend and credit refunds.
 - [x] Added template page deep links that preselect the matching generator template.
