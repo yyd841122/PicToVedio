@@ -1812,6 +1812,39 @@
       const resolutionOptions = document.querySelectorAll("[data-resolution]");
 
       const query = new URLSearchParams(window.location.search);
+      const attributionKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+
+      const normalizeAttributionValue = (value) => (value || "").trim().slice(0, 120);
+
+      const readAttribution = () => {
+        let stored = {};
+        try {
+          stored = JSON.parse(localStorage.getItem("motionpic-attribution") || "{}");
+        } catch {
+          stored = {};
+        }
+
+        const current = {};
+        attributionKeys.forEach((key) => {
+          const value = normalizeAttributionValue(query.get(key));
+          if (value) current[key] = value;
+        });
+
+        if (Object.keys(current).length) {
+          const next = {
+            ...stored,
+            ...current,
+            landingPage: `${window.location.pathname}${window.location.search}`,
+            capturedAt: new Date().toISOString(),
+          };
+          localStorage.setItem("motionpic-attribution", JSON.stringify(next));
+          return next;
+        }
+
+        return stored;
+      };
+
+      const attribution = readAttribution();
 
       const getUserId = () => {
         const stored = localStorage.getItem("motionpic-user-id");
@@ -1853,6 +1886,12 @@
         balance: state.balance,
         uploaded: state.uploaded,
         language: document.documentElement.lang || "en",
+        utmSource: attribution.utm_source || "",
+        utmMedium: attribution.utm_medium || "",
+        utmCampaign: attribution.utm_campaign || "",
+        utmContent: attribution.utm_content || "",
+        utmTerm: attribution.utm_term || "",
+        landingPage: attribution.landingPage || "",
         ...extra,
       });
 

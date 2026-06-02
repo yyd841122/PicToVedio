@@ -166,3 +166,9 @@ The project does not yet:
 - Users can mark a result as `Good` or `Distorted`.
 - The feedback is tracked as `result_feedback` in analytics so future template and model decisions can use quality signals, not just job success.
 - Extended the private analytics dashboard with feedback totals, usable-output rate, good/distorted counts, and template-level feedback rows.
+
+## 2026-06-02: Launch Channel Attribution
+
+- Added UTM capture for launch links such as `utm_source`, `utm_medium`, and `utm_campaign`.
+- Saved first-touch attribution in the browser so upload, generation, checkout, and payment events can stay connected to the original promotion channel.
+- Added Channel Attribution to the private analytics dashboard for page views, upload success, generation success, checkout redirects, and paid credits.

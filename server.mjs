@@ -960,11 +960,74 @@ function summarizeOpsData(data) {
   };
 }
 
+function buildUserAttribution(events) {
+  const attribution = {};
+
+  for (const event of [...events].reverse()) {
+    if (!event.userId || attribution[event.userId]) continue;
+    const channel = analyticsEventChannel(event, {});
+    if (channel && channel !== "direct") attribution[event.userId] = channel;
+  }
+
+  return attribution;
+}
+
+function analyticsEventChannel(event, attributionByUser = {}) {
+  const props = event.properties || {};
+  const source = readEventProperty(props, ["utmSource", "utm_source"]);
+  const medium = readEventProperty(props, ["utmMedium", "utm_medium"]) || "";
+  const campaign = readEventProperty(props, ["utmCampaign", "utm_campaign"]) || "";
+
+  if (source) {
+    const parts = [source, medium, campaign].filter(Boolean).map((part) => normalizeChannelPart(part));
+    return parts.join(" / ");
+  }
+
+  if (event.userId && attributionByUser[event.userId]) return attributionByUser[event.userId];
+
+  const referrerHost = referrerHostname(event.referrer);
+  if (referrerHost) return referrerHost;
+
+  return "direct";
+}
+
+function readEventProperty(props, keys) {
+  for (const key of keys) {
+    if (props[key] === undefined || props[key] === null || props[key] === "") continue;
+    return String(props[key]);
+  }
+  return "";
+}
+
+function normalizeChannelPart(value) {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/[^a-z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
+function referrerHostname(referrer) {
+  if (!referrer) return "";
+  try {
+    const url = new URL(referrer);
+    if (!url.hostname || url.hostname === SITE_URL.hostname) return "";
+    return normalizeChannelPart(url.hostname);
+  } catch {
+    return "";
+  }
+}
+
 function summarizeAnalyticsEvents(events) {
   const byName = {};
   const byPage = {};
   const users = new Set();
   const sessions = new Set();
+  const attributionByUser = buildUserAttribution(events);
+  const channelsByName = {};
 
   for (const event of events) {
     byName[event.name] = (byName[event.name] || 0) + 1;
@@ -972,6 +1035,31 @@ function summarizeAnalyticsEvents(events) {
     byPage[page] = (byPage[page] || 0) + 1;
     if (event.userId) users.add(event.userId);
     if (event.sessionId) sessions.add(event.sessionId);
+
+    const channel = analyticsEventChannel(event, attributionByUser);
+    channelsByName[channel] ||= {
+      channel,
+      events: 0,
+      pageViews: 0,
+      uploadClicks: 0,
+      uploadSuccess: 0,
+      generateClicks: 0,
+      generateSuccess: 0,
+      checkoutClicks: 0,
+      checkoutRedirects: 0,
+      paidCredits: 0,
+    };
+
+    const bucket = channelsByName[channel];
+    bucket.events += 1;
+    if (event.name === "page_view") bucket.pageViews += 1;
+    if (event.name === "upload_click") bucket.uploadClicks += 1;
+    if (event.name === "upload_success") bucket.uploadSuccess += 1;
+    if (event.name === "generate_click") bucket.generateClicks += 1;
+    if (event.name === "generate_success") bucket.generateSuccess += 1;
+    if (event.name === "checkout_click") bucket.checkoutClicks += 1;
+    if (event.name === "checkout_redirect" || event.name === "checkout_created") bucket.checkoutRedirects += 1;
+    if (event.name === "payment_credit_granted") bucket.paidCredits += Number(event.properties?.credits || 0);
   }
 
   const funnel = [
@@ -1002,6 +1090,16 @@ function summarizeAnalyticsEvents(events) {
     .slice(0, 12);
   const topPages = Object.entries(byPage)
     .sort((a, b) => b[1] - a[1])
+    .slice(0, 12);
+  const channels = Object.values(channelsByName)
+    .sort(
+      (a, b) =>
+        b.checkoutRedirects - a.checkoutRedirects ||
+        b.generateSuccess - a.generateSuccess ||
+        b.uploadSuccess - a.uploadSuccess ||
+        b.pageViews - a.pageViews ||
+        b.events - a.events
+    )
     .slice(0, 12);
   const riskSignals = [
     "generate_failed",
@@ -1046,6 +1144,7 @@ function summarizeAnalyticsEvents(events) {
     funnel,
     topEvents,
     topPages,
+    channels,
     riskSignals,
     feedback: {
       total: feedbackEvents.length,
@@ -1315,6 +1414,12 @@ function renderAnalyticsDashboard(summary, url) {
       <h2>Result Feedback By Template</h2>
       ${renderFeedbackTemplateTable(summary.feedback.templates)}
       <p class="footer-note">Use this table to decide which templates deserve promotion and which prompts need quality tuning.</p>
+    </section>
+
+    <section class="section card">
+      <h2>Channel Attribution</h2>
+      ${renderChannelTable(summary.channels)}
+      <p class="footer-note">Use UTM links from the Launch Kit to compare which directories, communities, and social platforms create real product actions.</p>
     </section>
 
     <section class="section grid columns">
@@ -1775,6 +1880,25 @@ function renderFeedbackTemplateTable(templates) {
   </tbody></table>`;
 }
 
+function renderChannelTable(channels) {
+  if (!channels.length) return `<div class="empty">No channel data yet. Open a Launch Kit UTM link, then trigger a few product events.</div>`;
+  return `<table><thead><tr><th>Channel</th><th>Events</th><th>Page Views</th><th>Uploads</th><th>Generations</th><th>Checkout</th><th>Paid Credits</th></tr></thead><tbody>
+    ${channels
+      .map(
+        (channel) => `<tr>
+          <td><strong>${escapeHtml(channel.channel)}</strong></td>
+          <td>${Number(channel.events || 0)}</td>
+          <td>${Number(channel.pageViews || 0)}</td>
+          <td>${Number(channel.uploadSuccess || 0)} / ${Number(channel.uploadClicks || 0)}</td>
+          <td>${Number(channel.generateSuccess || 0)} / ${Number(channel.generateClicks || 0)}</td>
+          <td>${Number(channel.checkoutRedirects || 0)} / ${Number(channel.checkoutClicks || 0)}</td>
+          <td>${Number(channel.paidCredits || 0)}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
 function renderEventDetails(event) {
   const details = summarizeEventProperties(event);
   const raw = JSON.stringify(event.properties || {}, null, 2);
@@ -1801,6 +1925,10 @@ function summarizeEventProperties(event) {
     "balance",
     "uploaded",
     "source",
+    "utmSource",
+    "utmMedium",
+    "utmCampaign",
+    "utmContent",
     "jobId",
     "error",
     "fileType",
