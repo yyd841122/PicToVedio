@@ -5,6 +5,7 @@ MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, 
 ## Primary Site
 
 - Homepage and generator: https://video.cozyguidehub.com/
+- Guides hub: https://video.cozyguidehub.com/guides
 - Sitemap: https://video.cozyguidehub.com/sitemap.xml
 - Robots: https://video.cozyguidehub.com/robots.txt
 
@@ -30,6 +31,7 @@ MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, 
 - Product Video Ad Generator: https://video.cozyguidehub.com/templates/product-video-ad
 - Pet Animation Generator: https://video.cozyguidehub.com/templates/pet-animation
 - Old Photo Alive Generator: https://video.cozyguidehub.com/templates/old-photo-alive
+- AI Photo-to-Video Guides Hub: https://video.cozyguidehub.com/guides
 - Best Photos for AI Video: https://video.cozyguidehub.com/guides/best-photos-for-ai-video
 - Reduce AI Video Distortion: https://video.cozyguidehub.com/guides/reduce-ai-video-distortion
 - AI Photo-to-Video Cost Guide: https://video.cozyguidehub.com/guides/photo-to-video-cost

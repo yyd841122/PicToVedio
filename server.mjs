@@ -1,5 +1,5 @@
 import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
-import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -2514,6 +2514,10 @@ function serveStatic(pathname, res) {
   const cleanPath = pathname === "/" ? "/index.html" : pathname;
   let filePath = resolve(join(root, cleanPath));
   const extension = extname(filePath);
+
+  if (existsSync(filePath) && statSync(filePath).isDirectory()) {
+    filePath = resolve(join(filePath, "index.html"));
+  }
 
   if (!extension && !existsSync(filePath)) {
     filePath = resolve(join(root, `${cleanPath}.html`));

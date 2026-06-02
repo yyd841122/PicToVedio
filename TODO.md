@@ -54,6 +54,7 @@ Last updated: 2026-06-02
 - [x] Added visible homepage resource links to the SEO guide pages.
 - [x] Reset stale generated-video state when a user uploads a new photo.
 - [x] Added first-revenue operating playbook for the live-payment transition.
+- [x] Added a `/guides` hub page and directory-index serving for SEO guide discovery.
 
 ## In Progress
 
@@ -110,6 +111,7 @@ Last updated: 2026-06-02
 - [ ] Submit sitemap to Google Search Console and Bing Webmaster Tools.
 - [x] Add protected IndexNow submit helper for sitemap URLs.
 - [x] Check `/llms.txt` after deploy and keep it aligned with new public pages.
+- [x] Add a guide hub so crawler and AI-search entry points are not only individual articles.
 - [x] Prepare copy-and-paste submission fields for AI tool directories and launch communities.
 - [ ] Prepare Baidu submission if targeting Chinese search.
 

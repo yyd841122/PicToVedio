@@ -249,6 +249,7 @@ These pages give the first long-tail keywords dedicated entry points for search 
 
 ## SEO Guide Pages
 
+- `/guides`
 - `/guides/best-photos-for-ai-video`
 - `/guides/reduce-ai-video-distortion`
 - `/guides/photo-to-video-cost`
@@ -256,7 +257,7 @@ These pages give the first long-tail keywords dedicated entry points for search 
 - `/guides/pet-photo-animation`
 - `/guides/old-photo-animation`
 
-These guide pages answer practical questions around input quality, provider cost, distortion, ecommerce ads, pet clips, and old photo memories.
+These guide pages answer practical questions around input quality, provider cost, distortion, ecommerce ads, pet clips, and old photo memories. The `/guides` hub links the guide layer together for users, crawlers, and AI answer engines.
 
 ## AI Discovery
 
