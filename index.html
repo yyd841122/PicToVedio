@@ -2193,6 +2193,17 @@
         }
       };
 
+      const resetGeneratedOutput = () => {
+        state.generated = false;
+        state.jobId = "";
+        state.outputUrl = "";
+        downloadButton.disabled = true;
+        downloadButton.textContent = currentCopy.download;
+        generateButton.disabled = false;
+        generateButton.textContent = currentCopy.generate;
+        progressBar.style.width = "0%";
+      };
+
       const handleFile = (file) => {
         if (!file || !file.type.startsWith("image/")) {
           trackEvent("upload_invalid_file", { fileType: file?.type || "" });
@@ -2209,6 +2220,7 @@
           uploadPreview.appendChild(img);
           state.imageData = String(reader.result);
           state.uploaded = true;
+          resetGeneratedOutput();
           uploadHint.textContent = `${file.name} uploaded. Choose a template and generate a preview.`;
           trackEvent("upload_success", {
             fileType: file.type,
@@ -2308,7 +2320,7 @@
           <div class="thumb" aria-hidden="true"></div>
           <div>
             <div class="queue-title">${state.template} video #${state.generations}</div>
-            <div class="queue-meta">${state.length} · ${state.ratio} · ${state.resolution} · ${currentCost()} credits</div>
+            <div class="queue-meta">${state.length} / ${state.ratio} / ${state.resolution} / ${currentCost()} credits</div>
           </div>
           <span class="pill">${label}</span>
         `;
@@ -2404,6 +2416,7 @@
             state.generated = true;
             state.outputUrl = finishedJob.outputUrl || "";
             downloadButton.disabled = false;
+            downloadButton.textContent = state.outputUrl ? "Open generated MP4" : currentCopy.download;
             generateButton.disabled = false;
             generateButton.textContent = "Generate another";
             if (pill) pill.textContent = "Done";
@@ -2436,6 +2449,7 @@
             generateButton.disabled = false;
             generateButton.textContent = "Generate another";
             downloadButton.disabled = false;
+            downloadButton.textContent = currentCopy.download;
             creditNote.textContent = "Preview generated. HD no-watermark export is the paid upgrade point.";
             addQueueItem();
             updateEstimate();
