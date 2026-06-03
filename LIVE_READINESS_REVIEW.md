@@ -29,8 +29,10 @@ Low-risk/public readiness:
 - [x] Account, launch-kit, admin, and API surfaces are excluded from sitemap or blocked from public indexing.
 - [x] Homepage has title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
 - [x] Template and guide pages have canonical, H1, JSON-LD, Open Graph, and Twitter Card metadata.
+- [x] Legal pages have canonical, H1, WebPage JSON-LD, Open Graph, and Twitter Card metadata.
 - [x] Privacy, Terms, and Refund pages exist and are visible from the footer.
 - [x] Search submission, directory submission, SEO/GEO audit, and demo asset planning documents exist.
+- [x] Public SEO readiness check report exists in `reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md`.
 
 Product foundation:
 
@@ -44,15 +46,15 @@ Product foundation:
 
 These checks are low risk and do not require changing production settings:
 
-- [ ] Homepage loads without obvious broken links.
-- [ ] Public template pages return 200.
-- [ ] Public guide pages return 200.
-- [ ] Public legal pages return 200.
-- [ ] Social preview metadata exists on public SEO pages.
-- [ ] JSON-LD blocks parse as valid JSON.
-- [ ] Internal root-relative links resolve to known routes.
-- [ ] Public health endpoint still reports DashScope.
-- [ ] `photo-to-video-hero.png` returns 200 for social preview images.
+- [x] Homepage loads without obvious broken links.
+- [x] Public template pages return 200.
+- [x] Public guide pages return 200.
+- [x] Public legal pages return 200.
+- [x] Social preview metadata exists on public SEO pages.
+- [x] JSON-LD blocks parse as valid JSON.
+- [x] Internal root-relative links resolve to known routes.
+- [x] Public health endpoint still reports DashScope.
+- [x] `photo-to-video-hero.png` returns 200 for social preview images.
 
 ## Needs Owner Confirmation Or Access
 
