@@ -2227,13 +2227,10 @@ async function ensureSupabaseUser(userId) {
 async function supabaseRequest(path, { method = "GET", body, prefer } = {}) {
   const headers = {
     apikey: config.supabaseServiceRoleKey,
+    Authorization: `Bearer ${config.supabaseServiceRoleKey}`,
     "Content-Type": "application/json",
     ...(prefer ? { Prefer: prefer } : {}),
   };
-
-  if (!config.supabaseServiceRoleKey.startsWith("sb_")) {
-    headers.Authorization = `Bearer ${config.supabaseServiceRoleKey}`;
-  }
 
   const response = await fetch(`${config.supabaseUrl}/rest/v1/${path}`, {
     method,
