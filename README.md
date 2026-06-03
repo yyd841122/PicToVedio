@@ -271,6 +271,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [DEMO_ASSET_CHECKLIST.md](./DEMO_ASSET_CHECKLIST.md): screenshot and short-video asset checklist for directories and social launch posts.
 - [SUPPORT_RESPONSE_TEMPLATES.md](./SUPPORT_RESPONSE_TEMPLATES.md): support reply templates for failed generations, distorted outputs, credits, payments, and privacy concerns.
 - [R2_SETUP_GUIDE.md](./R2_SETUP_GUIDE.md): Cloudflare R2 setup steps for storing uploaded photos and generated videos.
+- [STORAGE_SETUP_REVIEW_CHECKLIST.md](./STORAGE_SETUP_REVIEW_CHECKLIST.md): object-storage cutover review checklist, acceptance criteria, and rollback plan.
 - [reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md](./reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md): public SEO metadata, JSON-LD, internal-link, and endpoint readiness report.
 
 ## Search Discovery Helpers

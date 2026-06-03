@@ -122,10 +122,10 @@ Do not run broad public promotion until these are true:
 Low-risk tasks that can continue without touching private systems:
 
 - [x] Improve documentation around first live-payment test procedure.
-- [ ] Prepare a provider-cost sampling worksheet.
-- [ ] Prepare a demo-output evaluation rubric.
-- [ ] Prepare a support-response template for failed or distorted generations.
-- [ ] Prepare a storage setup review checklist based on `R2_SETUP_GUIDE.md`.
+- [x] Prepare a provider-cost sampling worksheet.
+- [x] Prepare a demo-output evaluation rubric.
+- [x] Prepare a support-response template for failed or distorted generations.
+- [x] Prepare a storage setup review checklist based on `R2_SETUP_GUIDE.md`.
 
 ## High-Risk Tasks That Need Explicit Confirmation
 
