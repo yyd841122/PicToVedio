@@ -56,6 +56,7 @@ Requires owner token or logged-in private session:
 Requires explicit owner approval because it may spend provider credits:
 
 - [ ] Owner provides or approves 4-5 safe test images.
+- [x] Manual test credits are available for the controlled generation sample.
 - [ ] Test images are owned, licensed, or approved.
 - [ ] No children, private family photos, medical images, or identifiable strangers are used without explicit consent.
 - [ ] First test uses 4s / 720p / audio off.
@@ -133,7 +134,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 |---|---|---|
 | Public site | In progress | Owner confirmed guide, template, privacy, terms, and refund pages display normally. |
 | Private dashboards | In progress | Owner confirmed logout returns to token login; no-cookie public scrape returned 403 login pages. |
-| Real generation | Pending | |
+| Real generation | In progress | Owner manually added 30 test credits through Supabase ledger; balance is ready for controlled samples. |
 | Payment | Pending | |
 | Storage | Pending | |
 | Support and policy | Pending | |

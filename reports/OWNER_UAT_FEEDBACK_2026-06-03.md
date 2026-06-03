@@ -10,6 +10,9 @@ The owner confirmed:
 
 - After logging out, `/admin/analytics` requires the private analytics token.
 - `/admin/ops` also requires the private analytics session/token.
+- A manual owner-approved test credit grant was applied in Supabase.
+- The credit ledger shows `manual-test-grant` with `+30` credits for `generation-test`.
+- The test account balance is now `33` credits, enough for the first controlled generation samples.
 - The following public pages display normally:
   - `/guides`
   - `/templates/product-video-ad`
