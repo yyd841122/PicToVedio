@@ -61,8 +61,8 @@ These checks are low risk and do not require changing production settings:
 
 These cannot be completed safely without account access, private tokens, screenshots, or explicit owner action:
 
-- [ ] Confirm `/admin/analytics` requires the private analytics token in production.
-- [ ] Confirm `/admin/ops` requires the private analytics token in production.
+- [x] Confirm `/admin/analytics` requires the private analytics token in production.
+- [x] Confirm `/admin/ops` requires the private analytics token in production.
 - [ ] Confirm upload, generation, download, checkout click, and checkout redirect events appear in analytics.
 - [ ] Confirm Supabase advisor warnings are cleared after `SUPABASE_SECURITY_FIX.sql`.
 - [ ] Confirm support email is final and monitored.

@@ -25,9 +25,9 @@ These checks can be done in a normal browser without private tokens:
 - [ ] Template selection is understandable.
 - [ ] Upload guidance is visible before selecting a file.
 - [ ] Credit estimate changes with duration, quality, and high-risk templates.
-- [ ] `/guides` opens and links to all guide pages.
-- [ ] Template pages open and their CTAs return to the generator.
-- [ ] Privacy, Terms, and Refund pages are visible from the footer.
+- [x] `/guides` opens and links to all guide pages.
+- [x] Template pages open and their CTAs return to the generator.
+- [x] Privacy, Terms, and Refund pages are visible from the footer.
 - [ ] `/robots.txt` opens.
 - [ ] `/sitemap.xml` opens.
 - [ ] `/llms.txt` opens.
@@ -38,8 +38,8 @@ These checks can be done in a normal browser without private tokens:
 
 Requires owner token or logged-in private session:
 
-- [ ] `/admin/analytics` requires the private analytics token in production.
-- [ ] `/admin/ops` requires the private analytics token/session in production.
+- [x] `/admin/analytics` requires the private analytics token in production.
+- [x] `/admin/ops` requires the private analytics token/session in production.
 - [ ] Token is not left visible in screenshots or browser address bars after login.
 - [ ] Analytics dashboard shows page views.
 - [ ] Analytics dashboard shows upload events.
@@ -131,8 +131,8 @@ Use this section as a manual record. Do not include private IDs or secrets.
 
 | Area | Status | Owner note |
 |---|---|---|
-| Public site | Pending | |
-| Private dashboards | Pending | |
+| Public site | In progress | Owner confirmed guide, template, privacy, terms, and refund pages display normally. |
+| Private dashboards | In progress | Owner confirmed logout returns to token login; no-cookie public scrape returned 403 login pages. |
 | Real generation | Pending | |
 | Payment | Pending | |
 | Storage | Pending | |
