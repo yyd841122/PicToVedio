@@ -1,6 +1,6 @@
 # MotionPic AI Unit Economics
 
-Last updated: 2026-05-28
+Last updated: 2026-06-03
 
 ## Current Measured Cost
 
@@ -8,8 +8,8 @@ The first real DashScope image-to-video tests show that cost is the main risk be
 
 | Setting | Provider Cost | Notes |
 | --- | ---: | --- |
-| 4s / 720p / audio on | about CN¥1.20 per generation | Too expensive for the current $9 / 100 credits package. |
-| 4s / 720p / audio off | about CN¥0.60 per generation | Better, but still needs careful credit pricing. |
+| 4s / 720p / audio on | about CNY 1.20 per generation | Too expensive for the current $9 / 100 credits package. |
+| 4s / 720p / audio off | about CNY 0.60 per generation | Better, but still needs careful credit pricing. |
 
 The current site package display is still:
 
@@ -18,7 +18,7 @@ The current site package display is still:
 | Creator Pack | US$9 | 100 credits |
 | Commerce Pack | US$29 | 400 credits |
 
-At an estimated FX rate of roughly CN¥7.2 per US$1, Creator Pack revenue is about CN¥64.8 before Creem/payment fees. If one real generation costs 1 credit and each generation costs CN¥0.60, then 100 generations cost about CN¥60 before failed generations, retries, payment fees, server costs, and support. That margin is too thin for live launch.
+At an estimated FX rate of roughly CNY 7.2 per US$1, Creator Pack revenue is about CNY 64.8 before Creem/payment fees. If one real generation costs 1 credit and each generation costs CNY 0.60, then 100 generations cost about CNY 60 before failed generations, retries, payment fees, server costs, and support. That margin is too thin for live launch.
 
 The backend now reads package credits and price labels from Render environment variables:
 
@@ -35,7 +35,7 @@ Target gross margin before fixed costs: 60% or more.
 
 Assumptions for planning:
 
-- Provider cost: CN¥0.60 per 4-second 720p generation.
+- Provider cost: CNY 0.60 per 4-second 720p generation.
 - Payment/platform fees: keep a buffer of 8-15%.
 - User retry or disliked-result rate: assume 20%.
 - Failed provider jobs should refund credits.
