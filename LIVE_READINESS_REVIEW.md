@@ -33,6 +33,7 @@ Low-risk/public readiness:
 - [x] Privacy, Terms, and Refund pages exist and are visible from the footer.
 - [x] Search submission, directory submission, SEO/GEO audit, and demo asset planning documents exist.
 - [x] Public SEO readiness check report exists in `reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md`.
+- [x] Owner UAT checklist exists in `OWNER_UAT_CHECKLIST.md`.
 
 Product foundation:
 

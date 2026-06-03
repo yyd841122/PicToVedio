@@ -8,6 +8,7 @@ Use this checklist before moving from test mode to real public launch.
 
 - [x] Render latest deploy is live on `https://video.cozyguidehub.com`.
 - [x] `/health` returns `{"ok":true,"provider":"dashscope"}`.
+- [x] Owner UAT checklist is prepared in `OWNER_UAT_CHECKLIST.md`.
 - [ ] Homepage loads without browser console errors.
 - [ ] Upload, generate, download, and checkout clicks are tracked in analytics.
 - [ ] `/admin/analytics` requires the private analytics token.
