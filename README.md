@@ -273,6 +273,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [R2_SETUP_GUIDE.md](./R2_SETUP_GUIDE.md): Cloudflare R2 setup steps for storing uploaded photos and generated videos.
 - [STORAGE_SETUP_REVIEW_CHECKLIST.md](./STORAGE_SETUP_REVIEW_CHECKLIST.md): object-storage cutover review checklist, acceptance criteria, and rollback plan.
 - [reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md](./reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md): public SEO metadata, JSON-LD, internal-link, and endpoint readiness report.
+- [reports/PUBLIC_ENDPOINT_STATUS_2026-06-03.md](./reports/PUBLIC_ENDPOINT_STATUS_2026-06-03.md): public health, robots, sitemap, llms, IndexNow key, and social image endpoint status.
 
 ## Search Discovery Helpers
 
