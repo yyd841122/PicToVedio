@@ -24,6 +24,7 @@ const config = {
   dashscopeApiKey: process.env.DASHSCOPE_API_KEY || "",
   dashscopeVideoModel: process.env.DASHSCOPE_VIDEO_MODEL || "wan2.6-i2v-flash",
   dashscopeAudio: process.env.DASHSCOPE_AUDIO === "true",
+  dashscopePromptExtend: process.env.DASHSCOPE_PROMPT_EXTEND === "true",
   estimatedVideoCostCny: Number(process.env.ESTIMATED_VIDEO_COST_CNY || process.env.DASHSCOPE_ESTIMATED_COST_CNY || 0.6),
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
@@ -2466,9 +2467,9 @@ async function createDashScopeVideoJob(body) {
       resolution: mapDashScopeResolution(body.resolution),
       duration: mapDashScopeDuration(body.seconds),
       audio: config.dashscopeAudio,
-      prompt_extend: true,
+      prompt_extend: config.dashscopePromptExtend,
       negative_prompt:
-        "deformed face, distorted face, different person, extra fingers, warped eyes, asymmetrical eyes, broken teeth, blurry face, low quality, artifacts, exaggerated motion, face morphing",
+        "deformed face, distorted face, different person, identity change, face morphing, merged faces, duplicated face, warped eyes, asymmetrical eyes, broken teeth, open mouth distortion, extra fingers, extra limbs, melting object, logo distortion, text distortion, blurry face, low quality, artifacts, exaggerated motion, fast head turn, scene change",
     },
   };
 
@@ -2525,6 +2526,7 @@ async function getDashScopeVideoJob(providerJobId) {
 
 function buildDashScopePrompt(body) {
   const basePrompt = String(body.prompt || "").trim();
+  const templateGuardrail = dashScopeTemplateGuardrail(body.template);
   const ratioInstruction =
     body.ratio === "9:16"
       ? "vertical 9:16 social video framing"
@@ -2535,13 +2537,39 @@ function buildDashScopePrompt(body) {
   return [
     "Use the uploaded photo as the exact first frame.",
     "Preserve the same people, facial identity, age, clothing, hairstyle, and background.",
-    "Keep faces natural and stable; avoid changing facial features.",
-    "Create only subtle realistic motion: gentle camera push-in, tiny head movement, natural blinking, soft smile.",
+    "Do not transform the subject into a different person, object, style, age, or scene.",
+    "Keep faces natural and stable; avoid changing facial features, mouth shape, eyes, teeth, or skin texture.",
+    "Use low-motion animation only: gentle camera push-in, tiny head movement, natural blinking, and very small expression change.",
+    "Avoid strong facial animation, lip movement, large head turns, body motion, camera shake, or background changes.",
+    "If a requested interaction is not clearly supported by the original photo, use subtle camera motion instead of inventing new contact.",
+    templateGuardrail,
     ratioInstruction,
     basePrompt,
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+function dashScopeTemplateGuardrail(template) {
+  const name = String(template || "").toLowerCase();
+
+  if (name.includes("product")) {
+    return "For product photos, preserve the exact product shape, logo, labels, edges, and readable text. Use camera motion instead of deforming the product.";
+  }
+
+  if (name.includes("old")) {
+    return "For old photos, preserve the original identity, face proportions, historical look, and mood. Do not modernize the face or change the person.";
+  }
+
+  if (name.includes("pet")) {
+    return "For pet photos, preserve the animal anatomy, eyes, fur, and face shape. Use very small natural motion only.";
+  }
+
+  if (name.includes("kiss")) {
+    return "For romantic couple photos, this is an experimental effect. Preserve both faces separately, avoid merging faces, avoid forced mouth movement, and keep motion extremely subtle.";
+  }
+
+  return "For portrait photos, preserve exact facial identity and use only a calm portrait animation.";
 }
 
 function mapDashScopeResolution(resolution) {

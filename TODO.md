@@ -25,6 +25,7 @@ Last updated: 2026-06-03
 - [x] Ran real DashScope image-to-video generation successfully.
 - [x] Reduced default generation cost by disabling audio.
 - [x] Changed the default template and prompts toward lower-distortion portrait motion.
+- [x] Disabled DashScope prompt expansion by default and added stronger identity/object guardrails to reduce distortion.
 - [x] Added unit economics notes for credit pricing and margins.
 - [x] Enforced server-side credit pricing for real generation requests.
 - [x] Added optional Cloudflare R2 adapter for uploaded images and generated videos.
@@ -87,6 +88,7 @@ Last updated: 2026-06-03
 - [x] Revisit visible Creem package amounts before switching to live mode.
 - [ ] Edit Creem product descriptions and Render credit pack variables together before live mode.
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
+- [ ] Run at least 20 real quality tests and track good vs distorted outputs in the analytics dashboard.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
 - [ ] Follow `R2_SETUP_GUIDE.md` when enabling Cloudflare R2 in Render.

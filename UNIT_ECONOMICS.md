@@ -97,8 +97,10 @@ Immediate mitigations:
 - Default to low-motion portrait templates.
 - Avoid kiss/intimate templates as the default path.
 - Keep `DASHSCOPE_AUDIO=false` unless audio becomes a paid feature.
+- Keep `DASHSCOPE_PROMPT_EXTEND=false` by default so DashScope follows the exact preservation prompt instead of freely expanding the scene.
 - Use prompts that say: preserve exact face identity, stable facial features, natural blinking only, very subtle movement.
-- Add negative prompts for distorted face, warped eyes, asymmetrical face, face morphing, blurry face, artifacts, exaggerated motion.
+- Add negative prompts for identity change, merged faces, distorted face, warped eyes, asymmetrical face, mouth/teeth distortion, face morphing, blurry face, artifacts, exaggerated motion, and scene changes.
+- Add template-specific guardrails: product logos/text must stay stable, old photos must preserve identity, pets must preserve anatomy, and romantic templates must avoid forced mouth movement or face merging.
 - Make 4s / 720p the default preview.
 
 Future provider testing:

@@ -181,3 +181,12 @@ The project does not yet:
 - Added `SUPABASE_SECURITY_FIX.sql` as a one-time live database repair script for clearing Supabase advisor warnings.
 - Ran the live security fix SQL successfully in Supabase SQL Editor.
 - Left one owner confirmation item open: re-run Supabase Advisor or click Resolve Issue to confirm the warning has disappeared.
+
+## 2026-06-03: Real Generation Quality Guardrails
+
+- Confirmed the DashScope real generation flow works end to end, with silent 4-second 720p jobs costing about CNY 0.60 in the latest test.
+- Kept the default generation cost at 2 credits so the current Creator Pack margin is safer than one-credit generation.
+- Disabled DashScope prompt expansion by default with `DASHSCOPE_PROMPT_EXTEND=false` to reduce identity drift and scene invention.
+- Added stronger backend negative prompts for identity change, merged faces, mouth distortion, object/logo/text distortion, and scene changes.
+- Added template-specific guardrails for portraits, products, old photos, pets, and romantic/couple clips.
+- Updated the visible template prompts so users start with subtle motion and understand that Couple Kiss is experimental.
