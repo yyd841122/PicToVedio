@@ -260,6 +260,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
 - [PROVIDER_COST_SAMPLING_WORKSHEET.md](./PROVIDER_COST_SAMPLING_WORKSHEET.md): provider cost sampling rules, log fields, and pricing review gates.
 - [FIRST_REVENUE_PLAYBOOK.md](./FIRST_REVENUE_PLAYBOOK.md): final live-payment, pricing, storage, and first-revenue operating checklist.
+- [LIVE_PAYMENT_TEST_PROCEDURE.md](./LIVE_PAYMENT_TEST_PROCEDURE.md): controlled live-payment test procedure, acceptance criteria, and rollback options.
 - [LIVE_READINESS_REVIEW.md](./LIVE_READINESS_REVIEW.md): readiness review for live payments, generation quality, storage, and promotion gates.
 - [GENERATION_TEST_PLAN.md](./GENERATION_TEST_PLAN.md): controlled real-generation test matrix, safety rules, and quality rubric.
 - [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.

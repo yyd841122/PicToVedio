@@ -121,7 +121,7 @@ Do not run broad public promotion until these are true:
 
 Low-risk tasks that can continue without touching private systems:
 
-- [ ] Improve documentation around first live-payment test procedure.
+- [x] Improve documentation around first live-payment test procedure.
 - [ ] Prepare a provider-cost sampling worksheet.
 - [ ] Prepare a demo-output evaluation rubric.
 - [ ] Prepare a support-response template for failed or distorted generations.
