@@ -259,6 +259,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [PROMOTION_COPY.md](./PROMOTION_COPY.md): reusable launch and advertising copy.
 - [UNIT_ECONOMICS.md](./UNIT_ECONOMICS.md): provider cost, credit pricing, and live-payment margin notes.
 - [FIRST_REVENUE_PLAYBOOK.md](./FIRST_REVENUE_PLAYBOOK.md): final live-payment, pricing, storage, and first-revenue operating checklist.
+- [LIVE_READINESS_REVIEW.md](./LIVE_READINESS_REVIEW.md): readiness review for live payments, generation quality, storage, and promotion gates.
 - [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.
 - [SEARCH_SUBMISSION_GUIDE.md](./SEARCH_SUBMISSION_GUIDE.md): Google, Bing, sitemap, and AI-search submission steps.
 - [SEARCH_ENGINE_SUBMISSION_CHECKLIST.md](./SEARCH_ENGINE_SUBMISSION_CHECKLIST.md): operator checklist for Google, Bing, and IndexNow submissions.
