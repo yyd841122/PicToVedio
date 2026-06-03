@@ -1,13 +1,13 @@
 # MotionPic AI Launch Checklist
 
-Last updated: 2026-06-02
+Last updated: 2026-06-03
 
 Use this checklist before moving from test mode to real public launch.
 
 ## 1. Production Health
 
-- [ ] Render latest deploy is live on `https://video.cozyguidehub.com`.
-- [ ] `/health` returns `{"ok":true,"provider":"dashscope"}`.
+- [x] Render latest deploy is live on `https://video.cozyguidehub.com`.
+- [x] `/health` returns `{"ok":true,"provider":"dashscope"}`.
 - [ ] Homepage loads without browser console errors.
 - [ ] Upload, generate, download, and checkout clicks are tracked in analytics.
 - [ ] `/admin/analytics` requires the private analytics token.
@@ -56,7 +56,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `/robots.txt` returns 200.
 - [x] `/sitemap.xml` returns 200.
 - [x] `/llms.txt` returns 200.
-- [ ] `/indexnow-key.txt` returns 200.
+- [x] `/indexnow-key.txt` returns 200.
 - [x] Homepage source contains title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
 - [x] Create a search submission guide.
 - [x] Create a directory submission pack.

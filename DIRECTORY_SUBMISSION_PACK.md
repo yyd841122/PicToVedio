@@ -216,4 +216,3 @@ Recommended order:
 4. Indie Hackers and X build-in-public posts.
 5. Xiaohongshu/TikTok/YouTube Shorts demo after recording a clean example video.
 6. Product Hunt after at least one stable demo and live payment readiness.
-
