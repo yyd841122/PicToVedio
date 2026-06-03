@@ -136,7 +136,7 @@ const server = createServer(async (req, res) => {
 
     return serveStatic(url.pathname, res);
   } catch (error) {
-    console.error(error);
+    console.error(`[${new Date().toISOString()}] ${req.method} ${req.url} failed`, error);
     return sendJson(res, 500, { error: "Internal server error" });
   }
 });
@@ -2227,10 +2227,13 @@ async function ensureSupabaseUser(userId) {
 async function supabaseRequest(path, { method = "GET", body, prefer } = {}) {
   const headers = {
     apikey: config.supabaseServiceRoleKey,
-    Authorization: `Bearer ${config.supabaseServiceRoleKey}`,
     "Content-Type": "application/json",
     ...(prefer ? { Prefer: prefer } : {}),
   };
+
+  if (requiresSupabaseBearerToken(config.supabaseServiceRoleKey)) {
+    headers.Authorization = `Bearer ${config.supabaseServiceRoleKey}`;
+  }
 
   const response = await fetch(`${config.supabaseUrl}/rest/v1/${path}`, {
     method,
@@ -2239,12 +2242,26 @@ async function supabaseRequest(path, { method = "GET", body, prefer } = {}) {
   });
 
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  const data = parseJsonResponse(text);
   if (!response.ok) {
-    const message = data?.message || data?.error || `Supabase request failed: ${response.status}`;
+    const message = data?.message || data?.error || text || `Supabase request failed: ${response.status}`;
     throw new Error(message);
   }
   return data || [];
+}
+
+function requiresSupabaseBearerToken(apiKey) {
+  const key = String(apiKey || "");
+  return key && !key.startsWith("sb_secret_") && !key.startsWith("sb_publishable_");
+}
+
+function parseJsonResponse(text) {
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
 }
 
 function getRequestUserId(req, body = {}) {
