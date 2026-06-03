@@ -102,6 +102,10 @@ const server = createServer(async (req, res) => {
       return await handleGetOpsSummary(req, res, url);
     }
 
+    if (req.method === "GET" && url.pathname === "/api/admin/db-check") {
+      return await handleGetDbCheck(req, res, url);
+    }
+
     if (req.method === "GET" && url.pathname === "/api/admin/indexnow") {
       return await handleSubmitIndexNow(req, res, url);
     }
@@ -319,6 +323,44 @@ async function handleGetOpsSummary(req, res, url) {
 
   const limit = Math.min(200, Math.max(10, Number(url.searchParams.get("limit") || 50)));
   return sendJson(res, 200, await getAdminOpsData(limit));
+}
+
+async function handleGetDbCheck(req, res, url) {
+  if (!canReadAdminAnalytics(req, url)) {
+    return sendJson(res, 403, { error: "Admin access denied" });
+  }
+
+  const base = {
+    dataProvider: config.dataProvider,
+    supabaseConfigured: Boolean(config.supabaseUrl && config.supabaseServiceRoleKey),
+    supabaseKeyType: supabaseKeyType(config.supabaseServiceRoleKey),
+    usesBearerAuthorization: Boolean(requiresSupabaseBearerToken(config.supabaseServiceRoleKey)),
+  };
+
+  if (!useSupabase()) {
+    return sendJson(res, 200, { ok: false, ...base, error: "Supabase is not configured as DATA_PROVIDER." });
+  }
+
+  const startedAt = Date.now();
+  try {
+    const account = await getAccount("demo-user");
+    return sendJson(res, 200, {
+      ok: true,
+      ...base,
+      ms: Date.now() - startedAt,
+      demoUserCredits: account.credits,
+      recentCredits: account.recentCredits.length,
+      recentJobs: account.recentJobs.length,
+    });
+  } catch (error) {
+    console.error("Supabase db-check failed", error);
+    return sendJson(res, 500, {
+      ok: false,
+      ...base,
+      ms: Date.now() - startedAt,
+      error: String(error.message || error).slice(0, 500),
+    });
+  }
 }
 
 async function handleGetOpsDashboard(req, res, url) {
@@ -2253,6 +2295,15 @@ async function supabaseRequest(path, { method = "GET", body, prefer } = {}) {
 function requiresSupabaseBearerToken(apiKey) {
   const key = String(apiKey || "");
   return key && !key.startsWith("sb_secret_") && !key.startsWith("sb_publishable_");
+}
+
+function supabaseKeyType(apiKey) {
+  const key = String(apiKey || "");
+  if (!key) return "missing";
+  if (key.startsWith("sb_secret_")) return "sb_secret";
+  if (key.startsWith("sb_publishable_")) return "sb_publishable";
+  if (key.startsWith("eyJ")) return "legacy_jwt";
+  return "unknown";
 }
 
 function parseJsonResponse(text) {
