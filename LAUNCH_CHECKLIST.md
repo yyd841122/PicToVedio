@@ -10,9 +10,17 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `/health` returns `{"ok":true,"provider":"dashscope"}`.
 - [x] Owner UAT checklist is prepared in `OWNER_UAT_CHECKLIST.md`.
 - [ ] Homepage loads without browser console errors.
-- [ ] Upload, generate, download, and checkout clicks are tracked in analytics.
+- [x] Upload, generate, and checkout clicks are tracked in analytics.
 - [x] `/admin/analytics` requires the private analytics token.
 - [x] `/admin/ops` requires the same private analytics session.
+
+## 1A. Database Security
+
+- [x] Production Supabase security fix SQL ran successfully.
+- [x] Public `anon` and `authenticated` direct table grants were revoked in the project SQL.
+- [x] Row Level Security was enabled for MotionPic application tables.
+- [x] Supabase advisor confirmation guide exists in `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
+- [ ] Re-run Supabase Advisor or click Resolve Issue and confirm the critical public-access warnings disappear.
 
 ## 2. Video Generation
 

@@ -40,16 +40,22 @@ Requires owner token or logged-in private session:
 
 - [x] `/admin/analytics` requires the private analytics token in production.
 - [x] `/admin/ops` requires the private analytics token/session in production.
-- [ ] Token is not left visible in screenshots or browser address bars after login.
-- [ ] Analytics dashboard shows page views.
-- [ ] Analytics dashboard shows upload events.
-- [ ] Analytics dashboard shows generation events.
-- [ ] Analytics dashboard shows checkout events.
-- [ ] Ops dashboard shows recent users.
-- [ ] Ops dashboard shows video jobs.
-- [ ] Ops dashboard shows payments and webhook events.
-- [ ] Ops dashboard shows credit ledger movements.
-- [ ] Ops dashboard shows estimated provider cost and refund signals.
+- [x] Token is not left visible in screenshots or browser address bars after login.
+- [x] Analytics dashboard shows page views.
+- [x] Analytics dashboard shows upload events.
+- [x] Analytics dashboard shows generation events.
+- [x] Analytics dashboard shows checkout events.
+- [x] Ops dashboard shows recent users.
+- [x] Ops dashboard shows video jobs.
+- [x] Ops dashboard shows payments and webhook events.
+- [x] Ops dashboard shows credit ledger movements.
+- [x] Ops dashboard shows estimated provider cost and refund signals.
+
+## Database Security UAT
+
+- [x] Supabase security fix SQL ran successfully in the production SQL Editor.
+- [x] Application SQL no longer disables RLS or grants direct public table access.
+- [ ] Supabase Advisor no longer shows critical `rls_disabled_in_public` or `sensitive_columns_exposed` warnings.
 
 ## Real Generation UAT
 
@@ -133,8 +139,9 @@ Use this section as a manual record. Do not include private IDs or secrets.
 | Area | Status | Owner note |
 |---|---|---|
 | Public site | In progress | Owner confirmed guide, template, privacy, terms, and refund pages display normally. |
-| Private dashboards | In progress | Owner confirmed logout returns to token login; no-cookie public scrape returned 403 login pages. |
-| Real generation | In progress | Owner manually added 30 test credits through Supabase ledger; balance is ready for controlled samples. |
+| Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
+| Database security | In progress | Owner ran the production security fix SQL successfully; waiting for Supabase Advisor warning confirmation. |
+| Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is about CNY 0.60, but output quality still needs tuning. |
 | Payment | Pending | |
 | Storage | Pending | |
 | Support and policy | Pending | |

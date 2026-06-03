@@ -15,6 +15,7 @@ Current state:
 - DashScope has been configured on Render.
 - Creem test checkout exists.
 - Supabase schema and credit persistence exist.
+- Supabase public table access has been tightened with the live security fix SQL.
 - Private analytics and ops dashboards exist.
 - SEO/GEO foundation is in place.
 - Directory, search, demo asset, and launch checklists exist.
@@ -63,7 +64,7 @@ These cannot be completed safely without account access, private tokens, screens
 
 - [x] Confirm `/admin/analytics` requires the private analytics token in production.
 - [x] Confirm `/admin/ops` requires the private analytics token in production.
-- [ ] Confirm upload, generation, download, checkout click, and checkout redirect events appear in analytics.
+- [x] Confirm upload, generation, checkout click, and checkout redirect events appear in analytics.
 - [ ] Confirm Supabase advisor warnings are cleared after `SUPABASE_SECURITY_FIX.sql`.
 - [ ] Confirm support email is final and monitored.
 - [ ] Confirm final brand name remains MotionPic AI.
@@ -130,7 +131,7 @@ Low-risk tasks that can continue without touching private systems:
 
 ## High-Risk Tasks That Need Explicit Confirmation
 
-- [ ] Run Supabase SQL.
+- [x] Run Supabase SQL.
 - [ ] Change Render environment variables.
 - [ ] Configure Creem live products or webhooks.
 - [ ] Perform a real payment.

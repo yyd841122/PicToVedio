@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-06-02
+Last updated: 2026-06-03
 
 ## Done
 
@@ -41,6 +41,8 @@ Last updated: 2026-06-02
 - [x] Added private ops cost/refund signals for estimated DashScope spend and credit refunds.
 - [x] Hardened Supabase SQL defaults by enabling RLS and revoking direct `anon` / `authenticated` table access.
 - [x] Added `SUPABASE_SECURITY_FIX.sql` for clearing Supabase public-access security warnings.
+- [x] Ran the Supabase live security fix SQL successfully in the production Supabase SQL Editor.
+- [x] Added `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md` for the final Supabase warning re-check.
 - [x] Added template page deep links that preselect the matching generator template.
 - [x] Added FAQPage and BreadcrumbList schema to template SEO pages.
 - [x] Blocked admin and API surfaces from search indexing.
@@ -70,7 +72,7 @@ Last updated: 2026-06-02
 - [x] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
 - [ ] Create Cloudflare R2 bucket and access keys.
-- [ ] Run `SUPABASE_SECURITY_FIX.sql` in the live Supabase project and confirm the Supabase advisor warning clears.
+- [ ] Re-run or resolve the Supabase security advisor check and confirm the public-access warnings clear using `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
 - [ ] Keep Creem in test mode until real generation works.
 - [x] Build the first SEO/GEO content layer around the homepage and templates.
 

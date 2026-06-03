@@ -179,3 +179,5 @@ The project does not yet:
 - Identified that earlier MVP testing SQL had disabled Row Level Security and granted direct table access to public API roles.
 - Updated `supabase.sql` so future database setup enables RLS, revokes `anon` / `authenticated` access, and keeps backend-only `service_role` access.
 - Added `SUPABASE_SECURITY_FIX.sql` as a one-time live database repair script for clearing Supabase advisor warnings.
+- Ran the live security fix SQL successfully in Supabase SQL Editor.
+- Left one owner confirmation item open: re-run Supabase Advisor or click Resolve Issue to confirm the warning has disappeared.
