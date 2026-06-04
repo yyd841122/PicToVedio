@@ -1,5 +1,7 @@
 # MotionPic AI Promotion Copy
 
+Last updated: 2026-06-04
+
 Use these snippets when submitting MotionPic AI to directories, communities, and social platforms.
 
 ## Core One-Liners
@@ -13,7 +15,7 @@ Turn one photo into a short AI video for Reels, TikTok, product pages, pets, cou
 Chinese:
 
 ```text
-上传一张照片，选择模板，把人物、宠物、产品图或老照片变成可发布的 AI 短视频。
+上传一张照片，选择一个模板，把人物、宠物、产品图或老照片变成可以发布的 AI 短视频。
 ```
 
 Short tagline:
@@ -45,7 +47,7 @@ MotionPic AI turns one uploaded photo into a short AI video for TikTok, Reels, p
 Long description:
 
 ```text
-MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a motion template, and create short videos for social posts, product pages, ads, or memories. The product supports credit packs, HD no-watermark exports, and templates such as AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
+MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a focused motion template, and create short videos for social posts, product pages, ads, or memories. The product uses credits for generation and export workflows and includes templates such as AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
 ```
 
 Categories:
@@ -110,7 +112,7 @@ Build-in-public angle:
 ```text
 I am building MotionPic AI, an AI photo-to-video generator.
 
-The first version started as a simple static page with mock generation. Then I added Creem test payments, Supabase credit persistence, Render deployment, Cloudflare custom domain, DashScope real generation, analytics, and ops dashboards.
+The first version started as a simple static page with mock generation. Then I added Creem test payments, Supabase credit persistence, Render deployment, Cloudflare custom domain, DashScope real generation, analytics, ops dashboards, and daily generation cost guardrails.
 
 The hardest part is balancing generation quality, provider cost, and a credit model that can actually survive real users.
 
@@ -151,7 +153,7 @@ Technical post:
 ```text
 I built the first MVP of an AI photo-to-video SaaS with a small stack: plain HTML/CSS/JS, Node http server, Render, Cloudflare, Supabase, DashScope, and Creem for checkout.
 
-The hardest part so far was not the UI. It was getting credits, webhook dedupe, payment return flow, persistence, analytics, and provider cost tracking to work reliably before going live.
+The hardest part so far was not the UI. It was getting credits, webhook dedupe, payment return flow, persistence, analytics, provider cost tracking, and daily spend guardrails to work reliably before going live.
 
 Happy to share details if anyone is building a similar small AI tool.
 ```
@@ -186,7 +188,7 @@ Before pushing traffic to an AI video product, I wired:
 - Supabase persistence
 - analytics
 - ops dashboard
-- custom domain
+- daily provider spend caps
 
 The product has to survive payment and cost reality, not just look good.
 ```
@@ -209,21 +211,21 @@ I am deciding which MotionPic AI template to improve first.
 Title ideas:
 
 ```text
-一张照片变 AI 短视频，真的太适合做内容了
+一张照片变 AI 短视频，真的很适合做内容
 宠物照片动起来了，这种 AI 视频很容易传播
 产品图也能变广告视频？我做了一个小工具测试
 老照片动起来，适合做纪念视频
 ```
 
-Post copy:
+General post:
 
 ```text
 我最近在做一个 AI 照片转视频工具：MotionPic AI。
 
 它的逻辑很简单：
 1. 上传一张照片
-2. 选择一个模板
-3. 生成适合发布的短视频
+2. 选择一个视频模板
+3. 生成适合发布的 AI 短视频
 
 目前最适合的场景：
 - 人物照片变短视频
@@ -232,6 +234,40 @@ Post copy:
 - 老照片做纪念视频
 
 这个方向我觉得有机会，因为用户不是为了“AI 很新”而来，而是想快速拿到一个能发布、能分享、能测试转化的视频素材。
+
+我现在最想验证的是：大家更愿意为哪一类模板付费？宠物、产品、情侣纪念，还是老照片？
+```
+
+Pet version:
+
+```text
+宠物照片动起来真的很容易出效果。
+
+我在做一个小工具 MotionPic AI，可以上传一张宠物照片，然后生成一个轻微动起来的短视频。比较适合宠物号、宠物店、节日祝福，或者单纯把猫猫狗狗的照片做成更好分享的素材。
+
+目前我发现效果更稳定的照片是：
+- 脸部清楚
+- 不要太糊
+- 背景不要太乱
+- 尽量不要多人/多只宠物挤在一起
+
+如果你有宠物照片，你会更想生成可爱动图、短视频，还是节日祝福视频？
+```
+
+Product version:
+
+```text
+产品图也可以变成短视频广告素材。
+
+我在做 MotionPic AI，一个照片转 AI 视频的小工具。对电商卖家来说，最实用的不是生成很夸张的大片，而是把已有产品图变成一个轻微推进、有一点动感、能放到商品页或社媒里的短视频。
+
+适合测试的图片：
+- 产品主体清楚
+- Logo 和文字不要太小
+- 背景干净
+- 不要用过强滤镜
+
+我现在想验证：小卖家更愿意为“产品图转视频广告”付费，还是为“批量生成多版本素材”付费？
 ```
 
 ## TikTok / YouTube Shorts Script

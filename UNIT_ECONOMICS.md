@@ -1,6 +1,6 @@
 # MotionPic AI Unit Economics
 
-Last updated: 2026-06-03
+Last updated: 2026-06-04
 
 ## Current Measured Cost
 
@@ -18,7 +18,9 @@ The current site package display is still:
 | Creator Pack | US$9 | 100 credits |
 | Commerce Pack | US$29 | 400 credits |
 
-At an estimated FX rate of roughly CNY 7.2 per US$1, Creator Pack revenue is about CNY 64.8 before Creem/payment fees. If one real generation costs 1 credit and each generation costs CNY 0.60, then 100 generations cost about CNY 60 before failed generations, retries, payment fees, server costs, and support. That margin is too thin for live launch.
+At an estimated FX rate of roughly CNY 7.2 per US$1, Creator Pack revenue is about CNY 64.8 before Creem/payment fees. If one real generation cost only 1 credit and each generation cost CNY 0.60, then 100 generations would cost about CNY 60 before failed generations, retries, payment fees, server costs, and support. That margin would be too thin.
+
+The current backend charges 2 credits for a standard 4-second 720p generation. With the current US$9 / 100 credit pack, that means roughly 50 standard generations per pack, or about CNY 30 provider cost at the current CNY 0.60 estimate. This is more workable, but still needs buffer for payment fees, retries, support, disliked outputs, and provider price changes.
 
 The backend now reads package credits and price labels from Render environment variables:
 
@@ -28,6 +30,13 @@ The backend now reads package credits and price labels from Render environment v
 - `COMMERCE_PACK_PRICE_LABEL`
 
 Defaults remain `100 / 400 credits` and `$9 / $29` until the Creem product copy is edited. Before live launch, update both Creem and Render together so the checkout page, visible site copy, and webhook credit grants match.
+
+The backend also reads daily real-generation limits from Render:
+
+- `MAX_DAILY_VIDEO_JOBS`
+- `MAX_DAILY_VIDEO_JOBS_PER_USER`
+
+Defaults are `20` sitewide real jobs and `3` real jobs per anonymous user per UTC day. These are cost guardrails, not a pricing model. Lower them during the first live-payment test if you want a tighter provider-spend ceiling.
 
 ## Margin Target
 
@@ -119,3 +128,4 @@ Do these before switching Creem to live mode:
 - Decide refund policy for failed and disliked outputs.
 - Run at least 20 real test generations across portrait, product, pet, and old photo templates.
 - Record average cost, success rate, and user-acceptable quality rate.
+- Confirm Render has conservative `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER` values.
