@@ -350,6 +350,10 @@
             const output = job.outputUrl
               ? `<a href="${escapeHtml(job.outputUrl)}" target="_blank" rel="noopener noreferrer">Open</a>`
               : "-";
+            const failed = String(job.status || "").toLowerCase() === "failed";
+            const errorNote = failed
+              ? `${job.error || "Video generation failed."} Credits were refunded automatically.`
+              : job.error || "None";
             return `
               <tr>
                 <td>${escapeHtml(formatDate(job.createdAt))}</td>
@@ -357,7 +361,7 @@
                 <td>${escapeHtml(job.template || "-")}<br /><span class="muted">${escapeHtml(job.ratio || "-")} / ${escapeHtml(job.resolution || "-")} / ${escapeHtml(job.seconds || "-")}s</span></td>
                 <td>${escapeHtml(job.credits || 0)} credits</td>
                 <td>${output}</td>
-                <td class="${job.error ? "error" : "muted"}">${escapeHtml(job.error || "None")}</td>
+                <td class="${failed || job.error ? "error" : "muted"}">${escapeHtml(errorNote)}</td>
               </tr>
             `;
           })
