@@ -190,3 +190,10 @@ The project does not yet:
 - Added stronger backend negative prompts for identity change, merged faces, mouth distortion, object/logo/text distortion, and scene changes.
 - Added template-specific guardrails for portraits, products, old photos, pets, and romantic/couple clips.
 - Updated the visible template prompts so users start with subtle motion and understand that Couple Kiss is experimental.
+
+## 2026-06-04: Second-Pass Prompt Tightening
+
+- Tightened the default Natural Portrait prompt around locked first-frame identity, closed-mouth micro expression, and no face reshaping.
+- Tightened Product Motion to preserve logos, labels, packaging proportions, and readable text while using camera motion instead of object deformation.
+- Tightened Old Photo, Pet Motion, and Couple Kiss prompts to avoid identity changes, anatomy changes, background changes, forced mouth movement, and invented contact.
+- Expanded the DashScope negative prompt with lip sync, talking mouth, product deformation, unreadable text, camera shake, and background-change blockers.

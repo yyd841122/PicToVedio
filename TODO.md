@@ -73,6 +73,7 @@ Last updated: 2026-06-03
 - [x] Added JPG/PNG/WebP and upload-size validation before credit deduction.
 - [x] Added public download-soon guidance while long-term object storage is deferred.
 - [x] Added storage provider, upload limit, and unit-cost visibility to the private ops dashboard.
+- [x] Tightened low-motion template prompts and DashScope guardrails for faces, pets, products, and old photos.
 
 ## In Progress
 

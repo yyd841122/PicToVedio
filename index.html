@@ -1386,11 +1386,11 @@
                     <div class="templates" id="templateGrid">
                       <button class="template active" type="button" data-template="Portrait" data-audience="creator emotion">
                         <strong>Natural Portrait</strong>
-                        <span>Subtle smile, blinking, light camera motion</span>
+                        <span>Low-motion portrait with stable face identity</span>
                       </button>
                       <button class="template" type="button" data-template="Product" data-audience="commerce">
                         <strong>Product Motion</strong>
-                        <span>Gentle product push-in and display</span>
+                        <span>Gentle push-in while preserving logo and text</span>
                       </button>
                       <button class="template" type="button" data-template="Old Photo" data-audience="emotion">
                         <strong>Old Photo Alive</strong>
@@ -1402,14 +1402,14 @@
                       </button>
                       <button class="template" type="button" data-template="Kiss" data-audience="emotion">
                         <strong>Couple Kiss</strong>
-                        <span>Experimental; test portrait first</span>
+                        <span>Experimental; use only clear two-person photos</span>
                       </button>
                     </div>
                   </div>
 
                   <div class="field-group">
                     <label for="prompt">Motion prompt</label>
-                    <textarea class="textarea" id="prompt">very subtle camera push-in, natural blinking only, gentle smile, preserve exact face identity, stable facial features</textarea>
+                    <textarea class="textarea" id="prompt">locked first-frame identity, very subtle camera push-in, natural blinking only, closed-mouth tiny smile, stable facial features, no face reshaping</textarea>
                   </div>
 
                   <div class="field-group">
@@ -1783,11 +1783,11 @@
       };
 
       const templatePrompts = {
-        Portrait: "very subtle camera push-in, natural blinking only, tiny smile, preserve exact face identity, no face reshaping",
-        Product: "subtle camera push-in only, stable product shape, preserve logos and text, no deformation, clean ecommerce ad",
-        "Old Photo": "very subtle old portrait animation, natural blinking only, preserve original identity and face proportions",
-        Pet: "very subtle pet motion, natural eyes, stable fur and face shape, no body deformation, cute social clip",
-        Kiss: "experimental romantic close-up, extremely subtle motion, preserve both faces separately, no face merging, avoid mouth distortion",
+        Portrait: "locked first-frame identity, very subtle camera push-in, natural blinking only, closed-mouth tiny smile, stable facial features, no face reshaping",
+        Product: "locked first-frame product, subtle camera push-in only, preserve exact product shape, logos, labels, and readable text, no deformation",
+        "Old Photo": "locked first-frame old portrait, very subtle animation, natural blinking only, preserve original identity, face proportions, clothing, and historical mood",
+        Pet: "locked first-frame pet, very subtle natural eye and head motion, stable fur, muzzle, ears, and body shape, no anatomy changes",
+        Kiss: "experimental romantic close-up, extremely subtle motion only, preserve both faces separately, closed mouths, no face merging, no forced kissing movement",
       };
 
       const fileInput = document.querySelector("#fileInput");

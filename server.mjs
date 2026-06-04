@@ -2701,7 +2701,7 @@ async function createDashScopeVideoJob(body) {
       audio: config.dashscopeAudio,
       prompt_extend: config.dashscopePromptExtend,
       negative_prompt:
-        "deformed face, distorted face, different person, identity change, face morphing, merged faces, duplicated face, warped eyes, asymmetrical eyes, broken teeth, open mouth distortion, extra fingers, extra limbs, melting object, logo distortion, text distortion, blurry face, low quality, artifacts, exaggerated motion, fast head turn, scene change",
+        "deformed face, distorted face, different person, identity change, face morphing, merged faces, duplicated face, warped eyes, asymmetrical eyes, broken teeth, open mouth distortion, lip sync, talking mouth, extra fingers, extra limbs, melting object, product deformation, logo distortion, text distortion, unreadable text, blurry face, low quality, artifacts, exaggerated motion, fast head turn, camera shake, background change, scene change",
     },
   };
 
@@ -2771,6 +2771,7 @@ function buildDashScopePrompt(body) {
     "Preserve the same people, facial identity, age, clothing, hairstyle, and background.",
     "Do not transform the subject into a different person, object, style, age, or scene.",
     "Keep faces natural and stable; avoid changing facial features, mouth shape, eyes, teeth, or skin texture.",
+    "Keep mouths mostly closed unless the original photo already has an open mouth; do not add speech, lip sync, or exaggerated teeth.",
     "Use low-motion animation only: gentle camera push-in, tiny head movement, natural blinking, and very small expression change.",
     "Avoid strong facial animation, lip movement, large head turns, body motion, camera shake, or background changes.",
     "If a requested interaction is not clearly supported by the original photo, use subtle camera motion instead of inventing new contact.",
@@ -2786,22 +2787,22 @@ function dashScopeTemplateGuardrail(template) {
   const name = String(template || "").toLowerCase();
 
   if (name.includes("product")) {
-    return "For product photos, preserve the exact product shape, logo, labels, edges, and readable text. Use camera motion instead of deforming the product.";
+    return "For product photos, preserve the exact product shape, logo, labels, edges, packaging proportions, and readable text. Use camera motion instead of deforming the product. Do not invent new text or change brand marks.";
   }
 
   if (name.includes("old")) {
-    return "For old photos, preserve the original identity, face proportions, historical look, and mood. Do not modernize the face or change the person.";
+    return "For old photos, preserve the original identity, face proportions, clothing, historical look, and mood. Use gentle restoration-like motion only. Do not modernize the face, change the person, or alter the background.";
   }
 
   if (name.includes("pet")) {
-    return "For pet photos, preserve the animal anatomy, eyes, fur, and face shape. Use very small natural motion only.";
+    return "For pet photos, preserve the animal anatomy, eyes, fur, muzzle, ears, paws, and face shape. Use very small natural motion only. Do not stretch the body or change the species.";
   }
 
   if (name.includes("kiss")) {
-    return "For romantic couple photos, this is an experimental effect. Preserve both faces separately, avoid merging faces, avoid forced mouth movement, and keep motion extremely subtle.";
+    return "For romantic couple photos, this is an experimental effect. Preserve both faces separately, keep mouths mostly closed, avoid merging faces, avoid forced mouth movement, avoid invented contact, and keep motion extremely subtle.";
   }
 
-  return "For portrait photos, preserve exact facial identity and use only a calm portrait animation.";
+  return "For portrait photos, preserve exact facial identity, face proportions, hairstyle, clothing, and background. Use only a calm portrait animation with closed-mouth micro expression.";
 }
 
 function mapDashScopeResolution(resolution) {
