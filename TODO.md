@@ -140,7 +140,7 @@ Last updated: 2026-06-03
 - [x] Prepare copy-and-paste submission fields for AI tool directories and launch communities.
 - [x] Add an internal `/launch-kit` page with directory links, UTM links, and reusable launch copy.
 - [x] Recheck local JSON-LD syntax and sitemap coverage for public SEO pages.
-- [ ] Prepare Baidu submission if targeting Chinese search.
+- [x] Prepare Baidu submission checklist if targeting Chinese search.
 
 ## Later: P2
 

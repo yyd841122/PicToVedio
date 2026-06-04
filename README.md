@@ -291,6 +291,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md): production launch, SEO submission, payment, and first-revenue checklist.
 - [SEARCH_SUBMISSION_GUIDE.md](./SEARCH_SUBMISSION_GUIDE.md): Google, Bing, sitemap, and AI-search submission steps.
 - [SEARCH_ENGINE_SUBMISSION_CHECKLIST.md](./SEARCH_ENGINE_SUBMISSION_CHECKLIST.md): operator checklist for Google, Bing, and IndexNow submissions.
+- [BAIDU_SUBMISSION_CHECKLIST.md](./BAIDU_SUBMISSION_CHECKLIST.md): optional Baidu Search Resource Platform checklist for Chinese search targeting.
 - [DIRECTORY_SUBMISSION_PACK.md](./DIRECTORY_SUBMISSION_PACK.md): copy-and-paste fields for AI tool directories and launch communities.
 - [DIRECTORY_SUBMISSION_CHECKLIST.md](./DIRECTORY_SUBMISSION_CHECKLIST.md): operator checklist for directory, community, and Product Hunt submissions.
 - [DEMO_ASSET_CHECKLIST.md](./DEMO_ASSET_CHECKLIST.md): screenshot and short-video asset checklist for directories and social launch posts.
