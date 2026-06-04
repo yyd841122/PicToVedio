@@ -119,7 +119,7 @@ Do not run broad public promotion until these are true:
 - [ ] Pricing and credit grants match across site, Creem, Render, and webhook logic.
 - [ ] Support email is final and monitored.
 - [ ] At least 3 acceptable demo clips or screenshots are ready.
-- [ ] Object storage is enabled or the site clearly tells users to download outputs.
+- [x] Object storage is enabled or the site clearly tells users to download outputs.
 - [ ] Refund policy is visible and matches real operating behavior.
 
 ## Safe Next Steps
@@ -131,6 +131,7 @@ Low-risk tasks that can continue without touching private systems:
 - [x] Prepare a demo-output evaluation rubric.
 - [x] Prepare a support-response template for failed or distorted generations.
 - [x] Prepare a storage setup review checklist based on `R2_SETUP_GUIDE.md`.
+- [x] Add public download-soon guidance while object storage remains deferred.
 
 ## High-Risk Tasks That Need Explicit Confirmation
 

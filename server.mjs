@@ -1102,6 +1102,7 @@ async function addOpsRuntimeConfig(data) {
     storageProvider: config.storageProvider,
     maxDailyVideoJobs: config.maxDailyVideoJobs,
     maxDailyVideoJobsPerUser: config.maxDailyVideoJobsPerUser,
+    maxUploadImageMb: config.maxUploadImageMb,
     todayRealVideoJobs: await countRealVideoJobsToday(),
     resetAt: nextUtcMidnightIso(),
     estimatedVideoCostCny: config.estimatedVideoCostCny,
@@ -1790,6 +1791,13 @@ function renderOpsDashboard(data) {
       ${renderMetricCard("Real Jobs Today", data.runtime.todayRealVideoJobs, `Resets ${formatDateTime(data.runtime.resetAt)}`)}
       ${renderMetricCard("Daily Site Cap", data.runtime.maxDailyVideoJobs, "MAX_DAILY_VIDEO_JOBS")}
       ${renderMetricCard("Daily User Cap", data.runtime.maxDailyVideoJobsPerUser, "MAX_DAILY_VIDEO_JOBS_PER_USER")}
+    </section>
+
+    <section class="grid metrics">
+      ${renderMetricCard("Storage Provider", data.runtime.storageProvider, data.runtime.storageProvider === "r2" ? "R2 storage active" : "Provider output links may expire")}
+      ${renderMetricCard("Upload Limit", `${data.runtime.maxUploadImageMb} MB`, "JPG / PNG / WebP")}
+      ${renderMetricCard("Unit Cost Est.", formatCny(data.runtime.estimatedVideoCostCny), "ESTIMATED_VIDEO_COST_CNY")}
+      ${renderMetricCard("Download Note", data.runtime.storageProvider === "r2" ? "Long-term links" : "Save outputs soon", "Shown on the public generator")}
     </section>
 
     <section class="section grid columns">

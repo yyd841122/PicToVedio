@@ -143,6 +143,8 @@ CLOUDFLARE_R2_PUBLIC_BASE_URL=https://assets.example.com
 
 When R2 is enabled, uploaded photos are saved under `uploads/{userId}/{jobId}` and generated videos are copied under `outputs/{userId}/{jobId}.mp4`. If a public R2 URL is configured, MotionPic also passes that image URL to the video provider instead of a browser data URL.
 
+Until `STORAGE_PROVIDER=r2` is enabled, generated videos use the provider output URL. Those links may expire, so the public generator tells users to open or download useful outputs soon after generation.
+
 ## Credit Packs
 
 - Creator Pack: `$9` for `100 credits`

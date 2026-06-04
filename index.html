@@ -95,6 +95,14 @@
                   "@type": "Answer",
                   "text": "The Commerce pack is designed for product video templates and commercial export workflows."
                 }
+              },
+              {
+                "@type": "Question",
+                "name": "Should I download generated videos?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Until long-term object storage is enabled, generated provider links may expire. Open or download useful outputs soon after generation."
+                }
               }
             ]
           }
@@ -1708,6 +1716,10 @@
                 <h3>How is it different from general AI video tools?</h3>
                 <p>General tools are open-ended. MotionPic AI focuses on photo-to-video templates so outputs are closer to ready-to-publish assets.</p>
               </article>
+              <article class="panel faq-item">
+                <h3>Should I download generated videos?</h3>
+                <p>Yes. Until long-term object storage is enabled, generated provider links may expire. Open or download useful outputs soon after generation.</p>
+              </article>
             </div>
           </div>
         </section>
@@ -2028,7 +2040,7 @@
           about3Title: "Transparent credit pricing",
           about3Text: "Preview first, then decide whether to unlock HD no-watermark exports. Creator and Commerce packs match different usage levels.",
           faqTitle: "Frequently Asked Questions",
-          faqLead: "These answers help visitors understand MotionPic AI, credits, watermark exports, and commercial usage.",
+          faqLead: "These answers help visitors understand MotionPic AI, credits, watermark exports, download behavior, and commercial usage.",
           faq1Title: "What is an AI photo to video generator?",
           faq1Text: "It is an online tool that combines one uploaded photo, a motion prompt, and a template to create a short AI video.",
           faq2Title: "What photos work best?",
@@ -2041,6 +2053,8 @@
           faq5Text: "The Commerce Pack is designed for product video templates and commercial export workflows for stores and ads.",
           faq6Title: "How is it different from general AI video tools?",
           faq6Text: "General tools are open-ended. MotionPic AI focuses on photo-to-video templates so outputs are closer to ready-to-publish assets.",
+          faq7Title: "Should I download generated videos?",
+          faq7Text: "Yes. Until long-term object storage is enabled, generated provider links may expire. Open or download useful outputs soon after generation.",
           modalTitle: "Unlock HD no watermark",
           modalDesc: "Use credits to unlock HD no-watermark exports and generate more variations.",
           currentChoice: "Current choice",
@@ -2154,6 +2168,7 @@
           currentCopy.faq4Title,
           currentCopy.faq5Title,
           currentCopy.faq6Title,
+          currentCopy.faq7Title,
         ]);
         setAllText("#faq .faq-item p", [
           currentCopy.faq1Text,
@@ -2162,6 +2177,7 @@
           currentCopy.faq4Text,
           currentCopy.faq5Text,
           currentCopy.faq6Text,
+          currentCopy.faq7Text,
         ]);
         setText("#footerCopy", currentCopy.footer);
         setText("#checkoutTitle", currentCopy.modalTitle);
@@ -2615,7 +2631,7 @@
             if (pill) pill.textContent = "Done";
             pill?.closest(".queue-item")?.setAttribute("data-complete", "true");
             creditNote.textContent = state.outputUrl
-              ? "Video is ready. You can download the generated MP4."
+              ? "Video is ready. Open or download the generated MP4 now; hosted links may expire later."
               : "Video job completed.";
             progressBar.style.width = "100%";
             updateEstimate();
@@ -2658,7 +2674,7 @@
         trackEvent("download_click", { hasOutputUrl: Boolean(state.outputUrl) });
         if (state.outputUrl) {
           window.open(state.outputUrl, "_blank", "noopener,noreferrer");
-          creditNote.textContent = "Download opened in a new tab.";
+          creditNote.textContent = "Generated MP4 opened in a new tab. Save it soon if you want to keep it.";
           return;
         }
         creditNote.textContent = "Watermarked download recorded. The live version can open the generated MP4 here.";

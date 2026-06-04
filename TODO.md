@@ -71,6 +71,8 @@ Last updated: 2026-06-03
 - [x] Replaced misleading free-preview copy with starter/current-credit copy on the homepage.
 - [x] Added daily real-generation cap visibility to the private ops dashboard.
 - [x] Added JPG/PNG/WebP and upload-size validation before credit deduction.
+- [x] Added public download-soon guidance while long-term object storage is deferred.
+- [x] Added storage provider, upload limit, and unit-cost visibility to the private ops dashboard.
 
 ## In Progress
 
