@@ -273,12 +273,25 @@ Redeploy or restart the Render service.
 Keep the current test setup until the whole flow is stable. When you are ready to accept real money:
 
 1. Finish Creem identity, payout, and live store checks.
-2. Create live products in Creem with the same package names:
+2. Choose one live pricing path before creating products.
+
+Current marketing path:
 
 ```text
 Creator Pack: $9 for 100 credits
 Commerce Pack: $29 for 400 credits
 ```
+
+This is acceptable only while a standard 4-second 720p generation costs at least 2 credits. At the current observed DashScope cost of about CNY 0.60 per standard generation, `$9 / 100 credits` gives about 50 standard generations, or about CNY 30 direct provider cost before payment fees, retries, support, and disliked outputs.
+
+Safer first-live path:
+
+```text
+Creator Pack: $9 for 40 credits
+Commerce Pack: $29 for 160 credits
+```
+
+This creates more margin during the first real-customer tests. Whichever path you choose, make the Creem product description, Render credit variables, and homepage pricing match exactly.
 
 3. Copy the live product ids into Render:
 
@@ -294,19 +307,46 @@ CREEM_PRODUCT_COMMERCE=live_commerce_product_id
 CREEM_TEST_MODE=false
 ```
 
-6. Create a live webhook in Creem:
+6. Set the matching package variables in Render.
+
+For the current marketing path:
+
+```env
+CREATOR_PACK_CREDITS=100
+COMMERCE_PACK_CREDITS=400
+CREATOR_PACK_PRICE_LABEL=$9
+COMMERCE_PACK_PRICE_LABEL=$29
+```
+
+For the safer first-live path:
+
+```env
+CREATOR_PACK_CREDITS=40
+COMMERCE_PACK_CREDITS=160
+CREATOR_PACK_PRICE_LABEL=$9
+COMMERCE_PACK_PRICE_LABEL=$29
+```
+
+7. Create a live webhook in Creem:
 
 ```text
 https://video.cozyguidehub.com/api/creem/webhook
 ```
 
-7. Copy the live webhook signing secret into Render:
+8. Copy the live webhook signing secret into Render:
 
 ```env
 CREEM_WEBHOOK_SECRET=live_webhook_signing_secret
 ```
 
-8. Click `Save, rebuild, and deploy` in Render.
+9. Keep conservative provider-spend caps in Render for the first live test:
+
+```env
+MAX_DAILY_VIDEO_JOBS=10
+MAX_DAILY_VIDEO_JOBS_PER_USER=2
+```
+
+10. Click `Save, rebuild, and deploy` in Render.
 
 After deploy, create a low-price live product first if possible, pay once yourself, and confirm:
 

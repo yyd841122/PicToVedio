@@ -95,7 +95,7 @@ Alternative if the visible "100 credits" offer is kept:
 - Charge 4+ credits for HD/no-watermark outputs.
 - Add 1 credit for high-risk creative templates such as kiss videos.
 
-This preserves the marketing appeal of "100 credits" while avoiding a near-zero margin.
+This preserves the marketing appeal of "100 credits" while avoiding a near-zero margin. At the current observed CNY 0.60 provider cost, US$9 / 100 credits means about 50 standard generations and roughly CNY 30 direct provider cost before payment fees, retries, support, and disliked outputs.
 
 ## Quality And Cost Optimization
 
@@ -123,8 +123,8 @@ Future provider testing:
 Do these before switching Creem to live mode:
 
 - Update visible package copy and backend credit costs together.
-- Add object storage for uploaded images and generated videos.
-- Replace `demo-user` with anonymous device IDs or login.
+- Either add object storage for uploaded images and generated videos, or clearly tell users to download generated outputs soon.
+- Keep anonymous device IDs working until a real login system is added later.
 - Decide refund policy for failed and disliked outputs.
 - Run at least 20 real test generations across portrait, product, pet, and old photo templates.
 - Record average cost, success rate, and user-acceptable quality rate.

@@ -67,6 +67,7 @@ If keeping the current US$9 Creator Pack:
 - Keep 1080p and Pro outputs at higher credit costs.
 - Do not advertise unlimited retries.
 - Tell users that AI results can vary.
+- Use this path for marketing simplicity, not maximum margin. At the current observed CNY 0.60 provider cost, US$9 / 100 credits gives about 50 standard generations and roughly CNY 30 direct provider cost before payment fees, retries, support, and disliked outputs.
 
 ## Creem Live Switch
 
@@ -98,7 +99,19 @@ MAX_DAILY_VIDEO_JOBS=10
 MAX_DAILY_VIDEO_JOBS_PER_USER=2
 ```
 
-Use the existing 100 / 400 credit packs only if the live Creem product descriptions still say 100 / 400 credits and you want the stronger marketing offer. At the current 2 credits per standard generation, US$9 / 100 credits is roughly 50 standard 4s / 720p generations, so it is not immediately loss-making at the current observed cost, but it leaves less buffer for retries, fees, support, and disliked outputs.
+Use the existing 100 / 400 credit packs only if the live Creem product descriptions still say 100 / 400 credits and you want the stronger marketing offer. If you keep that path, set:
+
+```env
+CREEM_TEST_MODE=false
+CREATOR_PACK_CREDITS=100
+COMMERCE_PACK_CREDITS=400
+CREATOR_PACK_PRICE_LABEL=$9
+COMMERCE_PACK_PRICE_LABEL=$29
+MAX_DAILY_VIDEO_JOBS=10
+MAX_DAILY_VIDEO_JOBS_PER_USER=2
+```
+
+Do not mix a Creem product that says 100 credits with Render values that grant 40 credits, or the reverse.
 
 ## What I Can Continue Without Owner Action
 
