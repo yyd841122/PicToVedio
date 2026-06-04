@@ -35,7 +35,7 @@ Public homepage, template pages, guide pages, and legal pages have:
 
 ## Structured Data Check
 
-Homepage has Product and FAQPage JSON-LD.
+Homepage has Organization, SoftwareApplication, and FAQPage JSON-LD.
 
 Template pages have WebPage, BreadcrumbList, and FAQPage JSON-LD.
 
@@ -52,6 +52,8 @@ Guide pages now use consistent guide schema patterns:
 ## Change Made
 
 The first three guide pages previously only had FAQPage schema. They now match the later guide pages with BreadcrumbList and Article schema, plus keyword metadata. Their sitemap `lastmod` values were updated to `2026-06-04`.
+
+The homepage FAQ was extended with download-soon guidance while object storage is deferred, and the homepage sitemap `lastmod` value was updated to `2026-06-04`.
 
 ## High-Risk Follow-Up Requiring Owner Confirmation
 
