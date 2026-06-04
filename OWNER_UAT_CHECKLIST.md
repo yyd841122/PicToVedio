@@ -75,6 +75,7 @@ Requires explicit owner approval because it may spend provider credits:
 - [ ] Output URL opens after completion.
 - [ ] At least 3 outputs are good enough for demo use before public promotion.
 - [ ] Provider cost is recorded in `PROVIDER_COST_SAMPLING_WORKSHEET.md` or `UNIT_ECONOMICS.md`.
+- [ ] The 20-generation promotion-readiness matrix in `GENERATION_TEST_PLAN.md` is completed before broad promotion.
 
 ## Payment UAT
 
