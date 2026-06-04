@@ -15,6 +15,8 @@ Use this checklist when you are ready to submit MotionPic AI to search engines. 
 - [x] Sitemap includes homepage, policy pages, template pages, guide pages, and `llms.txt`.
 - [x] Internal account, admin, API, and launch-kit pages are excluded from the public sitemap.
 - [x] Template and guide pages include canonical, H1, JSON-LD, Open Graph, and Twitter Card metadata.
+- [x] Local JSON-LD parse check passed for public homepage, legal pages, template pages, and guide pages on 2026-06-04.
+- [x] Local sitemap coverage check found 16 expected public URLs and no internal utility URLs on 2026-06-04.
 
 ## Google Search Console
 

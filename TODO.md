@@ -67,6 +67,7 @@ Last updated: 2026-06-03
 - [x] Added an anonymous `/account` page for credits, credit ledger history, and recent video jobs.
 - [x] Added real-provider daily generation caps before credit deduction.
 - [x] Added user-friendly generation API error codes for low credits, unsuitable images, busy providers, and daily quota limits.
+- [x] Rechecked public sitemap coverage and normalized guide page Article/Breadcrumb/FAQ schema.
 
 ## In Progress
 
@@ -131,6 +132,7 @@ Last updated: 2026-06-03
 - [x] Add a guide hub so crawler and AI-search entry points are not only individual articles.
 - [x] Prepare copy-and-paste submission fields for AI tool directories and launch communities.
 - [x] Add an internal `/launch-kit` page with directory links, UTM links, and reusable launch copy.
+- [x] Recheck local JSON-LD syntax and sitemap coverage for public SEO pages.
 - [ ] Prepare Baidu submission if targeting Chinese search.
 
 ## Later: P2
