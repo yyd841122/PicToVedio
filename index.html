@@ -2500,7 +2500,7 @@
           return "Not enough credits for this generation. Buy a credit pack or choose a shorter 720p clip.";
         }
         if (code === "DAILY_VIDEO_JOB_LIMIT_REACHED" || code === "DAILY_USER_VIDEO_JOB_LIMIT_REACHED" || status === 429) {
-          return "Today's video generation quota has been used up. Credits were not deducted. Please try again tomorrow.";
+          return "Today's daily safety limit for real video generation has been reached. This is not your credit balance. Credits were not deducted. Please try again tomorrow.";
         }
         if (code === "UNSUPPORTED_IMAGE" || code === "UNSUITABLE_IMAGE") {
           return "This image may not be suitable. Try a clear JPG, PNG, or WebP photo with a front-facing face, visible product, or simple background.";

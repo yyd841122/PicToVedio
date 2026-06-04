@@ -301,6 +301,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md](./reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md): public SEO metadata, JSON-LD, internal-link, and endpoint readiness report.
 - [reports/PUBLIC_ENDPOINT_STATUS_2026-06-03.md](./reports/PUBLIC_ENDPOINT_STATUS_2026-06-03.md): public health, robots, sitemap, llms, IndexNow key, and social image endpoint status.
 - [reports/OWNER_UAT_FEEDBACK_2026-06-03.md](./reports/OWNER_UAT_FEEDBACK_2026-06-03.md): owner-reported UAT results for admin protection and public page display.
+- [reports/GENERATION_STAGE1_RESULTS_2026-06-04.md](./reports/GENERATION_STAGE1_RESULTS_2026-06-04.md): owner-reported Stage 1 generation smoke-test results and quota-blocked pet test note.
 
 ## Search Discovery Helpers
 
