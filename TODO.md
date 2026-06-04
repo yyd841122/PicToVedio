@@ -68,6 +68,8 @@ Last updated: 2026-06-03
 - [x] Added real-provider daily generation caps before credit deduction.
 - [x] Added user-friendly generation API error codes for low credits, unsuitable images, busy providers, and daily quota limits.
 - [x] Rechecked public sitemap coverage and normalized guide page Article/Breadcrumb/FAQ schema.
+- [x] Replaced misleading free-preview copy with starter/current-credit copy on the homepage.
+- [x] Added daily real-generation cap visibility to the private ops dashboard.
 
 ## In Progress
 

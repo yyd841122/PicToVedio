@@ -1333,8 +1333,8 @@
 
               <div class="status-strip" aria-label="Video generation summary">
                 <div class="status-item">
-                  <span>Free previews today</span>
-                  <strong id="freeQuota">2 / 2</strong>
+                  <span>Current credits</span>
+                  <strong id="freeQuota">12 credits</strong>
                 </div>
                 <div class="status-item">
                   <span>Estimated cost</span>
@@ -1506,12 +1506,12 @@
               <h3>Credit packs</h3>
               <div class="price-card">
                 <div class="price-head">
-                  <strong>Free</strong>
+                  <strong>Starter balance</strong>
                   <span class="price">$0</span>
                 </div>
                 <ul>
-                  <li>2 previews per day</li>
-                  <li>720p, watermarked</li>
+                  <li>12 starter credits</li>
+                  <li>Standard 4s 720p clip uses 2 credits</li>
                   <li>Good for testing photo quality</li>
                 </ul>
               </div>
@@ -1694,7 +1694,7 @@
               </article>
               <article class="panel faq-item">
                 <h3>Will generated videos have a watermark?</h3>
-                <p>Free previews are useful for checking the result. HD no-watermark exports use credits or a paid pack.</p>
+                <p>Starter credits are useful for checking the result. HD no-watermark exports and additional variants use credits or a paid pack.</p>
               </article>
               <article class="panel faq-item">
                 <h3>How do credits work?</h3>
@@ -1759,7 +1759,6 @@
         baseCost: 2,
         length: "4s",
         balance: 12,
-        freeQuota: 2,
         events: 0,
         generations: 0,
         imageData: "",
@@ -1935,7 +1934,7 @@
           metric3Text: "Long-tail template SEO",
           studioTitle: "AI Video Studio",
           studioSubtitle: "Upload a photo, pick a template, and generate a downloadable short video.",
-          freePreview: "Free previews today",
+          freePreview: "Current credits",
           cost: "Estimated cost",
           output: "Export quality",
           events: "Conversion events",
@@ -1946,7 +1945,7 @@
           prompt: "Motion prompt",
           ratio: "Aspect ratio",
           quality: "Quality",
-          previewFree: "Free preview",
+          previewFree: "Standard preview",
           noWatermark: "No-watermark export",
           productAd: "Product ad",
           wait: "Wait time",
@@ -1964,12 +1963,12 @@
           balance: "Current balance",
           buy: "Buy credits",
           pricingTitle: "Recommended paid anchors",
-          free: "Free",
+          free: "Starter balance",
           creatorPack: "Creator Pack",
           commerce: "Commerce",
-          free1: "2 previews per day",
-          free2: "720p with watermark",
-          free3: "1 extra after sharing",
+          free1: "12 starter credits",
+          free2: "Standard 4s 720p clip uses 2 credits",
+          free3: "Good for testing photo quality",
           creator1: "100 credits, about 50 standard clips",
           creator2: "1080p no-watermark downloads",
           creator3: "Batch generate 4 versions",
@@ -2032,7 +2031,7 @@
           faq2Title: "What photos work best?",
           faq2Text: "Portraits, couple photos, pet photos, product shots, model images, and old family photos are strong starting points.",
           faq3Title: "Will generated videos have a watermark?",
-          faq3Text: "Free previews are useful for checking the result. HD no-watermark exports use credits or a paid pack.",
+          faq3Text: "Starter credits are useful for checking the result. HD no-watermark exports and additional variants use credits or a paid pack.",
           faq4Title: "How do credits work?",
           faq4Text: "Credits are used for previews, HD no-watermark exports, and batch generation. A standard 4-second 720p clip uses 2 credits.",
           faq5Title: "Can I use videos commercially?",
@@ -2231,7 +2230,7 @@
         const cost = currentCost();
         creditCost.textContent = `${cost} credit${cost > 1 ? "s" : ""}`;
         outputSpec.textContent = state.resolution;
-        freeQuota.textContent = `${state.freeQuota} / 2`;
+        freeQuota.textContent = `${state.balance} credits`;
         creditBalance.textContent = `${state.balance} credits`;
         waitTime.textContent = state.resolution === "Pro" ? "90s" : state.length === "12s" ? "70s" : state.length === "8s" ? "45s" : "25s";
         licenseHint.textContent = state.resolution === "720p" ? currentCopy.upgradeable : currentCopy.commercialReady;
@@ -2628,7 +2627,6 @@
             window.clearInterval(timer);
             state.generated = true;
             state.balance -= cost;
-            if (state.resolution === "720p") state.freeQuota = Math.max(0, state.freeQuota - 1);
             generateButton.disabled = false;
             generateButton.textContent = "Generate another";
             downloadButton.disabled = false;

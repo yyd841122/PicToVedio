@@ -1053,18 +1053,18 @@ async function getAdminOpsData(limit) {
       supabaseRequest(`credit_ledger?select=id,user_id,amount,source,external_id,plan,balance_after,created_at&order=created_at.desc&limit=${limit}`),
       supabaseRequest(`webhook_events?select=id,provider,type,received_at&order=received_at.desc&limit=${limit}`),
     ]);
-    return summarizeOpsData({
+    return await addOpsRuntimeConfig(summarizeOpsData({
       users: users.map(rowToAdminUser),
       jobs: jobs.map(rowToJob),
       payments: payments.map(rowToPayment),
       ledger: ledger.map(ledgerRowToEntry),
       webhooks: webhooks.map(rowToWebhookEvent),
-    });
+    }));
   }
 
   const db = readDb();
   normalizeDb(db);
-  return summarizeOpsData({
+  return await addOpsRuntimeConfig(summarizeOpsData({
     users: Object.entries(db.users)
       .map(([id, user]) => ({
         id,
@@ -1087,7 +1087,22 @@ async function getAdminOpsData(limit) {
     webhooks: Object.values(db.webhookEvents)
       .sort((a, b) => String(b.receivedAt || "").localeCompare(String(a.receivedAt || "")))
       .slice(0, limit),
-  });
+  }));
+}
+
+async function addOpsRuntimeConfig(data) {
+  data.runtime = {
+    videoProvider: config.videoProvider,
+    dataProvider: useSupabase() ? "supabase" : config.dataProvider,
+    paymentProvider: config.paymentProvider,
+    storageProvider: config.storageProvider,
+    maxDailyVideoJobs: config.maxDailyVideoJobs,
+    maxDailyVideoJobsPerUser: config.maxDailyVideoJobsPerUser,
+    todayRealVideoJobs: await countRealVideoJobsToday(),
+    resetAt: nextUtcMidnightIso(),
+    estimatedVideoCostCny: config.estimatedVideoCostCny,
+  };
+  return data;
 }
 
 function summarizeOpsData(data) {
@@ -1764,6 +1779,13 @@ function renderOpsDashboard(data) {
       ${renderMetricCard("Est. Provider Cost", formatCny(data.totals.estimatedProviderCostCny), "Succeeded DashScope jobs only")}
       ${renderMetricCard("Credits Spent", data.totals.jobCreditsSpent, `${formatNumber(data.totals.averageCreditsPerSucceededJob)} credits per succeeded job`)}
       ${renderMetricCard("Refunded Credits", data.totals.refundedCredits, `${data.totals.refundEntries} refund ledger entries`)}
+    </section>
+
+    <section class="grid metrics">
+      ${renderMetricCard("Video Provider", data.runtime.videoProvider, `${data.runtime.dataProvider} data / ${data.runtime.paymentProvider} payments`)}
+      ${renderMetricCard("Real Jobs Today", data.runtime.todayRealVideoJobs, `Resets ${formatDateTime(data.runtime.resetAt)}`)}
+      ${renderMetricCard("Daily Site Cap", data.runtime.maxDailyVideoJobs, "MAX_DAILY_VIDEO_JOBS")}
+      ${renderMetricCard("Daily User Cap", data.runtime.maxDailyVideoJobsPerUser, "MAX_DAILY_VIDEO_JOBS_PER_USER")}
     </section>
 
     <section class="section grid columns">

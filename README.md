@@ -229,7 +229,7 @@ After running it, test:
 
 Then re-run the Supabase security advisor or click Resolve issue in the warning email.
 
-The ops dashboard uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, Creem webhook events, refund signals, and estimated DashScope provider cost.
+The ops dashboard uses the same protected cookie and shows recent users, credit balances, video jobs, payments, credit ledger entries, Creem webhook events, refund signals, daily real-generation caps, today's real-generation count, and estimated DashScope provider cost.
 
 For copy-and-paste launch fields, directory submission links, community post drafts, and UTM tracking URLs, open:
 
