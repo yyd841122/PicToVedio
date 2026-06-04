@@ -28,6 +28,7 @@ const config = {
   estimatedVideoCostCny: Number(process.env.ESTIMATED_VIDEO_COST_CNY || process.env.DASHSCOPE_ESTIMATED_COST_CNY || 0.6),
   maxDailyVideoJobs: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS"], 20),
   maxDailyVideoJobsPerUser: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS_PER_USER"], 3),
+  maxUploadImageMb: readPositiveNumberEnv(["MAX_UPLOAD_IMAGE_MB"], 8),
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",
@@ -168,8 +169,11 @@ async function handleCreateVideoJob(req, res) {
     return sendApiError(res, 400, "MISSING_FIELDS", `Missing fields: ${missing.join(", ")}`);
   }
 
-  if (!String(body.imageData).startsWith("data:image/")) {
-    return sendApiError(res, 400, "UNSUPPORTED_IMAGE", "Please upload a JPG, PNG, or WebP image before generating.");
+  const imageValidation = validateUploadImageDataUrl(body.imageData);
+  if (!imageValidation.ok) {
+    return sendApiError(res, imageValidation.status, imageValidation.code, imageValidation.message, {
+      maxUploadImageMb: config.maxUploadImageMb,
+    });
   }
 
   if (!["mock", "openai", "dashscope"].includes(config.videoProvider)) {
@@ -2887,6 +2891,40 @@ function parseDataUrl(dataUrl) {
   };
 }
 
+function validateUploadImageDataUrl(dataUrl) {
+  const parsed = parseDataUrl(dataUrl);
+  if (!parsed) {
+    return {
+      ok: false,
+      status: 400,
+      code: "UNSUPPORTED_IMAGE",
+      message: "Please upload a JPG, PNG, or WebP image before generating.",
+    };
+  }
+
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+  if (!allowedTypes.has(String(parsed.contentType || "").toLowerCase())) {
+    return {
+      ok: false,
+      status: 400,
+      code: "UNSUPPORTED_IMAGE",
+      message: "Please upload a JPG, PNG, or WebP image. Other image formats are not supported yet.",
+    };
+  }
+
+  const maxBytes = Math.max(1, config.maxUploadImageMb) * 1024 * 1024;
+  if (parsed.buffer.length > maxBytes) {
+    return {
+      ok: false,
+      status: 413,
+      code: "UPLOAD_IMAGE_TOO_LARGE",
+      message: `This image is too large. Please upload a JPG, PNG, or WebP image under ${config.maxUploadImageMb} MB.`,
+    };
+  }
+
+  return { ok: true, ...parsed };
+}
+
 async function putR2Object(key, buffer, contentType) {
   ensureR2Config();
 
@@ -3071,6 +3109,16 @@ function readNonNegativeIntEnv(names, fallback) {
     if (raw === undefined || raw === "") continue;
     const value = Number(raw);
     if (Number.isInteger(value) && value >= 0) return value;
+  }
+  return fallback;
+}
+
+function readPositiveNumberEnv(names, fallback) {
+  for (const name of names) {
+    const raw = process.env[name];
+    if (raw === undefined || raw === "") continue;
+    const value = Number(raw);
+    if (Number.isFinite(value) && value > 0) return value;
   }
   return fallback;
 }

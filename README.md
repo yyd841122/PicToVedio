@@ -96,6 +96,7 @@ DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_UPLOAD_IMAGE_MB=8
 OPENAI_API_KEY=
 OPENAI_VIDEO_MODEL=sora-2
 ```
@@ -110,6 +111,7 @@ DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_UPLOAD_IMAGE_MB=8
 ```
 
 DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. MotionPic defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
@@ -120,6 +122,13 @@ Real provider jobs are protected by conservative daily caps:
 - `MAX_DAILY_VIDEO_JOBS_PER_USER`: real video jobs per anonymous user per UTC day. Default: `3`.
 
 Mock jobs do not count toward these caps. If a user exceeds a cap, `/api/video/jobs` returns `429` with a friendly quota message and does not deduct credits.
+
+Input uploads are also guarded before credits are deducted:
+
+- Supported image formats: JPG, PNG, and WebP.
+- `MAX_UPLOAD_IMAGE_MB`: maximum uploaded image size. Default: `8`.
+
+If an upload is unsupported or too large, `/api/video/jobs` returns `400` or `413` with a friendly message and does not deduct credits.
 
 Optional for Cloudflare R2 object storage:
 

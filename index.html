@@ -1353,7 +1353,7 @@
               <div class="flow">
                 <div class="upload" id="dropArea">
                   <div class="upload-preview" id="uploadPreview">Your photo</div>
-                  <input class="file-input" id="fileInput" type="file" accept="image/*" />
+                  <input class="file-input" id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" />
                   <button class="button primary" id="uploadButton" type="button">Upload photo</button>
                   <small id="uploadHint">Click or drag an image here. Clear front-facing portraits, pets, and product photos work best.</small>
                   <div class="quality-list" aria-label="Photo quality tips">
@@ -1812,6 +1812,9 @@
 
       const query = new URLSearchParams(window.location.search);
       const attributionKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+      const maxUploadImageMb = 8;
+      const maxUploadImageBytes = maxUploadImageMb * 1024 * 1024;
+      const acceptedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
       const normalizeAttributionValue = (value) => (value || "").trim().slice(0, 120);
 
@@ -2297,9 +2300,15 @@
       };
 
       const handleFile = (file) => {
-        if (!file || !file.type.startsWith("image/")) {
+        if (!file || !acceptedImageTypes.has(file.type)) {
           trackEvent("upload_invalid_file", { fileType: file?.type || "" });
           uploadHint.textContent = "Please upload a JPG, PNG, or WebP image.";
+          return;
+        }
+
+        if (file.size > maxUploadImageBytes) {
+          trackEvent("upload_invalid_file", { fileType: file.type, fileSize: file.size, reason: "too_large" });
+          uploadHint.textContent = `This image is too large. Please upload a JPG, PNG, or WebP image under ${maxUploadImageMb} MB.`;
           return;
         }
 
@@ -2477,8 +2486,12 @@
         if (code === "DAILY_VIDEO_JOB_LIMIT_REACHED" || code === "DAILY_USER_VIDEO_JOB_LIMIT_REACHED" || status === 429) {
           return "Today's video generation quota has been used up. Credits were not deducted. Please try again tomorrow.";
         }
-        if (code === "UNSUPPORTED_IMAGE" || code === "UNSUITABLE_IMAGE" || code === "PAYLOAD_TOO_LARGE") {
+        if (code === "UNSUPPORTED_IMAGE" || code === "UNSUITABLE_IMAGE") {
           return "This image may not be suitable. Try a clear JPG, PNG, or WebP photo with a front-facing face, visible product, or simple background.";
+        }
+        if (code === "PAYLOAD_TOO_LARGE" || code === "UPLOAD_IMAGE_TOO_LARGE") {
+          const limit = error?.details?.maxUploadImageMb || maxUploadImageMb;
+          return `This image is too large. Please upload a JPG, PNG, or WebP image under ${limit} MB.`;
         }
         if (code === "VIDEO_PROVIDER_BUSY" || code === "VIDEO_PROVIDER_UNAVAILABLE" || status === 503) {
           return "The generation service is busy right now. Credits were refunded if a job could not be started. Please try again later.";

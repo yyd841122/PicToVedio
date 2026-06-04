@@ -70,6 +70,7 @@ Last updated: 2026-06-03
 - [x] Rechecked public sitemap coverage and normalized guide page Article/Breadcrumb/FAQ schema.
 - [x] Replaced misleading free-preview copy with starter/current-credit copy on the homepage.
 - [x] Added daily real-generation cap visibility to the private ops dashboard.
+- [x] Added JPG/PNG/WebP and upload-size validation before credit deduction.
 
 ## In Progress
 
@@ -102,6 +103,7 @@ Last updated: 2026-06-03
 - [x] Add safe credit refund behavior when real generation fails.
 - [x] Add conservative daily real-generation limits with `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER`.
 - [x] Return `429` without deducting credits when daily generation caps are reached.
+- [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
 

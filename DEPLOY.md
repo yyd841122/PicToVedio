@@ -52,6 +52,7 @@ DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_UPLOAD_IMAGE_MB=8
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
@@ -76,11 +77,14 @@ DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_UPLOAD_IMAGE_MB=8
 ```
 
 Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.
 
 The two `MAX_DAILY_*` values are cost guardrails for real provider jobs. The defaults allow at most 20 real jobs across the site and 3 real jobs per anonymous user per UTC day. When either cap is reached, the API returns `429`, shows a friendly message on the site, and does not deduct credits. Keep these conservative until real traffic and provider cost are predictable.
+
+`MAX_UPLOAD_IMAGE_MB` controls the maximum uploaded input image size. The default is 8 MB and only JPG, PNG, and WebP uploads are accepted. Unsupported or oversized uploads are rejected before credits are deducted.
 
 ## 4. Create Supabase Tables
 
