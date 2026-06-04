@@ -62,6 +62,7 @@ const mimeTypes = {
   ".webp": "image/webp",
   ".svg": "image/svg+xml",
   ".txt": "text/plain; charset=utf-8",
+  ".md": "text/plain; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",
 };
 
@@ -3041,7 +3042,11 @@ function serveStatic(pathname, res) {
     return sendJson(res, 404, { error: "Not found" });
   }
 
-  res.writeHead(200, { "Content-Type": mimeTypes[extname(filePath)] || "application/octet-stream" });
+  const responseHeaders = { "Content-Type": mimeTypes[extname(filePath)] || "application/octet-stream" };
+  if (extname(filePath) === ".md") {
+    responseHeaders["X-Robots-Tag"] = "noindex, nofollow";
+  }
+  res.writeHead(200, responseHeaders);
   createReadStream(filePath).pipe(res);
 }
 
