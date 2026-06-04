@@ -1,6 +1,6 @@
 # MotionPic AI Demo Asset Checklist
 
-Last updated: 2026-06-03
+Last updated: 2026-06-04
 
 Use this checklist to prepare screenshots and short demo clips for directories, Product Hunt, Xiaohongshu, TikTok, YouTube Shorts, and launch posts. This is a planning document only; it does not require real payments, live submissions, or external posting.
 
@@ -135,6 +135,7 @@ Before using demo assets in submissions:
 - [ ] Confirm generated clips do not expose private source photos.
 - [ ] Confirm clips do not show severe face, pet, or product distortion.
 - [ ] Confirm the support email shown on the site is acceptable.
+- [ ] Download and save useful generated outputs promptly because provider links may expire before object storage is enabled.
 - [ ] Save final assets in a local folder outside the repo unless they are intentionally public marketing assets.
 
 ## Do Not Do Without Confirmation
