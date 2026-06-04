@@ -65,6 +65,8 @@ Last updated: 2026-06-03
 - [x] Added a `/guides` hub page and directory-index serving for SEO guide discovery.
 - [x] Added a Cloudflare R2 setup guide for deferred object-storage setup.
 - [x] Added an anonymous `/account` page for credits, credit ledger history, and recent video jobs.
+- [x] Added real-provider daily generation caps before credit deduction.
+- [x] Added user-friendly generation API error codes for low credits, unsuitable images, busy providers, and daily quota limits.
 
 ## In Progress
 
@@ -95,6 +97,8 @@ Last updated: 2026-06-03
 - [x] Replace `demo-user` with anonymous device IDs.
 - [x] Bind credits to each anonymous user ID.
 - [x] Add safe credit refund behavior when real generation fails.
+- [x] Add conservative daily real-generation limits with `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER`.
+- [x] Return `429` without deducting credits when daily generation caps are reached.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
 

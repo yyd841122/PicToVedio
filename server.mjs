@@ -26,6 +26,8 @@ const config = {
   dashscopeAudio: process.env.DASHSCOPE_AUDIO === "true",
   dashscopePromptExtend: process.env.DASHSCOPE_PROMPT_EXTEND === "true",
   estimatedVideoCostCny: Number(process.env.ESTIMATED_VIDEO_COST_CNY || process.env.DASHSCOPE_ESTIMATED_COST_CNY || 0.6),
+  maxDailyVideoJobs: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS"], 20),
+  maxDailyVideoJobsPerUser: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS_PER_USER"], 3),
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",
@@ -141,7 +143,8 @@ const server = createServer(async (req, res) => {
     return serveStatic(url.pathname, res);
   } catch (error) {
     console.error(`[${new Date().toISOString()}] ${req.method} ${req.url} failed`, error);
-    return sendJson(res, 500, { error: "Internal server error" });
+    const publicError = publicErrorFromException(error);
+    return sendApiError(res, publicError.status, publicError.code, publicError.message);
   }
 });
 
@@ -151,16 +154,26 @@ server.listen(config.port, () => {
 });
 
 async function handleCreateVideoJob(req, res) {
-  const body = await readJson(req);
+  let body;
+  try {
+    body = await readJson(req);
+  } catch (error) {
+    const publicError = publicErrorFromException(error);
+    return sendApiError(res, publicError.status, publicError.code, publicError.message);
+  }
   const required = ["imageData", "prompt", "template", "ratio", "resolution", "seconds"];
   const missing = required.filter((key) => body[key] === undefined || body[key] === "");
 
   if (missing.length) {
-    return sendJson(res, 400, { error: `Missing fields: ${missing.join(", ")}` });
+    return sendApiError(res, 400, "MISSING_FIELDS", `Missing fields: ${missing.join(", ")}`);
   }
 
   if (!String(body.imageData).startsWith("data:image/")) {
-    return sendJson(res, 400, { error: "imageData must be a data URL image" });
+    return sendApiError(res, 400, "UNSUPPORTED_IMAGE", "Please upload a JPG, PNG, or WebP image before generating.");
+  }
+
+  if (!["mock", "openai", "dashscope"].includes(config.videoProvider)) {
+    return sendApiError(res, 503, "VIDEO_PROVIDER_UNAVAILABLE", "Video generation is temporarily unavailable.");
   }
 
   const cost = calculateCreditCost(body);
@@ -168,7 +181,31 @@ async function handleCreateVideoJob(req, res) {
   const account = await getAccount(userId);
 
   if (account.credits < cost) {
-    return sendJson(res, 402, { error: "Not enough credits", remainingCredits: account.credits });
+    return sendApiError(res, 402, "INSUFFICIENT_CREDITS", "Not enough credits for this generation.", {
+      remainingCredits: account.credits,
+      requiredCredits: cost,
+    });
+  }
+
+  const quota = await getVideoGenerationQuota(userId);
+  if (quota.global.exceeded) {
+    return sendApiError(
+      res,
+      429,
+      "DAILY_VIDEO_JOB_LIMIT_REACHED",
+      "Today's sitewide video generation limit has been used up. Please try again tomorrow.",
+      quotaResponseFields(quota)
+    );
+  }
+
+  if (quota.user.exceeded) {
+    return sendApiError(
+      res,
+      429,
+      "DAILY_USER_VIDEO_JOB_LIMIT_REACHED",
+      "You've used today's video generation limit for this account. Please try again tomorrow.",
+      quotaResponseFields(quota)
+    );
   }
 
   const job = {
@@ -207,7 +244,7 @@ async function handleCreateVideoJob(req, res) {
       await maybeStoreGeneratedVideo(job);
     } catch (error) {
       job.status = "failed";
-      job.error = error.message;
+      job.error = providerFailureRecord(error);
       remainingCredits = await refundCreditsForFailedJob(job);
     }
 
@@ -223,7 +260,7 @@ async function handleCreateVideoJob(req, res) {
       await maybeStoreGeneratedVideo(job);
     } catch (error) {
       job.status = "failed";
-      job.error = error.message;
+      job.error = providerFailureRecord(error);
       remainingCredits = await refundCreditsForFailedJob(job);
     }
 
@@ -450,6 +487,7 @@ function handleAnalyticsAdminLogout(req, res) {
 
 async function handleGetVideoJob(req, res, id) {
   const job = await getJob(id);
+  let remainingCredits;
 
   if (!job) {
     return sendJson(res, 404, { error: "Job not found" });
@@ -461,26 +499,42 @@ async function handleGetVideoJob(req, res, id) {
   }
 
   if (job.provider === "openai" && job.providerJobId && ["queued", "in_progress"].includes(job.status)) {
-    const providerJob = await getOpenAiVideoJob(job.providerJobId);
-    job.status = providerJob.status || job.status;
-    job.outputUrl = providerJob.output_url || job.outputUrl;
-    await maybeStoreGeneratedVideo(job);
-    await saveJob(job);
-  }
-
-  if (job.provider === "dashscope" && job.providerJobId && ["queued", "processing"].includes(job.status)) {
-    const providerJob = await getDashScopeVideoJob(job.providerJobId);
-    job.status = providerJob.status || job.status;
-    job.outputUrl = providerJob.outputUrl || job.outputUrl;
-    job.error = providerJob.error || job.error;
-    if (job.status === "failed") {
-      await refundCreditsForFailedJob(job);
+    try {
+      const providerJob = await getOpenAiVideoJob(job.providerJobId);
+      job.status = providerJob.status || job.status;
+      job.outputUrl = providerJob.output_url || job.outputUrl;
+      job.error = providerJob.error?.message || providerJob.error || job.error;
+      if (job.status === "failed") {
+        remainingCredits = await refundCreditsForFailedJob(job);
+        job.error ||= "Video generation failed. Credits were refunded.";
+      }
+    } catch (error) {
+      const publicError = publicVideoProviderError(error);
+      return sendApiError(res, publicError.status, publicError.code, publicError.message);
     }
     await maybeStoreGeneratedVideo(job);
     await saveJob(job);
   }
 
-  return sendJson(res, 200, job);
+  if (job.provider === "dashscope" && job.providerJobId && ["queued", "processing"].includes(job.status)) {
+    try {
+      const providerJob = await getDashScopeVideoJob(job.providerJobId);
+      job.status = providerJob.status || job.status;
+      job.outputUrl = providerJob.outputUrl || job.outputUrl;
+      job.error = providerJob.error || job.error;
+      if (job.status === "failed") {
+        remainingCredits = await refundCreditsForFailedJob(job);
+        job.error ||= "Video generation failed. Credits were refunded.";
+      }
+    } catch (error) {
+      const publicError = publicVideoProviderError(error);
+      return sendApiError(res, publicError.status, publicError.code, publicError.message);
+    }
+    await maybeStoreGeneratedVideo(job);
+    await saveJob(job);
+  }
+
+  return sendJson(res, 200, remainingCredits === undefined ? job : { ...job, remainingCredits });
 }
 
 async function handleCheckout(req, res) {
@@ -742,6 +796,85 @@ async function getRecentUserJobs(userId, limit = 5) {
     .filter((job) => job.userId === userId)
     .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
     .slice(0, limit);
+}
+
+async function getVideoGenerationQuota(userId) {
+  const resetAt = nextUtcMidnightIso();
+  if (config.videoProvider === "mock") {
+    return {
+      resetAt,
+      global: { count: 0, limit: 0, remaining: 0, exceeded: false },
+      user: { count: 0, limit: 0, remaining: 0, exceeded: false },
+    };
+  }
+
+  const [globalCount, userCount] = await Promise.all([
+    countRealVideoJobsToday(),
+    countRealVideoJobsToday(userId),
+  ]);
+
+  return {
+    resetAt,
+    global: quotaBucket(globalCount, config.maxDailyVideoJobs),
+    user: quotaBucket(userCount, config.maxDailyVideoJobsPerUser),
+  };
+}
+
+function quotaBucket(count, limit) {
+  const normalizedLimit = Math.max(0, Number(limit || 0));
+  return {
+    count,
+    limit: normalizedLimit,
+    remaining: Math.max(0, normalizedLimit - count),
+    exceeded: count >= normalizedLimit,
+  };
+}
+
+function quotaResponseFields(quota) {
+  return {
+    resetAt: quota.resetAt,
+    globalLimit: quota.global.limit,
+    globalRemaining: quota.global.remaining,
+    userLimit: quota.user.limit,
+    userRemaining: quota.user.remaining,
+  };
+}
+
+async function countRealVideoJobsToday(userId = "") {
+  const { start, end } = utcDayRange();
+
+  if (useSupabase()) {
+    const limit = Math.max(1, Math.max(config.maxDailyVideoJobs, config.maxDailyVideoJobsPerUser) + 1);
+    const userFilter = userId ? `&user_id=eq.${filterValue(userId)}` : "";
+    const rows = await supabaseRequest(
+      `video_jobs?provider=neq.mock${userFilter}&created_at=gte.${filterValue(start)}&created_at=lt.${filterValue(end)}&select=id&limit=${limit}`
+    );
+    return rows.length;
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  return Object.values(db.jobs).filter((job) => {
+    if (job.provider === "mock") return false;
+    if (userId && job.userId !== userId) return false;
+    const createdAt = Date.parse(job.createdAt || "");
+    return Number.isFinite(createdAt) && createdAt >= Date.parse(start) && createdAt < Date.parse(end);
+  }).length;
+}
+
+function utcDayRange() {
+  const now = new Date();
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const end = new Date(start);
+  end.setUTCDate(end.getUTCDate() + 1);
+  return {
+    start: start.toISOString(),
+    end: end.toISOString(),
+  };
+}
+
+function nextUtcMidnightIso() {
+  return utcDayRange().end;
 }
 
 async function createJobAndDebit(job, cost) {
@@ -2910,6 +3043,16 @@ function readPositiveIntEnv(names, fallback) {
   return fallback;
 }
 
+function readNonNegativeIntEnv(names, fallback) {
+  for (const name of names) {
+    const raw = process.env[name];
+    if (raw === undefined || raw === "") continue;
+    const value = Number(raw);
+    if (Number.isInteger(value) && value >= 0) return value;
+  }
+  return fallback;
+}
+
 function addCredits(db, { userId, amount, source, externalId, plan }) {
   db.users[userId] ||= { credits: 0 };
   const ledgerId = `${source}:${externalId}`;
@@ -2949,6 +3092,93 @@ function getPaymentId(event) {
     event.data?.checkout?.id ||
     getEventId(event)
   );
+}
+
+function sendApiError(res, status, code, message, extra = {}) {
+  return sendJson(res, status, {
+    error: message,
+    message,
+    code,
+    ...extra,
+  });
+}
+
+function publicErrorFromException(error) {
+  const message = String(error?.message || error || "");
+  if (/body too large/i.test(message)) {
+    return {
+      status: 413,
+      code: "PAYLOAD_TOO_LARGE",
+      message: "This image is too large to upload. Please try a smaller JPG, PNG, or WebP photo.",
+    };
+  }
+  if (error instanceof SyntaxError || /json/i.test(message)) {
+    return {
+      status: 400,
+      code: "INVALID_JSON",
+      message: "The request could not be read. Please refresh the page and try again.",
+    };
+  }
+  return {
+    status: 500,
+    code: "SERVER_ERROR",
+    message: "Something went wrong while processing your request. Please try again.",
+  };
+}
+
+function publicVideoProviderError(error) {
+  const raw = String(error?.message || error || "");
+  const lower = raw.toLowerCase();
+
+  if (lower.includes("api_key") || lower.includes("api key") || lower.includes("missing")) {
+    return {
+      status: 503,
+      code: "VIDEO_PROVIDER_UNAVAILABLE",
+      message: "Video generation is temporarily unavailable. Please try again later.",
+    };
+  }
+
+  if (
+    lower.includes("image") ||
+    lower.includes("img_url") ||
+    lower.includes("unsupported") ||
+    lower.includes("invalid input") ||
+    lower.includes("invalid file")
+  ) {
+    return {
+      status: 400,
+      code: "UNSUITABLE_IMAGE",
+      message: "This image may not be suitable for video generation. Try a clear JPG, PNG, or WebP photo with the face or product fully visible.",
+    };
+  }
+
+  if (
+    lower.includes("quota") ||
+    lower.includes("rate") ||
+    lower.includes("throttl") ||
+    lower.includes("busy") ||
+    lower.includes("timeout") ||
+    lower.includes("too many")
+  ) {
+    return {
+      status: 503,
+      code: "VIDEO_PROVIDER_BUSY",
+      message: "The video generation service is busy right now. Credits were refunded if a job could not be started.",
+    };
+  }
+
+  return {
+    status: 502,
+    code: "VIDEO_PROVIDER_FAILED",
+    message: "Video generation failed. Credits were refunded automatically.",
+  };
+}
+
+function providerFailureRecord(error) {
+  const publicError = publicVideoProviderError(error);
+  const reason = sanitizeText(error?.message || error || "", 240);
+  if (!reason || reason === publicError.message) return publicError.message;
+  return `${publicError.message} Provider reason: ${reason}`;
 }
 
 function sendJson(res, status, data) {

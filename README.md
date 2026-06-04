@@ -93,6 +93,9 @@ Optional for real video generation later:
 DASHSCOPE_API_KEY=
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
+DASHSCOPE_PROMPT_EXTEND=false
+MAX_DAILY_VIDEO_JOBS=20
+MAX_DAILY_VIDEO_JOBS_PER_USER=3
 OPENAI_API_KEY=
 OPENAI_VIDEO_MODEL=sora-2
 ```
@@ -104,9 +107,19 @@ VIDEO_PROVIDER=dashscope
 DASHSCOPE_API_KEY=sk-...
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
+DASHSCOPE_PROMPT_EXTEND=false
+MAX_DAILY_VIDEO_JOBS=20
+MAX_DAILY_VIDEO_JOBS_PER_USER=3
 ```
 
 DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. MotionPic defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
+
+Real provider jobs are protected by conservative daily caps:
+
+- `MAX_DAILY_VIDEO_JOBS`: sitewide real video jobs per UTC day. Default: `20`.
+- `MAX_DAILY_VIDEO_JOBS_PER_USER`: real video jobs per anonymous user per UTC day. Default: `3`.
+
+Mock jobs do not count toward these caps. If a user exceeds a cap, `/api/video/jobs` returns `429` with a friendly quota message and does not deduct credits.
 
 Optional for Cloudflare R2 object storage:
 

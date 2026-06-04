@@ -1355,12 +1355,12 @@
                   <div class="upload-preview" id="uploadPreview">Your photo</div>
                   <input class="file-input" id="fileInput" type="file" accept="image/*" />
                   <button class="button primary" id="uploadButton" type="button">Upload photo</button>
-                  <small id="uploadHint">Click or drag an image here. People, pets, and product photos are great starting points.</small>
+                  <small id="uploadHint">Click or drag an image here. Clear front-facing portraits, pets, and product photos work best.</small>
                   <div class="quality-list" aria-label="Photo quality tips">
                     <strong>Best results</strong>
                     <ul>
-                      <li>Use a clear photo with the face or product fully visible.</li>
-                      <li>Avoid tiny faces, heavy filters, and busy backgrounds.</li>
+                      <li>For people templates, use a clear front-facing or half-body photo.</li>
+                      <li>Avoid tiny faces, overlapping groups, complex backgrounds, and heavy filters.</li>
                       <li>Choose subtle motion first to reduce distortion and wasted credits.</li>
                     </ul>
                   </div>
@@ -1941,7 +1941,7 @@
           events: "Conversion events",
           upload: "Upload photo",
           uploadPlaceholder: "Your photo",
-          uploadHint: "Click or drag an image here. People, pets, and product photos are great starting points.",
+          uploadHint: "Click or drag an image here. Clear front-facing portraits, pets, and product photos work best.",
           template: "Template",
           prompt: "Motion prompt",
           ratio: "Aspect ratio",
@@ -2461,6 +2461,44 @@
         bumpEvent();
       });
 
+      const applyReturnedCredits = (job) => {
+        if (typeof job?.remainingCredits === "number") {
+          state.balance = job.remainingCredits;
+          updateEstimate();
+        }
+      };
+
+      const apiGenerationMessage = (error) => {
+        const code = error?.code || error?.details?.code || "";
+        const status = Number(error?.status || 0);
+
+        if (code === "INSUFFICIENT_CREDITS" || status === 402) {
+          return "Not enough credits for this generation. Buy a credit pack or choose a shorter 720p clip.";
+        }
+        if (code === "DAILY_VIDEO_JOB_LIMIT_REACHED" || code === "DAILY_USER_VIDEO_JOB_LIMIT_REACHED" || status === 429) {
+          return "Today's video generation quota has been used up. Credits were not deducted. Please try again tomorrow.";
+        }
+        if (code === "UNSUPPORTED_IMAGE" || code === "UNSUITABLE_IMAGE" || code === "PAYLOAD_TOO_LARGE") {
+          return "This image may not be suitable. Try a clear JPG, PNG, or WebP photo with a front-facing face, visible product, or simple background.";
+        }
+        if (code === "VIDEO_PROVIDER_BUSY" || code === "VIDEO_PROVIDER_UNAVAILABLE" || status === 503) {
+          return "The generation service is busy right now. Credits were refunded if a job could not be started. Please try again later.";
+        }
+        if (code === "VIDEO_PROVIDER_FAILED" || status === 502) {
+          return "Video generation failed. Credits were refunded automatically. Try a clearer photo or a lower-motion template.";
+        }
+        return error?.message || "Video generation failed. Please try again.";
+      };
+
+      const readApiError = async (response, fallback) => {
+        const payload = await response.json().catch(() => ({}));
+        const error = new Error(payload.message || payload.error || fallback);
+        error.code = payload.code || "";
+        error.status = response.status;
+        error.details = payload;
+        return error;
+      };
+
       const createBackendJob = async () => {
         const response = await fetch("/api/video/jobs", {
           method: "POST",
@@ -2478,31 +2516,41 @@
         });
 
         if (!response.ok) {
-          const error = await response.json().catch(() => ({ error: "Create job failed" }));
-          throw new Error(error.error || "Create job failed");
+          throw await readApiError(response, "Create job failed");
         }
 
-        return response.json();
+        const job = await response.json();
+        applyReturnedCredits(job);
+        return job;
       };
 
       const fetchBackendJob = async (id) => {
         const response = await fetch(`/api/video/jobs/${encodeURIComponent(id)}`, { headers: apiHeaders() });
         if (!response.ok) {
-          const error = await response.json().catch(() => ({ error: "Fetch job failed" }));
-          throw new Error(error.error || "Fetch job failed");
+          throw await readApiError(response, "Fetch job failed");
         }
-        return response.json();
+        const job = await response.json();
+        applyReturnedCredits(job);
+        return job;
       };
 
       const pollBackendJob = async (job, pill) => {
         let current = job;
         if (current.status === "failed") {
-          throw new Error(current.error || "Video generation failed");
+          const error = new Error(current.error || "Video generation failed");
+          error.code = "VIDEO_PROVIDER_FAILED";
+          error.status = 502;
+          throw error;
         }
 
         for (let attempt = 0; attempt < 90; attempt += 1) {
           if (current.status === "succeeded") return current;
-          if (current.status === "failed") throw new Error(current.error || "Video generation failed");
+          if (current.status === "failed") {
+            const error = new Error(current.error || "Video generation failed");
+            error.code = "VIDEO_PROVIDER_FAILED";
+            error.status = 502;
+            throw error;
+          }
 
           if (pill) pill.textContent = current.status === "queued" ? "Queued" : "Processing";
           progressBar.style.width = `${Math.min(95, 25 + attempt)}%`;
@@ -2565,8 +2613,9 @@
           } catch (error) {
             generateButton.disabled = false;
             generateButton.textContent = "Generate preview";
-            creditNote.textContent = error.message;
-            trackEvent("generate_failed", { error: error.message });
+            const message = apiGenerationMessage(error);
+            creditNote.textContent = message;
+            trackEvent("generate_failed", { error: message, code: error.code || "", status: error.status || "" });
             return;
           }
         }

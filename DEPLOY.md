@@ -49,6 +49,9 @@ VIDEO_PROVIDER=mock
 DASHSCOPE_API_KEY=
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
+DASHSCOPE_PROMPT_EXTEND=false
+MAX_DAILY_VIDEO_JOBS=20
+MAX_DAILY_VIDEO_JOBS_PER_USER=3
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
@@ -70,9 +73,14 @@ VIDEO_PROVIDER=dashscope
 DASHSCOPE_API_KEY=sk-...
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
+DASHSCOPE_PROMPT_EXTEND=false
+MAX_DAILY_VIDEO_JOBS=20
+MAX_DAILY_VIDEO_JOBS_PER_USER=3
 ```
 
 Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.
+
+The two `MAX_DAILY_*` values are cost guardrails for real provider jobs. The defaults allow at most 20 real jobs across the site and 3 real jobs per anonymous user per UTC day. When either cap is reached, the API returns `429`, shows a friendly message on the site, and does not deduct credits. Keep these conservative until real traffic and provider cost are predictable.
 
 ## 4. Create Supabase Tables
 

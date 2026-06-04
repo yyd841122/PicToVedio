@@ -42,6 +42,8 @@ Product foundation:
 - [x] Anonymous user IDs replace the shared demo-user flow for normal browser traffic.
 - [x] Server recalculates generation credit costs instead of trusting browser-supplied credit values.
 - [x] Failed real generation requests can refund credits through ledger logic.
+- [x] Real provider jobs have conservative daily caps before credit deduction.
+- [x] Generation API errors return user-friendly codes for low credits, unsuitable images, busy providers, and quota limits.
 - [x] Admin analytics and ops dashboards exist for review.
 
 ## Can Be Checked Locally Or With Public GET Requests
@@ -84,6 +86,7 @@ Generation and quality:
 Credits and pricing:
 
 - [ ] Confirm one 4-second 720p generation charges the intended credit amount.
+- [ ] Confirm Render has conservative `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER` values before broad promotion.
 - [ ] Align visible website package amounts, Render variables, Creem product descriptions, and webhook credit grants.
 - [ ] Keep enough margin after provider cost, payment fees, failed jobs, retries, and support.
 
