@@ -23,10 +23,26 @@ MotionPic now has conservative cost protection for real video generation:
 
 - `MAX_DAILY_VIDEO_JOBS`: sitewide real jobs per UTC day. Default: `20`.
 - `MAX_DAILY_VIDEO_JOBS_PER_USER`: real jobs per anonymous user per UTC day. Default: `3`.
+- `STARTER_CREDITS`: credits granted to a new anonymous browser account. Default: `12`.
 - If a cap is reached, the API returns `429` and does not deduct credits.
 - Mock jobs do not count toward the caps, so local testing can continue without spending provider budget.
 
-Keep these caps conservative until the first live payment and first user-generated videos are reviewed.
+Keep these caps conservative until the first live payment and first user-generated videos are reviewed. For public promotion before email login, lower `STARTER_CREDITS` to `0`, `2`, or `4` so anonymous visitors cannot repeatedly consume provider budget by switching browsers or clearing local storage.
+
+## Access Strategy
+
+Do not require login just to view the site, read guides, choose templates, upload an image, or inspect pricing. That early exploration is useful for SEO, directory traffic, and conversion.
+
+Do gate provider-spending generation. The best first path is:
+
+```text
+Browse/upload/template selection: open to everyone.
+Free real generation: only a very small starter balance, preferably 0-4 credits until login exists.
+Paid generation: available after buying credits.
+Future free generation: available after email signup/login.
+```
+
+This keeps the funnel low-friction while preventing anonymous free use from becoming the main cost center.
 
 ## First Revenue Definition
 
@@ -107,6 +123,7 @@ CREATOR_PACK_PRICE_LABEL=$9
 COMMERCE_PACK_PRICE_LABEL=$29
 MAX_DAILY_VIDEO_JOBS=10
 MAX_DAILY_VIDEO_JOBS_PER_USER=2
+STARTER_CREDITS=2
 ```
 
 Use the existing 100 / 400 credit packs only if the live Creem product descriptions still say 100 / 400 credits and you want the stronger marketing offer. If you keep that path, set:
@@ -119,6 +136,7 @@ CREATOR_PACK_PRICE_LABEL=$9
 COMMERCE_PACK_PRICE_LABEL=$29
 MAX_DAILY_VIDEO_JOBS=10
 MAX_DAILY_VIDEO_JOBS_PER_USER=2
+STARTER_CREDITS=2
 ```
 
 Do not mix a Creem product that says 100 credits with Render values that grant 40 credits, or the reverse.

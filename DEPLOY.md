@@ -53,6 +53,7 @@ DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
 MAX_UPLOAD_IMAGE_MB=8
+STARTER_CREDITS=12
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
@@ -78,6 +79,7 @@ DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
 MAX_UPLOAD_IMAGE_MB=8
+STARTER_CREDITS=12
 ```
 
 Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.
@@ -85,6 +87,8 @@ Do not commit the full DashScope key. Add it only in Render Environment Variable
 The two `MAX_DAILY_*` values are cost guardrails for real provider jobs. The defaults allow at most 20 real jobs across the site and 3 real jobs per anonymous user per UTC day. When either cap is reached, the API returns `429`, shows a friendly message on the site, and does not deduct credits. Keep these conservative until real traffic and provider cost are predictable.
 
 `MAX_UPLOAD_IMAGE_MB` controls the maximum uploaded input image size. The default is 8 MB and only JPG, PNG, and WebP uploads are accepted. Unsupported or oversized uploads are rejected before credits are deducted.
+
+`STARTER_CREDITS` controls how many credits a new anonymous browser account receives. Keep `12` for owner/UAT testing. For public launch, consider `0`, `2`, or `4` until email login exists, because anonymous browser-local credits can be reset by switching devices, browsers, or clearing local storage.
 
 ## 4. Create Supabase Tables
 
@@ -353,6 +357,7 @@ CREEM_WEBHOOK_SECRET=live_webhook_signing_secret
 ```env
 MAX_DAILY_VIDEO_JOBS=10
 MAX_DAILY_VIDEO_JOBS_PER_USER=2
+STARTER_CREDITS=2
 ```
 
 10. Click `Save, rebuild, and deploy` in Render.

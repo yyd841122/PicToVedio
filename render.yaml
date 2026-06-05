@@ -23,3 +23,5 @@ services:
         value: creem
       - key: CREEM_TEST_MODE
         value: "true"
+      - key: STARTER_CREDITS
+        value: "12"

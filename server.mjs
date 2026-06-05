@@ -10,7 +10,6 @@ const dbPath = join(dataDir, "db.json");
 const analyticsCookieName = "motionpic_analytics_admin";
 
 loadDotEnv();
-ensureDb();
 
 const config = {
   port: Number(process.env.PORT || 8787),
@@ -29,6 +28,7 @@ const config = {
   maxDailyVideoJobs: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS"], 20),
   maxDailyVideoJobsPerUser: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS_PER_USER"], 3),
   maxUploadImageMb: readPositiveNumberEnv(["MAX_UPLOAD_IMAGE_MB"], 8),
+  starterCredits: readNonNegativeIntEnv(["STARTER_CREDITS"], 12),
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",
@@ -51,6 +51,8 @@ const config = {
   stripeCreatorPrice: process.env.STRIPE_PRICE_CREATOR || "",
   stripeCommercePrice: process.env.STRIPE_PRICE_COMMERCE || "",
 };
+
+ensureDb();
 
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
@@ -290,6 +292,7 @@ async function handleGetAccount(req, res) {
     recentCredits: account.recentCredits,
     recentJobs: account.recentJobs,
     videoQuota: account.videoQuota,
+    starterCredits: config.starterCredits,
     plans: packPlans(),
   });
 }
@@ -776,7 +779,7 @@ async function getAccount(userId) {
 
   const db = readDb();
   normalizeDb(db);
-  db.users[userId] ||= { credits: 12 };
+  db.users[userId] ||= { credits: config.starterCredits };
   writeDb(db);
   const user = db.users[userId];
   return {
@@ -925,7 +928,7 @@ async function createJobAndDebit(job, cost) {
 
   const db = readDb();
   normalizeDb(db);
-  db.users[job.userId] ||= { credits: 12 };
+  db.users[job.userId] ||= { credits: config.starterCredits };
   db.users[job.userId].credits -= cost;
   db.jobs[job.id] = job;
   db.creditLedger.push({
@@ -2435,7 +2438,7 @@ async function ensureSupabaseUser(userId) {
 
   await supabaseRequest("app_users", {
     method: "POST",
-    body: { id: userId, credits: 12 },
+    body: { id: userId, credits: config.starterCredits },
     prefer: "return=minimal",
   });
 }
@@ -3084,7 +3087,7 @@ function writeDb(db) {
 
 function createEmptyDb() {
   return {
-    users: { "demo-user": { credits: 12 } },
+    users: { "demo-user": { credits: config.starterCredits } },
     jobs: {},
     payments: {},
     webhookEvents: {},
@@ -3094,8 +3097,8 @@ function createEmptyDb() {
 }
 
 function normalizeDb(db) {
-  db.users ||= { "demo-user": { credits: 12 } };
-  db.users["demo-user"] ||= { credits: 12 };
+  db.users ||= { "demo-user": { credits: config.starterCredits } };
+  db.users["demo-user"] ||= { credits: config.starterCredits };
   db.jobs ||= {};
   db.payments ||= {};
   db.webhookEvents ||= {};

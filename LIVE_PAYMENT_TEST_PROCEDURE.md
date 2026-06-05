@@ -112,6 +112,7 @@ CREATOR_PACK_PRICE_LABEL=$9
 COMMERCE_PACK_PRICE_LABEL=$29
 MAX_DAILY_VIDEO_JOBS=10
 MAX_DAILY_VIDEO_JOBS_PER_USER=2
+STARTER_CREDITS=2
 ```
 
 For the current marketing path:
@@ -129,6 +130,7 @@ CREATOR_PACK_PRICE_LABEL=$9
 COMMERCE_PACK_PRICE_LABEL=$29
 MAX_DAILY_VIDEO_JOBS=10
 MAX_DAILY_VIDEO_JOBS_PER_USER=2
+STARTER_CREDITS=2
 ```
 
 After saving Render variables, click `Save, rebuild, and deploy`, then wait for the deployment to finish before opening checkout.

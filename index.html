@@ -1518,7 +1518,7 @@
                   <span class="price">$0</span>
                 </div>
                 <ul>
-                  <li>12 starter credits</li>
+                  <li>Starter credits for testing</li>
                   <li>Standard 4s 720p clip uses 2 credits</li>
                   <li>Good for testing photo quality</li>
                 </ul>
@@ -1771,6 +1771,7 @@
         baseCost: 2,
         length: "4s",
         balance: 12,
+        starterCredits: 12,
         events: 0,
         generations: 0,
         imageData: "",
@@ -1981,7 +1982,7 @@
           free: "Starter balance",
           creatorPack: "Creator Pack",
           commerce: "Commerce",
-          free1: "12 starter credits",
+          free1: "Starter credits for testing",
           free2: "Standard 4s 720p clip uses 2 credits",
           free3: "Good for testing photo quality",
           creator1: "100 credits, about 50 standard clips",
@@ -2195,6 +2196,9 @@
           if (typeof account.credits === "number") {
             state.balance = account.credits;
           }
+          if (typeof account.starterCredits === "number") {
+            state.starterCredits = account.starterCredits;
+          }
           if (account.plans?.creator && account.plans?.commerce) {
             state.plans = account.plans;
           }
@@ -2225,6 +2229,7 @@
         const priceCards = document.querySelectorAll(".price-card");
         const creatorCard = priceCards[1];
         const commerceCard = priceCards[2];
+        const starterItems = priceCards[0]?.querySelectorAll("li");
         const creatorItems = creatorCard?.querySelectorAll("li");
         const commerceItems = commerceCard?.querySelectorAll("li");
         const creatorPrice = creatorCard?.querySelector(".price");
@@ -2232,6 +2237,9 @@
 
         if (creatorPrice) creatorPrice.textContent = state.plans.creator.price || "$9";
         if (commercePrice) commercePrice.textContent = state.plans.commerce.price || "$29";
+        if (starterItems?.[0]) {
+          starterItems[0].textContent = `${state.starterCredits} starter credits`;
+        }
         if (creatorItems?.[0]) {
           creatorItems[0].textContent = `${state.plans.creator.credits} credits, about ${planClipCount(state.plans.creator.credits)} standard clips`;
         }

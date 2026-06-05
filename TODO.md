@@ -75,6 +75,7 @@ Last updated: 2026-06-05
 - [x] Added storage provider, upload limit, and unit-cost visibility to the private ops dashboard.
 - [x] Tightened low-motion template prompts and DashScope guardrails for faces, pets, products, and old photos.
 - [x] Completed Stage 1 real-generation smoke tests for Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait with owner-reported Good results.
+- [x] Added configurable `STARTER_CREDITS` so anonymous free generation can be reduced before public promotion.
 
 ## In Progress
 
@@ -86,6 +87,7 @@ Last updated: 2026-06-05
 - [ ] Re-run or resolve the Supabase security advisor check and confirm the public-access warnings clear using `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
 - [x] Keep Creem in test mode until Stage 1 real generation works.
 - [ ] Keep Creem in test mode until owner approves the controlled live-payment switch.
+- [ ] Decide launch access policy: open browsing/upload with low starter credits, then add email login before larger promotion.
 - [x] Build the first SEO/GEO content layer around the homepage and templates.
 
 ## Next: P0
@@ -114,6 +116,7 @@ Last updated: 2026-06-05
 - [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
+- [ ] Lower `STARTER_CREDITS` in Render before public promotion unless email login is added first.
 
 ## Next: P1
 
