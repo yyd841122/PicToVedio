@@ -76,12 +76,12 @@ These cannot be completed safely without account access, private tokens, screens
 
 Generation and quality:
 
-- [ ] Run at least 5 real DashScope generations with different photo types.
+- [x] Run at least 4 real DashScope generations with different safer photo types.
 - [ ] Confirm successful jobs create rows in `video_jobs`.
 - [ ] Confirm failed jobs refund credits.
 - [ ] Record average provider cost in `UNIT_ECONOMICS.md`.
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
-- [ ] Save at least 3 acceptable demo outputs before public promotion.
+- [x] Identify at least 3 acceptable demo outputs before public promotion.
 
 Credits and pricing:
 

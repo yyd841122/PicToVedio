@@ -61,19 +61,19 @@ Requires owner token or logged-in private session:
 
 Requires explicit owner approval because it may spend provider credits:
 
-- [ ] Owner provides or approves 4-5 safe test images.
+- [x] Owner provides or approves 4-5 safe test images.
 - [x] Manual test credits are available for the controlled generation sample.
 - [ ] Test images are owned, licensed, or approved.
 - [ ] No children, private family photos, medical images, or identifiable strangers are used without explicit consent.
-- [ ] First test uses 4s / 720p / audio off.
-- [ ] Product template succeeds or failure is recorded.
-- [ ] Pet template succeeds or failure is recorded.
-- [ ] Old Photo template succeeds or failure is recorded.
-- [ ] Portrait / natural motion template succeeds or failure is recorded.
+- [x] First test uses 4s / 720p / audio off.
+- [x] Product template succeeds or failure is recorded.
+- [x] Pet template succeeds or failure is recorded.
+- [x] Old Photo template succeeds or failure is recorded.
+- [x] Portrait / natural motion template succeeds or failure is recorded.
 - [ ] Failed jobs refund credits.
 - [ ] Successful jobs appear in `video_jobs`.
-- [ ] Output URL opens after completion.
-- [ ] At least 3 outputs are good enough for demo use before public promotion.
+- [x] Output URL opens after completion.
+- [x] At least 3 outputs are good enough for demo use before public promotion.
 - [ ] Provider cost is recorded in `PROVIDER_COST_SAMPLING_WORKSHEET.md` or `UNIT_ECONOMICS.md`.
 - [ ] The 20-generation promotion-readiness matrix in `GENERATION_TEST_PLAN.md` is completed before broad promotion.
 

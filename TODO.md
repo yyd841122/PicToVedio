@@ -74,6 +74,7 @@ Last updated: 2026-06-03
 - [x] Added public download-soon guidance while long-term object storage is deferred.
 - [x] Added storage provider, upload limit, and unit-cost visibility to the private ops dashboard.
 - [x] Tightened low-motion template prompts and DashScope guardrails for faces, pets, products, and old photos.
+- [x] Completed Stage 1 real-generation smoke tests for Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait with owner-reported Good results.
 
 ## In Progress
 

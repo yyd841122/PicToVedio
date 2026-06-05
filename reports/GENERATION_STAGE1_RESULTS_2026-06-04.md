@@ -4,6 +4,8 @@
 
 Owner started the Stage 1 real-generation smoke test on the production site.
 
+Stage 1 is now complete for the four safer core templates: Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait. All four successful real-generation outputs were reported as Good by the owner.
+
 Important note: the pet test was blocked by the daily real-generation quota. This is not the same as credits being exhausted. The API message said credits were not deducted. This result should be treated as a quota guardrail event, not a failed pet-template quality result.
 
 ## Results
@@ -13,10 +15,12 @@ Important note: the pet test was blocked by the daily real-generation quota. Thi
 | Product | Product Motion | Toner / skincare product | Succeeded | Yes | Good | Deducted correctly | Product Motion passed the first owner smoke test. |
 | Pet | Pet Motion | Cat | Blocked by daily generation quota | Not generated | Not rated | Credits not deducted according to quota message | Continue after quota reset or after owner explicitly raises Render daily caps. |
 | Pet follow-up | Pet Motion | Cat | Succeeded | Yes | Good | Deducted | Owner reported a successful follow-up pet test. Owner also reported that one pre-reset attempt deducted credits, so quota visibility was added to `/account` for diagnosis. |
+| Old photo | Old Photo Alive | Old / memory-style photo | Succeeded | Yes | Good | Deducted | Owner reported a successful old-photo test. |
+| Portrait | Natural Portrait | Person / portrait photo | Succeeded | Yes | Good | Deducted correctly | Owner reported a successful portrait test. |
 
 ## Interpretation
 
-- Product Motion is currently the first confirmed good Stage 1 output.
+- Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait all have at least one owner-reported Good output.
 - The first Pet Motion attempt did not reach the provider because the daily quota guardrail stopped it.
 - Pet Motion later passed a follow-up owner test with a good result.
 - No evidence from this report suggests that credits were incorrectly deducted for the quota-blocked pet attempt.
@@ -24,18 +28,18 @@ Important note: the pet test was blocked by the daily real-generation quota. Thi
 
 ## Recommended Next Step
 
-Continue Stage 1 after the daily real-generation quota resets. The quota uses the server's UTC-day window, so for China time the reset is expected around 08:00 the next day.
+Stage 1 core-template testing is complete. Do not test Couple Kiss yet unless the owner explicitly wants to spend additional provider credits on an experimental romantic template.
 
-Suggested remaining Stage 1 order:
+Recommended next steps:
 
-1. Natural Portrait with the prepared person image.
-2. Old Photo Alive with the prepared memory-style image.
-
-Do not test Couple Kiss yet. It is experimental and should wait until the safer templates pass.
+1. Save and preserve the four Good outputs as private candidate demo assets.
+2. Record actual provider cost if available from Alibaba Cloud billing.
+3. Continue to Stage 2 only after confirming the provider-spend budget for the 20-generation matrix.
+4. Keep Couple Kiss out of public promotion until it has a separate reviewed test.
 
 ## Optional High-Risk Path
 
-If the owner wants to continue testing today, they can raise the Render environment variables temporarily:
+If the owner wants to continue larger-scale testing today, they can raise the Render environment variables temporarily:
 
 ```env
 MAX_DAILY_VIDEO_JOBS=10
