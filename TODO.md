@@ -116,7 +116,7 @@ Last updated: 2026-06-05
 - [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
-- [ ] Lower `STARTER_CREDITS` in Render before public promotion unless email login is added first.
+- [x] Set the default anonymous starter balance to `STARTER_CREDITS=2`.
 
 ## Next: P1
 

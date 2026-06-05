@@ -23,11 +23,11 @@ MotionPic now has conservative cost protection for real video generation:
 
 - `MAX_DAILY_VIDEO_JOBS`: sitewide real jobs per UTC day. Default: `20`.
 - `MAX_DAILY_VIDEO_JOBS_PER_USER`: real jobs per anonymous user per UTC day. Default: `3`.
-- `STARTER_CREDITS`: credits granted to a new anonymous browser account. Default: `12`.
+- `STARTER_CREDITS`: credits granted to a new anonymous browser account. Default: `2`.
 - If a cap is reached, the API returns `429` and does not deduct credits.
 - Mock jobs do not count toward the caps, so local testing can continue without spending provider budget.
 
-Keep these caps conservative until the first live payment and first user-generated videos are reviewed. For public promotion before email login, lower `STARTER_CREDITS` to `0`, `2`, or `4` so anonymous visitors cannot repeatedly consume provider budget by switching browsers or clearing local storage.
+Keep these caps conservative until the first live payment and first user-generated videos are reviewed. Before email login, keep `STARTER_CREDITS=2` so anonymous visitors can try one standard generation but cannot repeatedly consume provider budget as the main product loop.
 
 ## Access Strategy
 

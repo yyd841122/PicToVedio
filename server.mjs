@@ -28,7 +28,7 @@ const config = {
   maxDailyVideoJobs: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS"], 20),
   maxDailyVideoJobsPerUser: readNonNegativeIntEnv(["MAX_DAILY_VIDEO_JOBS_PER_USER"], 3),
   maxUploadImageMb: readPositiveNumberEnv(["MAX_UPLOAD_IMAGE_MB"], 8),
-  starterCredits: readNonNegativeIntEnv(["STARTER_CREDITS"], 12),
+  starterCredits: readNonNegativeIntEnv(["STARTER_CREDITS"], 2),
   paymentProvider: process.env.PAYMENT_PROVIDER || "mock",
   creemTestMode: process.env.CREEM_TEST_MODE !== "false",
   creemApiKey: process.env.CREEM_API_KEY || "",

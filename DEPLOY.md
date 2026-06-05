@@ -53,7 +53,7 @@ DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
 MAX_UPLOAD_IMAGE_MB=8
-STARTER_CREDITS=12
+STARTER_CREDITS=2
 DATA_PROVIDER=supabase
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
@@ -79,7 +79,7 @@ DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
 MAX_UPLOAD_IMAGE_MB=8
-STARTER_CREDITS=12
+STARTER_CREDITS=2
 ```
 
 Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.
@@ -88,7 +88,7 @@ The two `MAX_DAILY_*` values are cost guardrails for real provider jobs. The def
 
 `MAX_UPLOAD_IMAGE_MB` controls the maximum uploaded input image size. The default is 8 MB and only JPG, PNG, and WebP uploads are accepted. Unsupported or oversized uploads are rejected before credits are deducted.
 
-`STARTER_CREDITS` controls how many credits a new anonymous browser account receives. Keep `12` for owner/UAT testing. For public launch, consider `0`, `2`, or `4` until email login exists, because anonymous browser-local credits can be reset by switching devices, browsers, or clearing local storage.
+`STARTER_CREDITS` controls how many credits a new anonymous browser account receives. The recommended launch value is `2`, enough for one standard 4-second 720p generation. Use `0` if you want no anonymous free generation, or increase it only after email login exists.
 
 ## 4. Create Supabase Tables
 

@@ -97,7 +97,7 @@ DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
 MAX_UPLOAD_IMAGE_MB=8
-STARTER_CREDITS=12
+STARTER_CREDITS=2
 OPENAI_API_KEY=
 OPENAI_VIDEO_MODEL=sora-2
 ```
@@ -113,7 +113,7 @@ DASHSCOPE_PROMPT_EXTEND=false
 MAX_DAILY_VIDEO_JOBS=20
 MAX_DAILY_VIDEO_JOBS_PER_USER=3
 MAX_UPLOAD_IMAGE_MB=8
-STARTER_CREDITS=12
+STARTER_CREDITS=2
 ```
 
 DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. MotionPic defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
@@ -132,7 +132,7 @@ Input uploads are also guarded before credits are deducted:
 
 If an upload is unsupported or too large, `/api/video/jobs` returns `400` or `413` with a friendly message and does not deduct credits.
 
-New anonymous browser accounts receive `STARTER_CREDITS` credits. The default is `12` for MVP testing. Before broad promotion, consider lowering it to `0`, `2`, or `4` in Render so public visitors can still browse, upload, and choose templates, but provider-spending generation is not fully open to every anonymous browser session.
+New anonymous browser accounts receive `STARTER_CREDITS` credits. The default is `2`, enough for one standard 4-second 720p test generation. Public visitors can still browse, upload, and choose templates without login, but provider-spending generation is not fully open to every anonymous browser session.
 
 Optional for Cloudflare R2 object storage:
 
