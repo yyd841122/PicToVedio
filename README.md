@@ -72,6 +72,14 @@ On Windows PowerShell, use `npm.cmd test` if script execution policy blocks `npm
 
 The smoke test starts a local mock server on a random port, checks key public pages, `/api/account`, checkout login gating, `/api/admin/ops` preflight output, and inline script syntax. It does not call Supabase, Creem, DashScope, R2, or any live provider.
 
+Run local readiness classification:
+
+```bash
+npm run readiness
+```
+
+This reads local `.env` and process environment values, then reports low-risk readiness, warnings, blockers, and owner-required work without printing API keys, product IDs, webhook secrets, or tokens. It is a local planning aid only; Render, Supabase, Creem, and search-console actions still require owner confirmation.
+
 ## Environment Variables
 
 Required for Creem test checkout:
