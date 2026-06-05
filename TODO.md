@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-06-05
+Last updated: 2026-06-06
 
 ## Done
 
@@ -77,6 +77,7 @@ Last updated: 2026-06-05
 - [x] Completed Stage 1 real-generation smoke tests for Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait with owner-reported Good results.
 - [x] Added configurable `STARTER_CREDITS` so anonymous free generation can be reduced before public promotion.
 - [x] Added disabled-by-default Supabase Auth magic-link login scaffolding with browser-account merge.
+- [x] Added a local smoke test for key pages, account API, checkout login gating, ops preflight, and inline scripts.
 
 ## In Progress
 

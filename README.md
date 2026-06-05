@@ -62,6 +62,16 @@ Open:
 http://localhost:8787
 ```
 
+Run local safety checks:
+
+```bash
+npm test
+```
+
+On Windows PowerShell, use `npm.cmd test` if script execution policy blocks `npm.ps1`.
+
+The smoke test starts a local mock server on a random port, checks key public pages, `/api/account`, checkout login gating, `/api/admin/ops` preflight output, and inline script syntax. It does not call Supabase, Creem, DashScope, R2, or any live provider.
+
 ## Environment Variables
 
 Required for Creem test checkout:
