@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL(".", import.meta.url));
 const dataDir = join(root, "data");
 const dbPath = join(dataDir, "db.json");
 const analyticsCookieName = "motionpic_analytics_admin";
+const authCookieName = "motionpic_auth_session";
 
 loadDotEnv();
 
@@ -18,6 +19,8 @@ const config = {
   dataProvider: process.env.DATA_PROVIDER || "file",
   supabaseUrl: (process.env.SUPABASE_URL || "").replace(/\/$/, ""),
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+  supabaseAuthAnonKey: process.env.SUPABASE_AUTH_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || "",
+  authCookieSecret: process.env.AUTH_COOKIE_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.ANALYTICS_ADMIN_TOKEN || "motionpic-local-auth-cookie",
   openaiApiKey: process.env.OPENAI_API_KEY || "",
   openaiVideoModel: process.env.OPENAI_VIDEO_MODEL || "sora-2",
   dashscopeApiKey: process.env.DASHSCOPE_API_KEY || "",
@@ -90,6 +93,18 @@ const server = createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/api/checkout") {
       return await handleCheckout(req, res);
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/auth/magic-link") {
+      return await handleAuthMagicLink(req, res);
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/auth/session") {
+      return await handleAuthSession(req, res);
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/auth/logout") {
+      return handleAuthLogout(req, res);
     }
 
     if (req.method === "POST" && url.pathname === "/api/analytics/events") {
@@ -286,8 +301,12 @@ async function handleCreateVideoJob(req, res) {
 async function handleGetAccount(req, res) {
   const userId = getRequestUserId(req);
   const account = await getAccount(userId);
+  const authSession = getAuthSession(req);
   return sendJson(res, 200, {
     userId,
+    authenticated: Boolean(authSession),
+    authAvailable: canUseSupabaseAuth(),
+    email: authSession?.email || "",
     credits: account.credits,
     recentCredits: account.recentCredits,
     recentJobs: account.recentJobs,
@@ -603,6 +622,76 @@ async function handleCheckout(req, res) {
   });
 
   return sendJson(res, 200, { url: checkout.url });
+}
+
+async function handleAuthMagicLink(req, res) {
+  if (!canUseSupabaseAuth()) {
+    return sendJson(res, 501, {
+      ok: false,
+      error: "Email login is not configured yet. Add SUPABASE_AUTH_ANON_KEY or SUPABASE_PUBLISHABLE_KEY in Render first.",
+    });
+  }
+
+  const body = await readJson(req);
+  const email = normalizeEmail(body.email);
+  if (!email) {
+    return sendJson(res, 400, { ok: false, error: "Enter a valid email address." });
+  }
+
+  const redirectTo = `${getPublicOrigin(req)}/auth-callback`;
+  try {
+    await supabaseAuthRequest(`otp?redirect_to=${encodeURIComponent(redirectTo)}`, {
+      method: "POST",
+      body: {
+        email,
+        create_user: true,
+      },
+    });
+    return sendJson(res, 200, { ok: true, message: "Magic link sent. Check your email to continue." });
+  } catch (error) {
+    console.error("Supabase magic link request failed", error);
+    return sendJson(res, 502, { ok: false, error: "Could not send the login email right now." });
+  }
+}
+
+async function handleAuthSession(req, res) {
+  if (!canUseSupabaseAuth()) {
+    return sendJson(res, 501, { ok: false, error: "Email login is not configured yet." });
+  }
+
+  const body = await readJson(req);
+  const accessToken = sanitizeText(body.accessToken, 4096);
+  const browserUserId = sanitizeText(body.browserUserId, 120);
+  if (!accessToken) {
+    return sendJson(res, 400, { ok: false, error: "Missing login token." });
+  }
+
+  try {
+    const authUser = await getSupabaseAuthUser(accessToken);
+    const authUserId = authAppUserId(authUser.id);
+    await mergeBrowserAccountIntoAuthAccount(browserUserId, authUserId);
+    setAuthCookie(req, res, {
+      userId: authUserId,
+      email: normalizeEmail(authUser.email),
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+    });
+
+    const account = await getAccount(authUserId);
+    return sendJson(res, 200, {
+      ok: true,
+      userId: authUserId,
+      email: normalizeEmail(authUser.email),
+      credits: account.credits,
+    });
+  } catch (error) {
+    console.error("Auth session creation failed", error);
+    return sendJson(res, 401, { ok: false, error: "Login link is invalid or expired." });
+  }
+}
+
+function handleAuthLogout(req, res) {
+  clearAuthCookie(req, res);
+  return sendJson(res, 200, { ok: true });
 }
 
 async function handleMockConfirmPayment(req, res) {
@@ -2385,6 +2474,20 @@ function clearAnalyticsAdminCookie(req, res) {
   res.setHeader("Set-Cookie", `${analyticsCookieName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`);
 }
 
+function setAuthCookie(req, res, session) {
+  const secure = isHttpsRequest(req) ? "; Secure" : "";
+  const value = signAuthSession(session);
+  res.setHeader(
+    "Set-Cookie",
+    `${authCookieName}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000${secure}`
+  );
+}
+
+function clearAuthCookie(req, res) {
+  const secure = isHttpsRequest(req) ? "; Secure" : "";
+  res.setHeader("Set-Cookie", `${authCookieName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`);
+}
+
 function parseCookies(cookieHeader) {
   const cookies = {};
   for (const part of String(cookieHeader || "").split(";")) {
@@ -2393,6 +2496,41 @@ function parseCookies(cookieHeader) {
     cookies[key] = decodeURIComponent(rest.join("=") || "");
   }
   return cookies;
+}
+
+function signAuthSession(session) {
+  const payload = Buffer.from(JSON.stringify(session)).toString("base64url");
+  const signature = createHmac("sha256", config.authCookieSecret).update(payload).digest("base64url");
+  return `${payload}.${signature}`;
+}
+
+function getAuthSession(req) {
+  const cookies = parseCookies(req.headers.cookie || "");
+  const raw = cookies[authCookieName] || "";
+  const [payload, signature] = String(raw).split(".");
+  if (!payload || !signature) return null;
+
+  const expected = createHmac("sha256", config.authCookieSecret).update(payload).digest("base64url");
+  if (!safeEqual(signature, expected)) return null;
+
+  try {
+    const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    if (!session.userId || !String(session.userId).startsWith("auth_")) return null;
+    if (Number(session.exp || 0) <= Math.floor(Date.now() / 1000)) return null;
+    return {
+      userId: sanitizeText(session.userId, 120),
+      email: normalizeEmail(session.email),
+      exp: Number(session.exp || 0),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function safeEqual(a, b) {
+  const left = Buffer.from(String(a));
+  const right = Buffer.from(String(b));
+  return left.length === right.length && timingSafeEqual(left, right);
 }
 
 function isHttpsRequest(req) {
@@ -2433,12 +2571,137 @@ function isHttpHeaderValue(value) {
 }
 
 async function ensureSupabaseUser(userId) {
+  return ensureSupabaseUserWithCredits(userId, config.starterCredits);
+}
+
+async function ensureSupabaseUserWithCredits(userId, credits) {
   const users = await supabaseRequest(`app_users?id=eq.${filterValue(userId)}&select=id&limit=1`);
   if (users.length) return;
 
   await supabaseRequest("app_users", {
     method: "POST",
-    body: { id: userId, credits: config.starterCredits },
+    body: { id: userId, credits },
+    prefer: "return=minimal",
+  });
+}
+
+function canUseSupabaseAuth() {
+  return Boolean(config.supabaseUrl && config.supabaseAuthAnonKey);
+}
+
+async function supabaseAuthRequest(path, { method = "GET", body, accessToken = "" } = {}) {
+  const headers = {
+    apikey: config.supabaseAuthAnonKey,
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken || config.supabaseAuthAnonKey}`,
+  };
+
+  const response = await fetch(`${config.supabaseUrl}/auth/v1/${path}`, {
+    method,
+    headers,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  const data = parseJsonResponse(text);
+  if (!response.ok) {
+    const message = data?.msg || data?.message || data?.error_description || data?.error || text || `Supabase auth failed: ${response.status}`;
+    throw new Error(message);
+  }
+  return data || {};
+}
+
+async function getSupabaseAuthUser(accessToken) {
+  const user = await supabaseAuthRequest("user", { accessToken });
+  if (!user?.id) throw new Error("Supabase Auth did not return a user id");
+  return user;
+}
+
+function authAppUserId(authProviderUserId) {
+  const clean = sanitizeText(authProviderUserId, 100).replace(/[^a-z0-9_-]/gi, "");
+  return `auth_${clean.slice(0, 80)}`;
+}
+
+function normalizeEmail(email) {
+  const value = sanitizeText(email, 254).toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "";
+  return value;
+}
+
+async function mergeBrowserAccountIntoAuthAccount(browserUserId, authUserId) {
+  if (!/^mp_[a-z0-9_-]{12,80}$/i.test(String(browserUserId || ""))) {
+    if (useSupabase()) {
+      await ensureSupabaseUserWithCredits(authUserId, 0);
+    } else {
+      const db = readDb();
+      normalizeDb(db);
+      db.users[authUserId] ||= { credits: 0 };
+      writeDb(db);
+    }
+    return;
+  }
+
+  if (browserUserId === authUserId) return;
+
+  if (useSupabase()) {
+    await mergeSupabaseBrowserAccount(browserUserId, authUserId);
+    return;
+  }
+
+  const db = readDb();
+  normalizeDb(db);
+  db.users[authUserId] ||= { credits: 0 };
+  const browser = db.users[browserUserId];
+  if (browser) {
+    db.users[authUserId].credits += Number(browser.credits || 0);
+    for (const job of Object.values(db.jobs)) {
+      if (job.userId === browserUserId) job.userId = authUserId;
+    }
+    for (const payment of Object.values(db.payments)) {
+      if (payment.userId === browserUserId) payment.userId = authUserId;
+    }
+    for (const entry of db.creditLedger) {
+      if (entry.userId === browserUserId) entry.userId = authUserId;
+    }
+    for (const event of db.analyticsEvents) {
+      if (event.userId === browserUserId) event.userId = authUserId;
+    }
+    delete db.users[browserUserId];
+  }
+  writeDb(db);
+}
+
+async function mergeSupabaseBrowserAccount(browserUserId, authUserId) {
+  await ensureSupabaseUserWithCredits(authUserId, 0);
+  const [browserRows, authRows] = await Promise.all([
+    supabaseRequest(`app_users?id=eq.${filterValue(browserUserId)}&select=id,credits&limit=1`),
+    supabaseRequest(`app_users?id=eq.${filterValue(authUserId)}&select=id,credits&limit=1`),
+  ]);
+  if (!browserRows.length) return;
+
+  const nextCredits = Number(authRows[0]?.credits || 0) + Number(browserRows[0]?.credits || 0);
+  await supabaseRequest(`app_users?id=eq.${filterValue(authUserId)}`, {
+    method: "PATCH",
+    body: { credits: nextCredits, updated_at: new Date().toISOString() },
+    prefer: "return=minimal",
+  });
+
+  const updates = [
+    ["video_jobs", { user_id: authUserId }],
+    ["payments", { user_id: authUserId }],
+    ["credit_ledger", { user_id: authUserId }],
+    ["analytics_events", { user_id: authUserId }],
+  ];
+  for (const [table, body] of updates) {
+    await supabaseRequest(`${table}?user_id=eq.${filterValue(browserUserId)}`, {
+      method: "PATCH",
+      body,
+      prefer: "return=minimal",
+    });
+  }
+
+  await supabaseRequest(`app_users?id=eq.${filterValue(browserUserId)}`, {
+    method: "DELETE",
     prefer: "return=minimal",
   });
 }
@@ -2493,6 +2756,9 @@ function parseJsonResponse(text) {
 }
 
 function getRequestUserId(req, body = {}) {
+  const authSession = getAuthSession(req);
+  if (authSession?.userId) return authSession.userId;
+
   const candidate = body.userId || req.headers["x-motionpic-user-id"] || "";
   const userId = String(candidate).trim();
   if (/^mp_[a-z0-9_-]{12,80}$/i.test(userId)) return userId;

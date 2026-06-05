@@ -244,6 +244,8 @@
         <a class="brand" href="/">MotionPic AI</a>
         <nav class="nav" aria-label="Account navigation">
           <a class="button" href="/">Back to Generator</a>
+          <a class="button" id="loginLink" href="/login" hidden>Email Login</a>
+          <button class="button" id="logoutButton" type="button" hidden>Log Out</button>
           <button class="button primary" id="refreshButton" type="button">Refresh</button>
         </nav>
       </div>
@@ -264,6 +266,7 @@
             <p style="color: rgba(255, 255, 255, 0.72); margin-bottom: 0">
               Browser account ID: <code id="userId" style="color: white">...</code>
             </p>
+            <p id="authState" style="color: rgba(255, 255, 255, 0.72); margin-bottom: 0">Checking login...</p>
           </aside>
         </section>
 
@@ -351,6 +354,9 @@
       const creditRows = document.querySelector("#creditRows");
       const jobRows = document.querySelector("#jobRows");
       const refreshButton = document.querySelector("#refreshButton");
+      const loginLink = document.querySelector("#loginLink");
+      const logoutButton = document.querySelector("#logoutButton");
+      const authState = document.querySelector("#authState");
       const quotaUser = document.querySelector("#quotaUser");
       const quotaUserRemaining = document.querySelector("#quotaUserRemaining");
       const quotaGlobalRemaining = document.querySelector("#quotaGlobalRemaining");
@@ -456,6 +462,17 @@
           });
           const account = await response.json();
           if (!response.ok) throw new Error(account.error || "Account request failed");
+          if (account.userId) {
+            localStorage.setItem("motionpic-user-id", account.userId);
+            userIdNode.textContent = account.userId;
+          }
+          loginLink.hidden = Boolean(account.authenticated) || !account.authAvailable;
+          logoutButton.hidden = !account.authenticated;
+          authState.textContent = account.authenticated
+            ? `Signed in as ${account.email || "email user"}`
+            : account.authAvailable
+              ? "Browser-local account. Email login is available."
+              : "Browser-local account. Email login is not connected yet.";
           creditBalance.textContent = `${account.credits ?? 0}`;
           renderCredits(account.recentCredits || []);
           renderJobs(account.recentJobs || []);
@@ -468,6 +485,18 @@
           refreshButton.disabled = false;
         }
       };
+
+      logoutButton.addEventListener("click", async () => {
+        logoutButton.disabled = true;
+        try {
+          await fetch("/api/auth/logout", { method: "POST" });
+          localStorage.removeItem("motionpic-auth-email");
+          localStorage.removeItem("motionpic-user-id");
+          window.location.href = "/account";
+        } finally {
+          logoutButton.disabled = false;
+        }
+      });
 
       refreshButton.addEventListener("click", refreshAccount);
       refreshAccount();

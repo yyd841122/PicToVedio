@@ -115,6 +115,15 @@ ANALYTICS_ADMIN_TOKEN=choose_a_long_private_password
 
 Never paste `SUPABASE_SERVICE_ROLE_KEY` into public code or GitHub.
 
+Optional, only when enabling real email login:
+
+```env
+SUPABASE_AUTH_ANON_KEY=public_or_anon_auth_key
+AUTH_COOKIE_SECRET=choose_a_long_random_private_string
+```
+
+Before adding those values, configure Supabase Auth redirect URLs using `EMAIL_LOGIN_SETUP_GUIDE.md`.
+
 If your Supabase project was created before analytics tracking was added, do not use any SQL that grants `anon` or `authenticated` direct access to product tables. MotionPic's browser pages should call the Render backend only, and the backend should use `SUPABASE_SERVICE_ROLE_KEY`.
 
 Preferred safe path:

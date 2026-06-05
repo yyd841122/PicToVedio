@@ -76,6 +76,7 @@ Last updated: 2026-06-05
 - [x] Tightened low-motion template prompts and DashScope guardrails for faces, pets, products, and old photos.
 - [x] Completed Stage 1 real-generation smoke tests for Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait with owner-reported Good results.
 - [x] Added configurable `STARTER_CREDITS` so anonymous free generation can be reduced before public promotion.
+- [x] Added disabled-by-default Supabase Auth magic-link login scaffolding with browser-account merge.
 
 ## In Progress
 
@@ -150,6 +151,7 @@ Last updated: 2026-06-05
 - [x] Recheck local JSON-LD syntax and sitemap coverage for public SEO pages.
 - [x] Prepare Baidu submission checklist if targeting Chinese search.
 - [ ] Add durable email login before larger promotion so purchases and credits are not tied only to browser storage.
+- [ ] Configure Supabase Auth redirect URL and Render `SUPABASE_AUTH_ANON_KEY` before exposing `/login` publicly.
 
 ## Later: P2
 

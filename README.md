@@ -87,6 +87,13 @@ SUPABASE_SERVICE_ROLE_KEY=
 ANALYTICS_ADMIN_TOKEN=
 ```
 
+Optional for real email magic-link login:
+
+```env
+SUPABASE_AUTH_ANON_KEY=
+AUTH_COOKIE_SECRET=
+```
+
 Optional for real video generation later:
 
 ```env
@@ -183,6 +190,8 @@ MotionPic creates a browser-local user id such as `mp_...` and sends it with API
 Users can open `/account` from the homepage credit panel to view their current browser-local account ID, credit balance, recent credit ledger entries, and recent video generation jobs. This page is marked `noindex` and excluded from `robots.txt` because it is an account utility page, not a public SEO landing page.
 
 This is not a full login system. Anonymous credits are low-friction for early testing, but users can lose access if they clear browser storage or switch devices. Before larger paid traffic, add email login or another durable account system so free credits, purchases, and generated outputs follow a real user account.
+
+The email-login code path exists behind Supabase Auth configuration. See [EMAIL_LOGIN_SETUP_GUIDE.md](./EMAIL_LOGIN_SETUP_GUIDE.md) before enabling `/login` publicly.
 
 ## Analytics
 
@@ -291,6 +300,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [PROVIDER_COST_SAMPLING_WORKSHEET.md](./PROVIDER_COST_SAMPLING_WORKSHEET.md): provider cost sampling rules, log fields, and pricing review gates.
 - [FIRST_REVENUE_PLAYBOOK.md](./FIRST_REVENUE_PLAYBOOK.md): final live-payment, pricing, storage, and first-revenue operating checklist.
 - [LIVE_PAYMENT_TEST_PROCEDURE.md](./LIVE_PAYMENT_TEST_PROCEDURE.md): controlled live-payment test procedure, acceptance criteria, and rollback options.
+- [EMAIL_LOGIN_SETUP_GUIDE.md](./EMAIL_LOGIN_SETUP_GUIDE.md): Supabase Auth magic-link setup, Render variables, and login acceptance criteria.
 - [OWNER_UAT_CHECKLIST.md](./OWNER_UAT_CHECKLIST.md): owner acceptance checklist for public pages, dashboards, generation, payment, storage, support, and promotion.
 - [LIVE_READINESS_REVIEW.md](./LIVE_READINESS_REVIEW.md): readiness review for live payments, generation quality, storage, and promotion gates.
 - [GENERATION_TEST_PLAN.md](./GENERATION_TEST_PLAN.md): controlled real-generation test matrix, safety rules, and quality rubric.
