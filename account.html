@@ -22,6 +22,10 @@
         box-sizing: border-box;
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       body {
         margin: 0;
         background: var(--paper);
@@ -255,8 +259,8 @@
       <div class="shell">
         <section class="hero">
           <div>
-            <h1>Your Browser Account</h1>
-            <p>
+            <h1 id="accountTitle">Your Browser Account</h1>
+            <p id="accountDescription">
               This browser keeps a local account ID for credits, payments, and generation records. Email login is planned before broader promotion.
             </p>
           </div>
@@ -351,6 +355,8 @@
       const userId = getUserId();
       const creditBalance = document.querySelector("#creditBalance");
       const userIdNode = document.querySelector("#userId");
+      const accountTitle = document.querySelector("#accountTitle");
+      const accountDescription = document.querySelector("#accountDescription");
       const creditRows = document.querySelector("#creditRows");
       const jobRows = document.querySelector("#jobRows");
       const refreshButton = document.querySelector("#refreshButton");
@@ -468,6 +474,10 @@
           }
           loginLink.hidden = Boolean(account.authenticated) || !account.authAvailable;
           logoutButton.hidden = !account.authenticated;
+          accountTitle.textContent = account.authenticated ? "Your MotionPic Account" : "Your Browser Account";
+          accountDescription.textContent = account.authenticated
+            ? "Your email login is connected. Credits, payments, and generation records now follow this signed-in account."
+            : "This browser keeps a local account ID for credits, payments, and generation records. Email login is planned before broader promotion.";
           authState.textContent = account.authenticated
             ? `Signed in as ${account.email || "email user"}`
             : account.authAvailable
