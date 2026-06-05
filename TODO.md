@@ -149,6 +149,7 @@ Last updated: 2026-06-05
 - [x] Add an internal `/launch-kit` page with directory links, UTM links, and reusable launch copy.
 - [x] Recheck local JSON-LD syntax and sitemap coverage for public SEO pages.
 - [x] Prepare Baidu submission checklist if targeting Chinese search.
+- [ ] Add durable email login before larger promotion so purchases and credits are not tied only to browser storage.
 
 ## Later: P2
 

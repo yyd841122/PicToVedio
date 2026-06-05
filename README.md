@@ -9,9 +9,9 @@ The current build is intentionally lightweight: a static front end plus a zero-d
 - Photo upload UI with click and drag-and-drop support
 - Template selection for creator, commerce, and emotional use cases
 - Aspect ratio and quality controls
-- Credit cost estimates and anonymous account balance
+- Credit cost estimates and browser-local account balance
 - Generation history and real or mock video jobs
-- Account page for current anonymous credits, credit ledger entries, and video jobs
+- Account page for browser-local credits, credit ledger entries, and video jobs
 - Creem checkout integration for credit packs
 - Creem webhook endpoint for paid credit top-ups
 - Webhook event deduplication
@@ -178,7 +178,7 @@ The server recalculates the credit cost for each generation request. It does not
 
 ## Anonymous Users
 
-MotionPic creates a browser-local anonymous user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
+MotionPic creates a browser-local user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this browser account id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
 
 Users can open `/account` from the homepage credit panel to view their current browser-local account ID, credit balance, recent credit ledger entries, and recent video generation jobs. This page is marked `noindex` and excluded from `robots.txt` because it is an account utility page, not a public SEO landing page.
 

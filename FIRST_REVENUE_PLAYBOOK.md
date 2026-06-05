@@ -44,6 +44,8 @@ Future free generation: available after email signup/login.
 
 This keeps the funnel low-friction while preventing anonymous free use from becoming the main cost center.
 
+Current UI policy: label the current state as a browser account, not a logged-in user account. Do not show a fake sign-in button until email login or another durable auth flow is actually implemented.
+
 ## First Revenue Definition
 
 The first revenue milestone is complete when all of these are true:
