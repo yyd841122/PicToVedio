@@ -2,7 +2,7 @@
 
 Last updated: 2026-06-05
 
-MotionPic AI now has the code path for real email magic-link login, but it is intentionally disabled until Supabase Auth and Render are configured.
+MotionPic AI has a real email magic-link login path. It stays disabled automatically until Supabase Auth and the Render Auth variables are configured.
 
 ## Current Behavior
 
@@ -12,6 +12,7 @@ MotionPic AI now has the code path for real email magic-link login, but it is in
 - `/auth-callback` exchanges the Supabase Auth access token for a MotionPic HttpOnly session cookie.
 - After login, the backend uses the signed cookie instead of trusting the browser-local user id.
 - The current browser account is merged into the durable email account so credits, jobs, payments, ledger rows, and analytics move forward together.
+- When Auth is available, the homepage shows a real login/account state and checkout requires email login before buying credits.
 
 ## Why This Is Safer
 
@@ -77,17 +78,20 @@ After deploy:
 2. Enter your email.
 3. Open the newest magic link email.
 4. Confirm the browser redirects to `/auth-callback`.
-5. Confirm it then redirects to `/account`.
+5. Confirm it then redirects to the original page if login started from a protected action, or `/account` for direct login.
 6. Confirm `/account` says you are signed in.
 7. Confirm your existing browser credits are still present.
-8. Generate only if you intentionally want to spend provider credits.
+8. Confirm the homepage shows `Account` instead of `Email Login`.
+9. Generate only if you intentionally want to spend provider credits.
 
 ## Acceptance Criteria
 
 - [ ] `/login` sends a magic link after Render variables are configured.
 - [ ] `/auth-callback` creates a signed MotionPic session.
 - [ ] `/account` shows signed-in email state.
+- [ ] Homepage shows `Email Login` for anonymous visitors and `Account` for signed-in visitors.
 - [ ] Existing browser credits merge into the email account.
+- [ ] Anonymous checkout redirects to `/login` before creating a paid checkout.
 - [ ] Checkout and generation use the signed account after login.
 - [ ] Logging out clears the signed cookie and returns to a fresh browser-local account.
 
@@ -95,5 +99,5 @@ After deploy:
 
 - [ ] Do not expose `SUPABASE_SERVICE_ROLE_KEY` in public HTML or JavaScript.
 - [ ] Do not grant direct Supabase table access to `anon` or `authenticated`.
-- [ ] Do not add a public homepage login CTA until the magic-link flow is configured and tested.
+- [ ] Do not show a fake login state; the homepage CTA should appear only when Auth is configured.
 - [ ] Do not run broad promotion until paid credits and generated jobs survive login.

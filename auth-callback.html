@@ -44,6 +44,17 @@
     </main>
     <script>
       const getUserId = () => localStorage.getItem("motionpic-user-id") || "";
+      const safeNextPath = (value) => {
+        if (!value) return "/account";
+        try {
+          const url = new URL(value, window.location.origin);
+          if (url.origin !== window.location.origin) return "/account";
+          return `${url.pathname}${url.search}${url.hash}`;
+        } catch {
+          return "/account";
+        }
+      };
+
       const title = document.querySelector("#title");
       const message = document.querySelector("#message");
       const params = new URLSearchParams(window.location.hash.replace(/^#/, "") || window.location.search.replace(/^\?/, ""));
@@ -66,7 +77,9 @@
           if (!response.ok || !result.ok) throw new Error(result.error || "Login could not be completed.");
           localStorage.setItem("motionpic-user-id", result.userId);
           if (result.email) localStorage.setItem("motionpic-auth-email", result.email);
-          window.location.replace("/account");
+          const nextPath = safeNextPath(localStorage.getItem("motionpic-auth-next") || "/account");
+          localStorage.removeItem("motionpic-auth-next");
+          window.location.replace(nextPath);
         } catch (error) {
           title.textContent = "Login failed";
           message.textContent = `${error.message} Request a new login link from /login.`;

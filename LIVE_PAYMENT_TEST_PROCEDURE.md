@@ -35,6 +35,7 @@ Collect these before the owner approves a live test:
 | Render variables | Owner confirms the exact values to set, without exposing secrets in Git |
 | Support email | Public support email is final and monitored |
 | Refund policy | Public `/refund` page matches operating rules |
+| Email login | Homepage and `/account` show signed-in state; anonymous checkout redirects to `/login` |
 | Test buyer | Owner confirms who will make the small live payment |
 | Test amount | Owner confirms the smallest safe live product or test price |
 
@@ -156,17 +157,18 @@ Only run these after owner confirmation:
 4. Wait for Render deployment to complete.
 5. Open `https://video.cozyguidehub.com/health`.
 6. Open the homepage in a normal browser.
-7. Record the browser-local account ID from `/account`.
-8. Start checkout from the public site.
-9. Complete the smallest approved live payment.
-10. Return to the site.
-11. Refresh `/account` and confirm credits increased.
-12. Open `/admin/ops` with the private token.
-13. Confirm payment, webhook, and credit ledger entries.
-14. Run one approved 4-second 720p generation.
-15. Confirm credits decrease by the intended amount.
-16. Confirm the generated output opens.
-17. Record result quality and provider cost.
+7. If not signed in, click `Email Login`, complete magic-link login, and confirm the homepage shows the signed-in account state.
+8. Record the signed-in account ID from `/account`.
+9. Start checkout from the public site.
+10. Complete the smallest approved live payment.
+11. Return to the site.
+12. Refresh `/account` and confirm credits increased.
+13. Open `/admin/ops` with the private token.
+14. Confirm payment, webhook, and credit ledger entries.
+15. Run one approved 4-second 720p generation.
+16. Confirm credits decrease by the intended amount.
+17. Confirm the generated output opens.
+18. Record result quality and provider cost.
 
 ## Immediate Rollback Variables
 
@@ -194,6 +196,7 @@ The controlled live payment test passes only if:
 - [ ] Supabase records the webhook event.
 - [ ] Credit ledger records the paid credit grant.
 - [ ] Buyer credit balance persists after refresh.
+- [ ] Buyer was signed in before checkout and the paid credits belong to the signed-in account.
 - [ ] Buyer can spend credits on one real generation.
 - [ ] Generation job appears in `/admin/ops`.
 - [ ] Output URL opens after completion.

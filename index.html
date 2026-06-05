@@ -2251,6 +2251,12 @@
         }
       };
 
+      const redirectToLogin = (source) => {
+        trackEvent("login_required", { source });
+        const next = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        window.location.href = `/login?next=${encodeURIComponent(next)}`;
+      };
+
       const refreshAccount = async () => {
         if (!canUseBackend()) return;
         try {
@@ -2764,6 +2770,11 @@
         updateEstimate();
         const plan = state.resolution === "Pro" ? "commerce" : "creator";
         trackEvent("checkout_click", { source, plan });
+        if (state.authAvailable && !state.authenticated) {
+          creditNote.textContent = "Please log in with email before buying credits so your purchase is saved to your account.";
+          redirectToLogin(source);
+          return;
+        }
         if (canUseBackend()) {
           try {
             const response = await fetch("/api/checkout", {
@@ -2776,6 +2787,11 @@
               }),
             });
             const checkout = await response.json();
+            if (response.status === 401 || checkout.code === "LOGIN_REQUIRED") {
+              creditNote.textContent = checkout.message || checkout.error || "Please log in with email before buying credits.";
+              redirectToLogin(source);
+              return;
+            }
             if (checkout.url) {
               trackEvent("checkout_redirect", { source, plan });
               window.location.href = checkout.url;

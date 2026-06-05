@@ -131,12 +131,27 @@
         </label>
         <div class="actions">
           <button id="submitButton" type="submit">Send magic link</button>
-          <a class="button secondary" href="/">Back to generator</a>
+          <a class="button secondary" href="/" id="backLink">Back to generator</a>
         </div>
       </form>
       <p class="status" id="status" aria-live="polite"></p>
     </main>
     <script>
+      const safeNextPath = (value) => {
+        if (!value) return "/account";
+        try {
+          const url = new URL(value, window.location.origin);
+          if (url.origin !== window.location.origin) return "/account";
+          return `${url.pathname}${url.search}${url.hash}`;
+        } catch {
+          return "/account";
+        }
+      };
+
+      const loginQuery = new URLSearchParams(window.location.search);
+      const nextPath = safeNextPath(loginQuery.get("next") || "/account");
+      localStorage.setItem("motionpic-auth-next", nextPath);
+
       const getUserId = () => {
         const stored = localStorage.getItem("motionpic-user-id");
         if (stored) return stored;
@@ -152,6 +167,8 @@
       const email = document.querySelector("#email");
       const statusNode = document.querySelector("#status");
       const submitButton = document.querySelector("#submitButton");
+      const backLink = document.querySelector("#backLink");
+      backLink.href = nextPath === "/account" ? "/" : nextPath;
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();

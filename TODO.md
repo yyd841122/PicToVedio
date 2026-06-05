@@ -88,7 +88,7 @@ Last updated: 2026-06-05
 - [ ] Re-run or resolve the Supabase security advisor check and confirm the public-access warnings clear using `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
 - [x] Keep Creem in test mode until Stage 1 real generation works.
 - [ ] Keep Creem in test mode until owner approves the controlled live-payment switch.
-- [ ] Decide launch access policy: open browsing/upload with low starter credits, then add email login before larger promotion.
+- [x] Decide launch access policy: open browsing/upload with low starter credits, require email login before paid checkout, and keep larger promotion gated on live-payment readiness.
 - [x] Build the first SEO/GEO content layer around the homepage and templates.
 
 ## Next: P0
@@ -150,12 +150,13 @@ Last updated: 2026-06-05
 - [x] Add an internal `/launch-kit` page with directory links, UTM links, and reusable launch copy.
 - [x] Recheck local JSON-LD syntax and sitemap coverage for public SEO pages.
 - [x] Prepare Baidu submission checklist if targeting Chinese search.
-- [ ] Add durable email login before larger promotion so purchases and credits are not tied only to browser storage.
-- [ ] Configure Supabase Auth redirect URL and Render `SUPABASE_AUTH_ANON_KEY` before exposing `/login` publicly.
+- [x] Add durable email login before larger promotion so purchases and credits are not tied only to browser storage.
+- [x] Configure Supabase Auth redirect URL and Render `SUPABASE_AUTH_ANON_KEY` before exposing `/login` publicly.
+- [x] Show login/account state on the homepage and require email login before paid checkout when Auth is configured.
 
 ## Later: P2
 
-- [ ] Add email login.
+- [x] Add email login.
 - [x] Add account page.
 - [x] Add admin view for payments and generation jobs.
 - [ ] Add A/B tests for hero copy and pricing.

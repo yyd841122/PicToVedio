@@ -172,6 +172,8 @@ COMMERCE_PACK_PRICE_LABEL=$29
 
 Keep these Render values aligned with the active Creem product descriptions before switching to live payments.
 
+When Supabase Auth is configured, checkout requires email login before creating a paid credit-pack session. This keeps real purchases tied to a durable account instead of only to browser storage.
+
 Current generation credit rules:
 
 - 4s / 720p: `2 credits`
@@ -183,15 +185,15 @@ Current generation credit rules:
 
 The server recalculates the credit cost for each generation request. It does not trust the `credits` value sent by the browser.
 
-## Anonymous Users
+## Accounts And Login
 
 MotionPic creates a browser-local user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this browser account id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
 
-Users can open `/account` from the homepage credit panel to view their current browser-local account ID, credit balance, recent credit ledger entries, and recent video generation jobs. This page is marked `noindex` and excluded from `robots.txt` because it is an account utility page, not a public SEO landing page.
+Users can open `/account` from the homepage credit panel to view their current account ID, credit balance, recent credit ledger entries, and recent video generation jobs. This page is marked `noindex` and excluded from `robots.txt` because it is an account utility page, not a public SEO landing page.
 
-This is not a full login system. Anonymous credits are low-friction for early testing, but users can lose access if they clear browser storage or switch devices. Before larger paid traffic, add email login or another durable account system so free credits, purchases, and generated outputs follow a real user account.
+Supabase Auth magic-link login is available when `SUPABASE_AUTH_ANON_KEY` or `SUPABASE_PUBLISHABLE_KEY` is configured. After login, the backend uses a signed HttpOnly session cookie and merges the current browser account into a durable `auth_...` account so credits, payments, and generation history follow the email account.
 
-The email-login code path exists behind Supabase Auth configuration. See [EMAIL_LOGIN_SETUP_GUIDE.md](./EMAIL_LOGIN_SETUP_GUIDE.md) before enabling `/login` publicly.
+Anonymous credits are still low-friction for early testing, but users can lose access if they clear browser storage or switch devices before logging in. Paid checkout is gated behind email login when Auth is available. See [EMAIL_LOGIN_SETUP_GUIDE.md](./EMAIL_LOGIN_SETUP_GUIDE.md) for setup and acceptance checks.
 
 ## Analytics
 

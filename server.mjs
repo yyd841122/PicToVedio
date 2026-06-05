@@ -568,6 +568,15 @@ async function handleGetVideoJob(req, res, id) {
 async function handleCheckout(req, res) {
   const body = await readJson(req);
   const plan = body.plan === "commerce" ? "commerce" : "creator";
+  const authSession = getAuthSession(req);
+  if (canUseSupabaseAuth() && !authSession) {
+    return sendApiError(
+      res,
+      401,
+      "LOGIN_REQUIRED",
+      "Please log in with email before buying credits so your purchase is saved to your account."
+    );
+  }
   const userId = getRequestUserId(req, body);
 
   if (config.paymentProvider === "creem") {

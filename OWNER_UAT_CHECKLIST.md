@@ -88,6 +88,8 @@ Requires owner confirmation and real payment readiness:
 - [ ] Live webhook points to `https://video.cozyguidehub.com/api/creem/webhook`.
 - [ ] Render live Creem variables are set by the owner or authorized operator.
 - [ ] `CREEM_TEST_MODE=false` only after final confirmation.
+- [ ] Buyer is signed in with email before starting checkout.
+- [ ] Anonymous checkout redirects to login instead of creating a paid checkout.
 - [ ] One small live payment succeeds.
 - [ ] Buyer credits increase after checkout.
 - [ ] Credits persist after refresh.

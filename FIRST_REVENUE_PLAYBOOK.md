@@ -27,7 +27,7 @@ MotionPic now has conservative cost protection for real video generation:
 - If a cap is reached, the API returns `429` and does not deduct credits.
 - Mock jobs do not count toward the caps, so local testing can continue without spending provider budget.
 
-Keep these caps conservative until the first live payment and first user-generated videos are reviewed. Before email login, keep `STARTER_CREDITS=2` so anonymous visitors can try one standard generation but cannot repeatedly consume provider budget as the main product loop.
+Keep these caps conservative until the first live payment and first user-generated videos are reviewed. With email login enabled, keep `STARTER_CREDITS=2` so anonymous visitors can try one standard generation while paid purchases stay tied to a durable account.
 
 ## Access Strategy
 
@@ -37,14 +37,14 @@ Do gate provider-spending generation. The best first path is:
 
 ```text
 Browse/upload/template selection: open to everyone.
-Free real generation: only a very small starter balance, preferably 0-4 credits until login exists.
-Paid generation: available after buying credits.
-Future free generation: available after email signup/login.
+Free real generation: only a very small starter balance, currently 2 credits.
+Paid checkout: require email login before creating a credit-pack checkout.
+Paid generation: available after buying credits on the signed-in account.
 ```
 
 This keeps the funnel low-friction while preventing anonymous free use from becoming the main cost center.
 
-Current UI policy: label the current state as a browser account, not a logged-in user account. Do not show a fake sign-in button until email login or another durable auth flow is actually implemented.
+Current UI policy: show a real Email Login button when Supabase Auth is configured. Label anonymous visitors as a browser account, and show the signed-in account state after magic-link login.
 
 ## First Revenue Definition
 
@@ -67,6 +67,8 @@ Before switching Creem live:
 - Confirm failed provider jobs refund credits.
 - Confirm successful jobs appear in `/admin/ops`.
 - Confirm new uploads clear stale generated output state.
+- Confirm homepage and `/account` show the signed-in email state after login.
+- Confirm checkout prompts anonymous visitors to log in before buying credits.
 - Confirm analytics records upload, generate, success, download, checkout click, and checkout redirect.
 
 ## Pricing Decision
