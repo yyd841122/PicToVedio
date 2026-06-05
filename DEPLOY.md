@@ -111,7 +111,16 @@ ANALYTICS_ADMIN_TOKEN=choose_a_long_private_password
 
 Never paste `SUPABASE_SERVICE_ROLE_KEY` into public code or GitHub.
 
-If your Supabase project was created before analytics tracking was added, run this in Supabase SQL Editor:
+If your Supabase project was created before analytics tracking was added, do not use any SQL that grants `anon` or `authenticated` direct access to product tables. MotionPic's browser pages should call the Render backend only, and the backend should use `SUPABASE_SERVICE_ROLE_KEY`.
+
+Preferred safe path:
+
+1. Re-run the latest additive table/index parts from `supabase.sql` if a table or column is missing.
+2. Run `SUPABASE_SECURITY_FIX.sql` afterward.
+3. Confirm `/health`, `/api/account`, `/admin/analytics`, and `/admin/ops` still work.
+4. Re-run Supabase Advisor or click Resolve issue to confirm public-access warnings are cleared.
+
+For reference, the analytics table must exist with RLS enabled and service-role-only grants:
 
 ```sql
 create table if not exists analytics_events (
@@ -134,10 +143,10 @@ create index if not exists idx_analytics_events_name_created
 create index if not exists idx_analytics_events_user_created
   on analytics_events(user_id, created_at desc);
 
-grant usage on schema public to anon, authenticated, service_role;
-grant select, insert, update, delete on table analytics_events to anon, authenticated, service_role;
+alter table analytics_events enable row level security;
 
-alter table analytics_events disable row level security;
+revoke all on table analytics_events from anon, authenticated;
+grant select, insert, update, delete on table analytics_events to service_role;
 ```
 
 After deployment, you can check recent events at:
@@ -252,13 +261,13 @@ After the custom domain works:
 https://video.cozyguidehub.com/api/creem/webhook
 ```
 
-5. Select payment success events such as:
+5. Select the successful checkout event. Use `checkout.completed` if Creem offers it:
 
 ```text
 checkout.completed
-order.created
-payment.completed
 ```
+
+If Creem also offers equivalent successful payment events in your account, enable them only when you intentionally want to test those event types. The MotionPic webhook code can recognize `checkout.completed`, `order.created`, and `payment.completed`, but the safest first setup is one clear successful-checkout event.
 
 6. Copy the webhook secret into Render:
 
@@ -327,7 +336,7 @@ CREATOR_PACK_PRICE_LABEL=$9
 COMMERCE_PACK_PRICE_LABEL=$29
 ```
 
-7. Create a live webhook in Creem:
+7. Create a live webhook in Creem, using the live dashboard, not the test dashboard:
 
 ```text
 https://video.cozyguidehub.com/api/creem/webhook
@@ -356,6 +365,8 @@ Supabase credit_ledger has creem-checkout
 Supabase payments has the payment id
 Supabase webhook_events has checkout.completed
 ```
+
+If anything fails, pause promotion first. A minimal rollback is `CREEM_TEST_MODE=true`; if checkout should be disabled completely while the site stays online, set `PAYMENT_PROVIDER=mock` and redeploy.
 
 ## 10. Search And AI Discovery
 

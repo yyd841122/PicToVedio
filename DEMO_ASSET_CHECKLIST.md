@@ -1,6 +1,6 @@
 # MotionPic AI Demo Asset Checklist
 
-Last updated: 2026-06-04
+Last updated: 2026-06-05
 
 Use this checklist to prepare screenshots and short demo clips for directories, Product Hunt, Xiaohongshu, TikTok, YouTube Shorts, and launch posts. This is a planning document only; it does not require real payments, live submissions, or external posting.
 
@@ -13,6 +13,8 @@ Create a small set of clean, reusable demo assets that show MotionPic AI clearly
 - One pet-photo-animation demo.
 - One old-photo-animation demo.
 - Optional: one AI Kiss Video demo only after content and privacy concerns are reviewed.
+
+Stage 1 already produced four owner-reported Good outputs. Save those privately as candidate demos before provider links expire.
 
 ## Safety Rules
 
@@ -50,10 +52,11 @@ Recommended first clips:
 1. Product photo to video ad.
 2. Pet photo animation.
 3. Old photo alive.
+4. Natural portrait motion.
 
 Optional after review:
 
-4. Couple / AI Kiss Video.
+5. Couple / AI Kiss Video.
 
 Recommended clip settings:
 
@@ -63,6 +66,15 @@ Aspect ratio: 9:16 for social
 Quality: 720p first
 Audio: off
 Motion: subtle
+```
+
+Recommended filenames:
+
+```text
+motionpic-product-motion-4s-720p.mp4
+motionpic-pet-motion-4s-720p.mp4
+motionpic-old-photo-alive-4s-720p.mp4
+motionpic-natural-portrait-4s-720p.mp4
 ```
 
 ## 15-Second Demo Script
@@ -91,7 +103,7 @@ The workflow is simple:
 3. Generate a short preview.
 4. Use the result for Reels, TikTok, product pages, pet clips, or old photo memories.
 
-The first templates are Product Video Ad, Pet Animation, Old Photo Alive, and AI Kiss Video.
+The first templates are Product Video Ad, Pet Animation, Old Photo Alive, and Natural Portrait.
 
 I am improving output quality, credit pricing, and template coverage as the product moves toward live payments.
 ```
@@ -111,8 +123,7 @@ Post copy:
 
 ```text
 我在做一个 AI 照片转视频工具：MotionPic AI。
-
-它的逻辑很简单：
+它的流程很简单：
 1. 上传一张照片
 2. 选择一个模板
 3. 生成适合发布的短视频

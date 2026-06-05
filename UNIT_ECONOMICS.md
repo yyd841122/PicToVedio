@@ -1,6 +1,6 @@
 # MotionPic AI Unit Economics
 
-Last updated: 2026-06-04
+Last updated: 2026-06-05
 
 ## Current Measured Cost
 
@@ -10,6 +10,15 @@ The first real DashScope image-to-video tests show that cost is the main risk be
 | --- | ---: | --- |
 | 4s / 720p / audio on | about CNY 1.20 per generation | Too expensive for the current $9 / 100 credits package. |
 | 4s / 720p / audio off | about CNY 0.60 per generation | Better, but still needs careful credit pricing. |
+
+The four completed Stage 1 generations from 2026-06-04 still need an Alibaba Cloud / DashScope bill check. Treat CNY 0.60 as the current planning estimate until the owner confirms the actual billed cost for:
+
+- Product Motion
+- Pet Motion
+- Old Photo Alive
+- Natural Portrait
+
+If the confirmed average differs materially from CNY 0.60, update both this document and Render's `ESTIMATED_VIDEO_COST_CNY` planning value.
 
 The current site package display is still:
 

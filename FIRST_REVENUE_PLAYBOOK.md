@@ -1,6 +1,6 @@
 # MotionPic AI First Revenue Playbook
 
-Last updated: 2026-06-04
+Last updated: 2026-06-05
 
 This playbook is the final operating checklist for turning the current working test product into a small live product that can earn the first real paid order.
 
@@ -57,9 +57,10 @@ Keep the first live pricing simple.
 
 Recommended safer first live packages:
 
-- Starter: US$9 for 40 credits.
-- Creator: US$19 for 120 credits.
-- Commerce: US$49 for 400 credits.
+- Creator Pack: US$9 for 40 credits.
+- Commerce Pack: US$29 for 160 credits.
+
+This is the recommended controlled-live path until the latest Alibaba Cloud/DashScope bill confirms the real cost for the four Stage 1 successful generations. At 2 credits per standard 4-second 720p clip, the $9 pack gives about 20 standard generations and leaves more room for payment fees, retries, support, and disliked outputs.
 
 If keeping the current US$9 Creator Pack:
 
@@ -69,13 +70,22 @@ If keeping the current US$9 Creator Pack:
 - Tell users that AI results can vary.
 - Use this path for marketing simplicity, not maximum margin. At the current observed CNY 0.60 provider cost, US$9 / 100 credits gives about 50 standard generations and roughly CNY 30 direct provider cost before payment fees, retries, support, and disliked outputs.
 
+Decision needed from owner before Creem live setup:
+
+```text
+Option A, recommended: keep $9 / $29 prices but reduce grants to 40 / 160 credits.
+Option B: keep current $9 / $29 prices and 100 / 400 credits for a stronger marketing offer.
+```
+
 ## Creem Live Switch
 
 Owner actions required:
 
 - Finish Creem live store verification.
-- Create live Creator Pack and Commerce Pack products.
+- Create live Creator Pack and Commerce Pack products in the live Creem dashboard.
+- Make each live product name, price, and credit description match the selected pricing path exactly.
 - Create a live webhook for `https://video.cozyguidehub.com/api/creem/webhook`.
+- Use `checkout.completed` as the first successful-checkout webhook event if Creem offers it.
 - Copy the live API key, live product IDs, and live webhook signing secret.
 
 Render environment changes that need owner confirmation:

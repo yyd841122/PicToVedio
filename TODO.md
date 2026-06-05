@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-06-03
+Last updated: 2026-06-05
 
 ## Done
 
@@ -84,7 +84,8 @@ Last updated: 2026-06-03
 - [ ] Decide object storage provider.
 - [ ] Create Cloudflare R2 bucket and access keys.
 - [ ] Re-run or resolve the Supabase security advisor check and confirm the public-access warnings clear using `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
-- [ ] Keep Creem in test mode until real generation works.
+- [x] Keep Creem in test mode until Stage 1 real generation works.
+- [ ] Keep Creem in test mode until owner approves the controlled live-payment switch.
 - [x] Build the first SEO/GEO content layer around the homepage and templates.
 
 ## Next: P0
@@ -98,6 +99,8 @@ Last updated: 2026-06-03
 - [x] Revisit visible Creem package amounts before switching to live mode.
 - [ ] Edit Creem product descriptions and Render credit pack variables together before live mode.
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
+- [ ] Confirm actual Alibaba Cloud / DashScope bill cost for the four completed Stage 1 generations.
+- [ ] Choose live pricing path: `$9 / 40 credits` controlled-live path or `$9 / 100 credits` marketing path.
 - [ ] Run at least 20 real quality tests and track good vs distorted outputs in the analytics dashboard.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
