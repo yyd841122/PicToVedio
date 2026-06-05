@@ -115,6 +115,7 @@ Last updated: 2026-06-05
 - [x] Add conservative daily real-generation limits with `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER`.
 - [x] Return `429` without deducting credits when daily generation caps are reached.
 - [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
+- [x] Add private `/admin/ops` live-payment preflight checks for Auth, Creem, pricing, caps, and storage.
 - [ ] Switch Creem from test to live only after real generation succeeds.
 - [ ] Create a low-price live product for first live payment testing.
 - [x] Set the default anonymous starter balance to `STARTER_CREDITS=2`.

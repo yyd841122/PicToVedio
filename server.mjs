@@ -1208,6 +1208,17 @@ async function addOpsRuntimeConfig(data) {
     dataProvider: useSupabase() ? "supabase" : config.dataProvider,
     paymentProvider: config.paymentProvider,
     storageProvider: config.storageProvider,
+    authAvailable: canUseSupabaseAuth(),
+    checkoutRequiresLogin: canUseSupabaseAuth(),
+    creemTestMode: config.creemTestMode,
+    creemApiKeyConfigured: Boolean(config.creemApiKey),
+    creemCreatorProductConfigured: Boolean(config.creemCreatorProduct),
+    creemCommerceProductConfigured: Boolean(config.creemCommerceProduct),
+    creemWebhookConfigured: Boolean(config.creemWebhookSecret),
+    creatorPackCredits: config.creatorPackCredits,
+    commercePackCredits: config.commercePackCredits,
+    creatorPackPriceLabel: config.creatorPackPriceLabel,
+    commercePackPriceLabel: config.commercePackPriceLabel,
     maxDailyVideoJobs: config.maxDailyVideoJobs,
     maxDailyVideoJobsPerUser: config.maxDailyVideoJobsPerUser,
     maxUploadImageMb: config.maxUploadImageMb,
@@ -1215,7 +1226,70 @@ async function addOpsRuntimeConfig(data) {
     resetAt: nextUtcMidnightIso(),
     estimatedVideoCostCny: config.estimatedVideoCostCny,
   };
+  data.livePaymentPreflight = buildLivePaymentPreflight(data.runtime);
   return data;
+}
+
+function buildLivePaymentPreflight(runtime) {
+  const creemProductsConfigured = runtime.creemCreatorProductConfigured && runtime.creemCommerceProductConfigured;
+  const controlledCredits = runtime.creatorPackCredits === 40 && runtime.commercePackCredits === 160;
+  const marketingCredits = runtime.creatorPackCredits === 100 && runtime.commercePackCredits === 400;
+  const tightCaps = runtime.maxDailyVideoJobs <= 10 && runtime.maxDailyVideoJobsPerUser <= 2;
+
+  return [
+    {
+      label: "Email Login",
+      status: runtime.authAvailable ? "Ready" : "Missing",
+      tone: runtime.authAvailable ? "tone-success" : "tone-danger",
+      note: runtime.authAvailable ? "Magic-link login is configured." : "Add Supabase Auth public key before paid checkout.",
+    },
+    {
+      label: "Checkout Login Gate",
+      status: runtime.checkoutRequiresLogin ? "Active" : "Inactive",
+      tone: runtime.checkoutRequiresLogin ? "tone-success" : "tone-warning",
+      note: runtime.checkoutRequiresLogin ? "Anonymous checkout is blocked before paid sessions are created." : "Paid checkout can bind to browser-local accounts.",
+    },
+    {
+      label: "Payment Provider",
+      status: runtime.paymentProvider,
+      tone: runtime.paymentProvider === "creem" ? "tone-success" : "tone-warning",
+      note: runtime.paymentProvider === "creem" ? "Creem checkout path is selected." : "Set PAYMENT_PROVIDER=creem before a live payment test.",
+    },
+    {
+      label: "Creem Mode",
+      status: runtime.creemTestMode ? "Test mode" : "Live mode",
+      tone: runtime.creemTestMode ? "tone-info" : "tone-warning",
+      note: runtime.creemTestMode ? "Safe before owner approval; no live charges." : "Live charges are possible. Monitor payments and webhooks.",
+    },
+    {
+      label: "Creem Secrets And Products",
+      status: runtime.creemApiKeyConfigured && creemProductsConfigured && runtime.creemWebhookConfigured ? "Configured" : "Incomplete",
+      tone: runtime.creemApiKeyConfigured && creemProductsConfigured && runtime.creemWebhookConfigured ? "tone-success" : "tone-warning",
+      note: "Shows presence only; secret values are never displayed.",
+    },
+    {
+      label: "Credit Packs",
+      status: `${runtime.creatorPackPriceLabel}/${runtime.creatorPackCredits} + ${runtime.commercePackPriceLabel}/${runtime.commercePackCredits}`,
+      tone: controlledCredits ? "tone-success" : marketingCredits ? "tone-info" : "tone-warning",
+      note: controlledCredits
+        ? "Matches the recommended controlled-live path."
+        : marketingCredits
+          ? "Marketing path; align Creem descriptions before live mode."
+          : "Custom pack values; confirm site, Render, Creem, and webhook grants match.",
+    },
+    {
+      label: "Daily Spend Caps",
+      status: `${runtime.maxDailyVideoJobs} site / ${runtime.maxDailyVideoJobsPerUser} user`,
+      tone: tightCaps ? "tone-success" : "tone-warning",
+      note: tightCaps ? "Tight enough for the first live-payment test." : "Consider lowering caps before broader promotion.",
+    },
+    {
+      label: "Storage",
+      status: runtime.storageProvider,
+      tone: runtime.storageProvider === "r2" ? "tone-success" : "tone-info",
+      note: runtime.storageProvider === "r2" ? "Generated links can be made durable." : "Provider output links may expire; users should save outputs soon.",
+    },
+  ];
 }
 
 function summarizeOpsData(data) {
@@ -1908,6 +1982,12 @@ function renderOpsDashboard(data) {
       ${renderMetricCard("Download Note", data.runtime.storageProvider === "r2" ? "Long-term links" : "Save outputs soon", "Shown on the public generator")}
     </section>
 
+    <section class="section card">
+      <h2>Live Payment Preflight</h2>
+      <p>Configuration status for the first controlled live-payment test. Secret values are never shown.</p>
+      ${renderPreflightTable(data.livePaymentPreflight)}
+    </section>
+
     <section class="section grid columns">
       <div class="card">
         <h2>Job Status</h2>
@@ -2162,6 +2242,21 @@ function renderRiskSignal(signal) {
     <strong>${signal.count}</strong>
     <p>${escapeHtml(note)}</p>
   </div>`;
+}
+
+function renderPreflightTable(items) {
+  if (!items?.length) return `<div class="empty">No preflight data available.</div>`;
+  return `<table><thead><tr><th>Check</th><th>Status</th><th>Note</th></tr></thead><tbody>
+    ${items
+      .map(
+        (item) => `<tr>
+          <td>${escapeHtml(item.label || "")}</td>
+          <td><span class="badge ${escapeHtml(item.tone || "tone-neutral")}">${escapeHtml(item.status || "")}</span></td>
+          <td>${escapeHtml(item.note || "")}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
 }
 
 function renderRecentEventsTable(events) {

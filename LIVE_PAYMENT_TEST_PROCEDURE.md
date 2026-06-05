@@ -144,6 +144,7 @@ Before changing payment mode:
 - [ ] At least 5 real generation tests are recorded or the owner explicitly accepts the risk.
 - [ ] Failed-generation credit refund behavior has been reviewed.
 - [ ] Package credits and visible price labels are aligned with the intended live Creem products.
+- [ ] `/admin/ops` Live Payment Preflight has been reviewed and any intentional warnings are understood.
 - [ ] Support email is final.
 - [ ] The owner understands that AI outputs can be distorted and successful jobs are not automatically refunded for aesthetic imperfections.
 
