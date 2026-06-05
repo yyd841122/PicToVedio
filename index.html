@@ -227,6 +227,10 @@
         gap: 10px;
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       .button {
         border: 0;
         border-radius: 8px;
@@ -940,6 +944,15 @@
         font-weight: 700;
       }
 
+      .account-status {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.66);
+        font-size: 13px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
       .price-card {
         border-radius: 8px;
         border: 1px solid var(--line);
@@ -1211,8 +1224,22 @@
           width: min(100% - 24px, 1180px);
         }
 
+        .nav-inner {
+          gap: 10px;
+        }
+
         .nav-links {
           display: none;
+        }
+
+        .nav-actions {
+          gap: 8px;
+        }
+
+        .nav-actions .button {
+          min-height: 40px;
+          padding: 0 10px;
+          font-size: 14px;
         }
 
         .hero {
@@ -1286,6 +1313,8 @@
           </nav>
           <div class="nav-actions">
             <a class="button secondary" href="#tool">Try generator</a>
+            <a class="button secondary" id="loginNavLink" href="/login" hidden>Email Login</a>
+            <a class="button secondary" id="accountNavLink" href="/account" hidden>Account</a>
           </div>
         </div>
       </header>
@@ -1509,7 +1538,8 @@
                   <strong id="creditBalance">12 credits</strong>
                   <button class="mini-button" id="buyCreditsButton" type="button">Buy credits</button>
                 </div>
-                <a class="account-link" href="/account">View browser account</a>
+                <span class="account-status" id="accountStatusText">Browser account</span>
+                <a class="account-link" href="/account" id="accountPanelLink">View browser account</a>
               </div>
               <h3>Credit packs</h3>
               <div class="price-card">
@@ -1777,6 +1807,10 @@
         imageData: "",
         jobId: "",
         outputUrl: "",
+        authenticated: false,
+        authAvailable: false,
+        email: "",
+        accountUserId: "",
         plans: {
           creator: { credits: 100, label: "Creator Pack", price: "$9" },
           commerce: { credits: 400, label: "Commerce Pack", price: "$29" },
@@ -1812,6 +1846,10 @@
       const licenseHint = document.querySelector("#licenseHint");
       const queueList = document.querySelector("#queueList");
       const creditBalance = document.querySelector("#creditBalance");
+      const loginNavLink = document.querySelector("#loginNavLink");
+      const accountNavLink = document.querySelector("#accountNavLink");
+      const accountStatusText = document.querySelector("#accountStatusText");
+      const accountPanelLink = document.querySelector("#accountPanelLink");
       const checkoutModal = document.querySelector("#checkoutModal");
       const closeModalButton = document.querySelector("#closeModalButton");
       const checkoutChoice = document.querySelector("#checkoutChoice");
@@ -2188,11 +2226,43 @@
         updateEstimate();
       };
 
+      const updateAccountUi = () => {
+        const signedIn = state.authenticated && state.email;
+        if (loginNavLink) {
+          loginNavLink.hidden = signedIn || !state.authAvailable;
+        }
+        if (accountNavLink) {
+          accountNavLink.hidden = !state.authAvailable;
+          accountNavLink.textContent = signedIn ? "Account" : "Browser account";
+          accountNavLink.setAttribute(
+            "aria-label",
+            signedIn ? `View account for ${state.email}` : "View browser account"
+          );
+        }
+        if (accountStatusText) {
+          accountStatusText.textContent = signedIn
+            ? `Signed in as ${state.email}`
+            : state.authAvailable
+              ? "Browser account. Email login is available."
+              : "Browser account";
+        }
+        if (accountPanelLink) {
+          accountPanelLink.textContent = signedIn ? "View account and history" : "View browser account";
+        }
+      };
+
       const refreshAccount = async () => {
         if (!canUseBackend()) return;
         try {
           const response = await fetch("/api/account", { headers: apiHeaders() });
           const account = await response.json();
+          state.authenticated = Boolean(account.authenticated);
+          state.authAvailable = Boolean(account.authAvailable);
+          state.email = account.email || "";
+          state.accountUserId = account.userId || "";
+          if (state.accountUserId) {
+            localStorage.setItem("motionpic-user-id", state.accountUserId);
+          }
           if (typeof account.credits === "number") {
             state.balance = account.credits;
           }
@@ -2202,6 +2272,7 @@
           if (account.plans?.creator && account.plans?.commerce) {
             state.plans = account.plans;
           }
+          updateAccountUi();
           updateEstimate();
         } catch (error) {
           console.warn("Account refresh failed", error);
