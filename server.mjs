@@ -289,6 +289,7 @@ async function handleGetAccount(req, res) {
     credits: account.credits,
     recentCredits: account.recentCredits,
     recentJobs: account.recentJobs,
+    videoQuota: account.videoQuota,
     plans: packPlans(),
   });
 }
@@ -769,6 +770,7 @@ async function getAccount(userId) {
       credits: Number(users[0]?.credits || 0),
       recentCredits: ledger.map(ledgerRowToEntry),
       recentJobs: await getRecentUserJobs(userId, 5),
+      videoQuota: await getVideoGenerationQuota(userId),
     };
   }
 
@@ -784,6 +786,7 @@ async function getAccount(userId) {
       .filter((job) => job.userId === userId)
       .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")))
       .slice(0, 5),
+    videoQuota: await getVideoGenerationQuota(userId),
   };
 }
 
@@ -804,10 +807,11 @@ async function getRecentUserJobs(userId, limit = 5) {
 }
 
 async function getVideoGenerationQuota(userId) {
-  const resetAt = nextUtcMidnightIso();
+  const { start, end } = utcDayRange();
   if (config.videoProvider === "mock") {
     return {
-      resetAt,
+      startAt: start,
+      resetAt: end,
       global: { count: 0, limit: 0, remaining: 0, exceeded: false },
       user: { count: 0, limit: 0, remaining: 0, exceeded: false },
     };
@@ -819,7 +823,8 @@ async function getVideoGenerationQuota(userId) {
   ]);
 
   return {
-    resetAt,
+    startAt: start,
+    resetAt: end,
     global: quotaBucket(globalCount, config.maxDailyVideoJobs),
     user: quotaBucket(userCount, config.maxDailyVideoJobsPerUser),
   };
@@ -837,6 +842,7 @@ function quotaBucket(count, limit) {
 
 function quotaResponseFields(quota) {
   return {
+    startAt: quota.startAt,
     resetAt: quota.resetAt,
     globalLimit: quota.global.limit,
     globalRemaining: quota.global.remaining,

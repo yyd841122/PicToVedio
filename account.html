@@ -135,6 +135,33 @@
         line-height: 1;
       }
 
+      .quota-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .quota-item {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+        background: #fffefa;
+      }
+
+      .quota-item span {
+        color: var(--muted);
+        display: block;
+        font-size: 12px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .quota-item strong {
+        display: block;
+        font-size: 24px;
+        margin-top: 6px;
+      }
+
       .section {
         margin-top: 26px;
       }
@@ -204,6 +231,10 @@
           flex-direction: column;
           padding: 16px 0;
         }
+
+        .quota-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -243,6 +274,19 @@
             <a href="mailto:support@cozyguidehub.com?subject=MotionPic%20AI%20account%20support">support@cozyguidehub.com</a>
             with your Account ID and a short description. Do not send private photos unless support specifically asks for them.
           </p>
+        </section>
+
+        <section class="section card">
+          <h2>Daily Generation Safety Limit</h2>
+          <p>
+            This limit is separate from your credit balance. It protects provider spend and resets on the server's UTC-day window.
+          </p>
+          <div class="quota-grid" id="quotaGrid" aria-live="polite">
+            <div class="quota-item"><span>Your usage</span><strong id="quotaUser">...</strong></div>
+            <div class="quota-item"><span>Your remaining</span><strong id="quotaUserRemaining">...</strong></div>
+            <div class="quota-item"><span>Site remaining</span><strong id="quotaGlobalRemaining">...</strong></div>
+            <div class="quota-item"><span>Resets at</span><strong id="quotaReset">...</strong></div>
+          </div>
         </section>
 
         <section class="section card">
@@ -307,6 +351,10 @@
       const creditRows = document.querySelector("#creditRows");
       const jobRows = document.querySelector("#jobRows");
       const refreshButton = document.querySelector("#refreshButton");
+      const quotaUser = document.querySelector("#quotaUser");
+      const quotaUserRemaining = document.querySelector("#quotaUserRemaining");
+      const quotaGlobalRemaining = document.querySelector("#quotaGlobalRemaining");
+      const quotaReset = document.querySelector("#quotaReset");
 
       const escapeHtml = (value) =>
         String(value ?? "")
@@ -377,6 +425,28 @@
           .join("");
       };
 
+      const formatQuotaRemaining = (quota) => {
+        if (!quota || Number(quota.limit || 0) <= 0) return "Not active";
+        return `${quota.remaining ?? 0} / ${quota.limit}`;
+      };
+
+      const renderQuota = (quota) => {
+        if (!quota) {
+          quotaUser.textContent = "-";
+          quotaUserRemaining.textContent = "-";
+          quotaGlobalRemaining.textContent = "-";
+          quotaReset.textContent = "-";
+          return;
+        }
+
+        quotaUser.textContent = quota.user?.limit
+          ? `${quota.user.count ?? 0} / ${quota.user.limit}`
+          : "Not active";
+        quotaUserRemaining.textContent = formatQuotaRemaining(quota.user);
+        quotaGlobalRemaining.textContent = formatQuotaRemaining(quota.global);
+        quotaReset.textContent = formatDate(quota.resetAt);
+      };
+
       const refreshAccount = async () => {
         refreshButton.disabled = true;
         userIdNode.textContent = userId;
@@ -389,9 +459,11 @@
           creditBalance.textContent = `${account.credits ?? 0}`;
           renderCredits(account.recentCredits || []);
           renderJobs(account.recentJobs || []);
+          renderQuota(account.videoQuota);
         } catch (error) {
           creditRows.innerHTML = `<tr><td colspan="5" class="error">${escapeHtml(error.message)}</td></tr>`;
           jobRows.innerHTML = '<tr><td colspan="6" class="muted">Unable to load jobs.</td></tr>';
+          renderQuota(null);
         } finally {
           refreshButton.disabled = false;
         }
