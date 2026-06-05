@@ -98,8 +98,9 @@ Last updated: 2026-06-05
 - [x] Revise first-pass credit economics before charging real users.
 - [x] Revisit visible Creem package amounts before switching to live mode.
 - [ ] Edit Creem product descriptions and Render credit pack variables together before live mode.
-- [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
-- [ ] Confirm actual Alibaba Cloud / DashScope bill cost for the four completed Stage 1 generations.
+- [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
+- [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
+- [ ] Re-check `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations, 1080p tests, 8-second tests, or audio-on tests.
 - [ ] Choose live pricing path: `$9 / 40 credits` controlled-live path or `$9 / 100 credits` marketing path.
 - [ ] Run at least 20 real quality tests and track good vs distorted outputs in the analytics dashboard.
 - [ ] Store uploaded photos outside the browser and local JSON.

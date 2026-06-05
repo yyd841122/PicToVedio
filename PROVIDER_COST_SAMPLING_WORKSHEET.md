@@ -1,12 +1,14 @@
 # MotionPic AI Provider Cost Sampling Worksheet
 
-Last updated: 2026-06-03
+Last updated: 2026-06-05
 
 This worksheet defines how to record DashScope generation cost samples after the owner confirms real provider testing. It is a planning document only. Do not run real generations, spend API credits, inspect private provider bills, or change Render settings without confirmation.
 
 ## Purpose
 
 MotionPic AI needs a small but consistent cost sample before live payments. The goal is to compare real provider cost, credits charged, output quality, and refund behavior for the first priority templates.
+
+Current confirmed baseline: owner confirmed Alibaba Cloud / DashScope charges CNY 0.60 per 4-second 720p audio-off use. Continue sampling because higher quality, longer duration, audio-on jobs, retries, or provider changes may have different costs.
 
 Use this worksheet together with:
 
@@ -45,6 +47,7 @@ Copy this table into a spreadsheet or append rows below after owner-approved tes
 | Date | Job ID | Template | Duration | Quality | Aspect | Audio | Status | Credits charged | Credits refunded | Provider cost CNY | Output usable? | Notes |
 |---|---|---|---:|---|---|---|---|---:|---:|---:|---|---|
 | 2026-06-03 | example-only | Product Video Ad | 4s | 720p | 9:16 | Off | succeeded | 2 | 0 | 0.60 | yes | Example row only; replace after confirmed tests |
+| 2026-06-05 | owner-confirmed-baseline | Stage 1 core templates | 4s | 720p | 9:16 | Off | succeeded | 2 | 0 | 0.60 | yes | Owner confirmed billed unit cost is CNY 0.60 per use for the completed Stage 1 baseline. |
 
 Do not keep private source-photo URLs, signed output URLs, API request IDs, customer emails, or provider dashboard screenshots in this repo.
 

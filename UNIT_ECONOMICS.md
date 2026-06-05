@@ -9,16 +9,16 @@ The first real DashScope image-to-video tests show that cost is the main risk be
 | Setting | Provider Cost | Notes |
 | --- | ---: | --- |
 | 4s / 720p / audio on | about CNY 1.20 per generation | Too expensive for the current $9 / 100 credits package. |
-| 4s / 720p / audio off | about CNY 0.60 per generation | Better, but still needs careful credit pricing. |
+| 4s / 720p / audio off | CNY 0.60 per generation | Owner confirmed Alibaba Cloud / DashScope unit cost on 2026-06-05. |
 
-The four completed Stage 1 generations from 2026-06-04 still need an Alibaba Cloud / DashScope bill check. Treat CNY 0.60 as the current planning estimate until the owner confirms the actual billed cost for:
+The owner confirmed the Alibaba Cloud / DashScope billed unit cost is CNY 0.60 per use. Keep Render's `ESTIMATED_VIDEO_COST_CNY=0.6` unless later samples show a different average for:
 
 - Product Motion
 - Pet Motion
 - Old Photo Alive
 - Natural Portrait
 
-If the confirmed average differs materially from CNY 0.60, update both this document and Render's `ESTIMATED_VIDEO_COST_CNY` planning value.
+This is still an early sample. Re-check the average after more traffic, 1080p tests, 8-second tests, audio-on tests, or provider pricing changes.
 
 The current site package display is still:
 
@@ -87,15 +87,29 @@ Implemented first version:
 
 The backend recalculates this cost for every generation request. The browser can display the estimate, but the server does not trust a client-supplied `credits` value.
 
+## Pricing Path Comparison
+
+At CNY 0.60 per standard 4-second 720p generation and 2 credits per standard generation:
+
+| Path | Price | Credits | Standard Generations | Direct Provider Cost | Gross Before Fees | Launch Readiness |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Controlled live | US$9 | 40 | 20 | CNY 12.00 | about CNY 52.80 | Recommended first path |
+| Marketing offer | US$9 | 100 | 50 | CNY 30.00 | about CNY 34.80 | Use only if conversion needs a stronger offer |
+
+The controlled-live path is more profitable and more resilient. It leaves room for Creem/payment fees, failed-job edge cases, disliked outputs, support, provider price changes, and early traffic mistakes.
+
+The 100-credit marketing path may convert better because the offer feels larger, but it spends about 46% of gross $9 revenue on direct provider cost before payment fees and support. After a 10-15% payment/platform buffer and a 20% retry or disliked-output buffer, the margin can become uncomfortable.
+
+Recommendation: start live payments with US$9 / 40 credits and US$29 / 160 credits. If traffic is weak and checkout conversion looks price-sensitive, test a time-limited launch bonus later instead of permanently granting 100 credits for US$9.
+
 ## Recommended Live Packages
 
 Safer packages before live launch:
 
 | Package | Price | Credits | Approx 4s Preview Count at 2 Credits |
 | --- | ---: | ---: | ---: |
-| Starter | US$9 | 40 credits | 20 generations |
-| Creator | US$19 | 120 credits | 60 generations |
-| Commerce | US$49 | 400 credits | 200 generations |
+| Creator Pack | US$9 | 40 credits | 20 generations |
+| Commerce Pack | US$29 | 160 credits | 80 generations |
 
 Alternative if the visible "100 credits" offer is kept:
 
