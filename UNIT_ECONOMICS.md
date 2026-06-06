@@ -1,6 +1,6 @@
 # MotionPic AI Unit Economics
 
-Last updated: 2026-06-05
+Last updated: 2026-06-06
 
 ## Current Measured Cost
 
@@ -147,7 +147,7 @@ Do these before switching Creem to live mode:
 
 - Update visible package copy and backend credit costs together.
 - Either add object storage for uploaded images and generated videos, or clearly tell users to download generated outputs soon.
-- Keep anonymous device IDs working until a real login system is added later.
+- Keep browser-local account IDs working for free trials, but require email login before paid checkout when Supabase Auth is configured.
 - Decide refund policy for failed and disliked outputs.
 - Run at least 20 real test generations across portrait, product, pet, and old photo templates.
 - Record average cost, success rate, and user-acceptable quality rate.

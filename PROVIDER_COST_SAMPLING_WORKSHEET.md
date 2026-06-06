@@ -1,6 +1,6 @@
 # MotionPic AI Provider Cost Sampling Worksheet
 
-Last updated: 2026-06-05
+Last updated: 2026-06-06
 
 This worksheet defines how to record DashScope generation cost samples after the owner confirms real provider testing. It is a planning document only. Do not run real generations, spend API credits, inspect private provider bills, or change Render settings without confirmation.
 

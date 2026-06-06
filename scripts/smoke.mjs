@@ -36,6 +36,8 @@ server.stderr.on("data", (chunk) => {
 try {
   await waitForHealth(origin);
   await assertPublicPages(origin);
+  await assertSeoMetadata(origin);
+  await assertSupportAndLaunchCopy(origin);
   await assertAccountApi(origin);
   await assertCheckoutRequiresLogin(origin);
   await assertOpsPreflight(origin);
@@ -83,6 +85,15 @@ async function assertPublicPages(baseUrl) {
     "/privacy",
     "/terms",
     "/refund",
+    "/guides",
+    "/guides/best-photos-for-ai-video",
+    "/guides/reduce-ai-video-distortion",
+    "/guides/photo-to-video-cost",
+    "/templates/ai-kiss-video",
+    "/templates/product-video-ad",
+    "/templates/pet-animation",
+    "/templates/old-photo-alive",
+    "/launch-kit",
     "/robots.txt",
     "/sitemap.xml",
     "/llms.txt",
@@ -94,6 +105,54 @@ async function assertPublicPages(baseUrl) {
     const body = await response.text();
     assert(body.length > 100, `${path} should return content`);
   }
+}
+
+async function assertSeoMetadata(baseUrl) {
+  const home = await fetchText(baseUrl, "/");
+  assert(home.includes('<link rel="canonical" href="https://video.cozyguidehub.com/"'), "homepage should have canonical URL");
+  assert(home.includes('<meta name="robots" content="index, follow"'), "homepage should be indexable");
+  assert(home.includes('property="og:image"'), "homepage should include Open Graph image");
+  assert(home.includes('name="twitter:card"'), "homepage should include Twitter card");
+
+  const jsonLdBlocks = extractJsonLd(home);
+  assert(jsonLdBlocks.length >= 1, "homepage should include JSON-LD");
+  const graph = jsonLdBlocks.flatMap((block) => block["@graph"] || [block]);
+  const faq = graph.find((entry) => entry["@type"] === "FAQPage");
+  assert(faq, "homepage JSON-LD should include FAQPage");
+  assert((faq.mainEntity || []).length >= 7, "homepage FAQ JSON-LD should cover support/refund questions");
+
+  const sitemap = await fetchText(baseUrl, "/sitemap.xml");
+  [
+    "https://video.cozyguidehub.com/",
+    "https://video.cozyguidehub.com/templates/product-video-ad",
+    "https://video.cozyguidehub.com/guides/best-photos-for-ai-video",
+  ].forEach((url) => assert(sitemap.includes(url), `sitemap should include ${url}`));
+  ["/account", "/admin", ".md"].forEach((privatePath) => {
+    assert(!sitemap.includes(privatePath), `sitemap should not include ${privatePath}`);
+  });
+
+  const robots = await fetchText(baseUrl, "/robots.txt");
+  ["Disallow: /admin", "Disallow: /account", "Disallow: /*.md"].forEach((rule) => {
+    assert(robots.includes(rule), `robots.txt should include ${rule}`);
+  });
+}
+
+async function assertSupportAndLaunchCopy(baseUrl) {
+  const refund = await fetchText(baseUrl, "/refund");
+  assert(refund.includes("If a provider request fails technically"), "refund page should explain failed generation refunds");
+  assert(refund.includes("If a job succeeds but the result is aesthetically imperfect"), "refund page should explain imperfect successful outputs");
+  assert(refund.includes("MotionPic account ID"), "refund page should tell users to include the account ID");
+  assert(refund.includes("selected template"), "refund page should tell users to include the selected template");
+  assert(refund.includes("Do not send private photos unless support specifically asks"), "refund page should discourage private photo sharing");
+
+  const launchKit = await fetchText(baseUrl, "/launch-kit");
+  assert(launchKit.includes("Private launch helper"), "launch kit should identify itself as a private helper");
+  assert(launchKit.includes("Launch gates"), "launch kit should show launch gates");
+  assert(launchKit.includes("Owner only"), "launch kit should show owner-only guardrails");
+  assert(launchKit.includes("一张照片变 AI 短视频"), "launch kit should keep Xiaohongshu copy readable");
+  ["涓€", "鎴", "瀹", "�"].forEach((garbled) => {
+    assert(!launchKit.includes(garbled), `launch kit should not contain garbled text marker ${garbled}`);
+  });
 }
 
 async function assertAccountApi(baseUrl) {
@@ -128,8 +187,22 @@ async function assertOpsPreflight(baseUrl) {
   assert(response.ok, "/api/admin/ops should return 200 from localhost");
   assert(Array.isArray(ops.livePaymentPreflight), "ops should include livePaymentPreflight");
   assert(ops.livePaymentPreflight.length >= 8, "preflight should include all launch checks");
+  assert(Array.isArray(ops.ownerActionChecklist), "ops should include ownerActionChecklist");
+  assert(ops.ownerActionChecklist.length >= 6, "owner action queue should include high-risk gates");
   const creditPack = ops.livePaymentPreflight.find((item) => item.label === "Credit Packs");
   assert(creditPack?.status === "$9/40 + $29/160", "preflight should show controlled pack values");
+  const promotionGate = ops.ownerActionChecklist.find((item) => item.area === "Promotion");
+  assert(promotionGate?.status === "Do not publish", "ops should keep promotion publishing gated");
+}
+
+async function fetchText(baseUrl, path) {
+  const response = await fetch(`${baseUrl}${path}`);
+  assert(response.ok, `${path} should return 200`);
+  return await response.text();
+}
+
+function extractJsonLd(html) {
+  return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
 }
 
 async function assertInlineScriptsCompile() {

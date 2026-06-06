@@ -1,6 +1,6 @@
 # MotionPic AI Demo Asset Checklist
 
-Last updated: 2026-06-05
+Last updated: 2026-06-06
 
 Use this checklist to prepare screenshots and short demo clips for directories, Product Hunt, Xiaohongshu, TikTok, YouTube Shorts, and launch posts. This is a planning document only; it does not require real payments, live submissions, or external posting.
 
@@ -114,27 +114,30 @@ Title ideas:
 
 ```text
 一张照片变 AI 短视频，适合做内容和产品素材
-宠物照片动起来了，这种 AI 视频很容易传播
-产品图也能变广告视频，我做了一个小工具测试
-老照片动起来，适合做纪念视频
+宠物照片动起来了，这类 AI 视频很适合分享
+产品图也能变短视频广告？我做了一个小工具测试
+老照片动起来，适合做纪念短视频
 ```
 
 Post copy:
 
 ```text
-我在做一个 AI 照片转视频工具：MotionPic AI。
-它的流程很简单：
+我最近在做一个 AI 照片转视频工具：MotionPic AI。
+
+流程很简单：
 1. 上传一张照片
-2. 选择一个模板
+2. 选择一个视频模板
 3. 生成适合发布的短视频
 
-目前适合测试的场景：
-- 产品图变广告视频
-- 宠物照片动起来
-- 老照片做纪念视频
+目前比较适合测试的场景：
 - 人物照片变短视频
+- 宠物照片动起来
+- 产品图变广告视频
+- 老照片做纪念视频
 
-我觉得这个方向值得测试，因为用户不是为了“AI 很新”而来，而是想快速拿到一个能发布、能分享、能测试转化的视频素材。
+我觉得这个方向值得验证，因为用户不是为了“AI 很新”而来，而是想快速拿到一个能发布、能分享、能测试转化的视频素材。
+
+现在最想验证的是：大家更愿意为哪类模板付费？宠物、产品、情侣纪念，还是老照片？
 ```
 
 ## Submission Readiness

@@ -11,8 +11,10 @@ Public support email currently shown on the site: `support@cozyguidehub.com`.
 - Keep the reply factual and calm.
 - Ask for the browser account ID only when it is needed to identify credit or job records.
 - Ask for an order ID only for payment-related questions.
+- Ask whether a generation failed technically or completed with a poor-quality result before discussing credits.
 - Do not promise that AI outputs will be distortion-free.
 - Do not promise refunds for successful but aesthetically imperfect generations.
+- Do not ask users to email private photos unless an owner-approved review requires it.
 - Do not share internal provider costs, API keys, webhook payloads, or private dashboard screenshots.
 - Escalate anything involving live payments, legal complaints, privacy deletion, or suspected abuse to the owner before acting.
 
@@ -35,6 +37,7 @@ Please send us:
 - Your MotionPic account ID from the /account page
 - The approximate time of the generation
 - The template and settings you used
+- Whether the job showed a failed/error state or completed with an output
 
 We will check the job record and credit ledger. If the failed job did not refund credits automatically, we will review it and correct the credit balance where appropriate.
 
@@ -94,6 +97,33 @@ Please send:
 - A short description of what happened
 
 We will compare the payment record with the credit ledger and review the request according to the refund policy shown on the site.
+
+Thanks,
+MotionPic AI Support
+```
+
+## Login Or Account Access Issue
+
+Subject:
+
+```text
+MotionPic AI account access help
+```
+
+Reply:
+
+```text
+Hi,
+
+Thanks for reaching out. Email login helps keep credits, purchases, and generation history connected to your MotionPic account instead of only one browser.
+
+Please send:
+- The email address you used for login
+- Your MotionPic account ID from /account, if you can access it
+- Whether you changed browser, cleared storage, or used a different device
+- A short description of what you expected to see
+
+Please do not send passwords, private photos, payment card details, or screenshots that show private tokens.
 
 Thanks,
 MotionPic AI Support

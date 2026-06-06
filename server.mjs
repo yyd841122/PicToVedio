@@ -1227,6 +1227,7 @@ async function addOpsRuntimeConfig(data) {
     estimatedVideoCostCny: config.estimatedVideoCostCny,
   };
   data.livePaymentPreflight = buildLivePaymentPreflight(data.runtime);
+  data.ownerActionChecklist = buildOwnerActionChecklist(data.runtime);
   return data;
 }
 
@@ -1288,6 +1289,55 @@ function buildLivePaymentPreflight(runtime) {
       status: runtime.storageProvider,
       tone: runtime.storageProvider === "r2" ? "tone-success" : "tone-info",
       note: runtime.storageProvider === "r2" ? "Generated links can be made durable." : "Provider output links may expire; users should save outputs soon.",
+    },
+  ];
+}
+
+function buildOwnerActionChecklist(runtime) {
+  return [
+    {
+      area: "Supabase",
+      action: "Confirm the Advisor critical warnings are cleared after the security SQL.",
+      risk: "Dashboard-only verification; do not paste screenshots with secrets into the repo.",
+      status: "Owner check",
+      tone: "tone-info",
+    },
+    {
+      area: "Creem",
+      action: runtime.creemTestMode
+        ? "Keep test mode until live products, webhook, pricing, and rollback are reviewed."
+        : "Live mode appears selected. Watch payments, webhooks, and credit ledger immediately.",
+      risk: "Can affect real checkout and customer credits.",
+      status: runtime.creemTestMode ? "Waiting" : "Live risk",
+      tone: runtime.creemTestMode ? "tone-warning" : "tone-danger",
+    },
+    {
+      area: "Render",
+      action: "Change live payment, storage, or generation-cap environment variables only after confirmation.",
+      risk: "Can deploy new public behavior or change spending limits.",
+      status: "Owner approval",
+      tone: "tone-warning",
+    },
+    {
+      area: "DashScope",
+      action: "Run more real generation tests only when provider spend and test images are approved.",
+      risk: "Each real run spends provider balance and may use private media.",
+      status: "Owner approval",
+      tone: "tone-warning",
+    },
+    {
+      area: "Storage",
+      action: "Enable R2/OSS only after bucket, keys, public URL, and output-link test plan are reviewed.",
+      risk: "Can expose or break media delivery if configured incorrectly.",
+      status: runtime.storageProvider === "r2" ? "Review active" : "Deferred",
+      tone: runtime.storageProvider === "r2" ? "tone-warning" : "tone-info",
+    },
+    {
+      area: "Promotion",
+      action: "Submit search engines, directories, Product Hunt, Reddit, X, or Xiaohongshu only after launch gates pass.",
+      risk: "Creates public traffic, user expectations, or paid listing cost.",
+      status: "Do not publish",
+      tone: "tone-warning",
     },
   ];
 }
@@ -1988,6 +2038,12 @@ function renderOpsDashboard(data) {
       ${renderPreflightTable(data.livePaymentPreflight)}
     </section>
 
+    <section class="section card">
+      <h2>Owner Action Queue</h2>
+      <p>High-risk work that should stay manual until the owner confirms the exact step.</p>
+      ${renderOwnerActionTable(data.ownerActionChecklist)}
+    </section>
+
     <section class="section grid columns">
       <div class="card">
         <h2>Job Status</h2>
@@ -2253,6 +2309,22 @@ function renderPreflightTable(items) {
           <td>${escapeHtml(item.label || "")}</td>
           <td><span class="badge ${escapeHtml(item.tone || "tone-neutral")}">${escapeHtml(item.status || "")}</span></td>
           <td>${escapeHtml(item.note || "")}</td>
+        </tr>`
+      )
+      .join("")}
+  </tbody></table>`;
+}
+
+function renderOwnerActionTable(items) {
+  if (!items?.length) return `<div class="empty">No owner actions queued.</div>`;
+  return `<table><thead><tr><th>Area</th><th>Status</th><th>Next Action</th><th>Risk</th></tr></thead><tbody>
+    ${items
+      .map(
+        (item) => `<tr>
+          <td>${escapeHtml(item.area || "")}</td>
+          <td><span class="badge ${escapeHtml(item.tone || "tone-neutral")}">${escapeHtml(item.status || "")}</span></td>
+          <td>${escapeHtml(item.action || "")}</td>
+          <td>${escapeHtml(item.risk || "")}</td>
         </tr>`
       )
       .join("")}

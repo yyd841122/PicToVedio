@@ -1,6 +1,6 @@
 # MotionPic AI Live Readiness Review
 
-Last updated: 2026-06-03
+Last updated: 2026-06-06
 
 This review summarizes what is ready, what can still be checked locally, and what must wait for owner confirmation before MotionPic AI moves from a working public MVP toward real paid traffic.
 
@@ -19,6 +19,7 @@ Current state:
 - Private analytics and ops dashboards exist.
 - SEO/GEO foundation is in place.
 - Directory, search, demo asset, and launch checklists exist.
+- Email login is available, homepage account status is visible, and paid checkout requires login when Supabase Auth is configured.
 
 ## Ready Now
 
@@ -32,6 +33,7 @@ Low-risk/public readiness:
 - [x] Template and guide pages have canonical, H1, JSON-LD, Open Graph, and Twitter Card metadata.
 - [x] Legal pages have canonical, H1, WebPage JSON-LD, Open Graph, and Twitter Card metadata.
 - [x] Privacy, Terms, and Refund pages exist and are visible from the footer.
+- [x] Homepage FAQ and refund/support copy explain failed-generation refunds, imperfect successful outputs, and support-request details.
 - [x] Search submission, directory submission, SEO/GEO audit, and demo asset planning documents exist.
 - [x] Public SEO readiness check report exists in `reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md`.
 - [x] Owner UAT checklist exists in `OWNER_UAT_CHECKLIST.md`.
@@ -45,6 +47,7 @@ Product foundation:
 - [x] Real provider jobs have conservative daily caps before credit deduction.
 - [x] Generation API errors return user-friendly codes for low credits, unsuitable images, busy providers, and quota limits.
 - [x] Admin analytics and ops dashboards exist for review.
+- [x] Ops dashboard includes live-payment preflight and owner-only action queue.
 
 ## Can Be Checked Locally Or With Public GET Requests
 
@@ -59,6 +62,7 @@ These checks are low risk and do not require changing production settings:
 - [x] Internal root-relative links resolve to known routes.
 - [x] Public health endpoint still reports DashScope.
 - [x] `photo-to-video-hero.png` returns 200 for social preview images.
+- [x] Local smoke coverage checks public pages, SEO metadata, login-required checkout, ops preflight, refund copy, and launch-kit copy.
 
 ## Needs Owner Confirmation Or Access
 
@@ -71,6 +75,7 @@ These cannot be completed safely without account access, private tokens, screens
 - [ ] Confirm support email is final and monitored.
 - [ ] Confirm final brand name remains MotionPic AI.
 - [ ] Confirm whether Baidu submission matters for the first launch wave.
+- [ ] Confirm the support inbox is actively monitored before public paid traffic.
 
 ## Must Wait Before Public Paid Traffic
 
@@ -80,6 +85,7 @@ Generation and quality:
 - [ ] Confirm successful jobs create rows in `video_jobs`.
 - [ ] Confirm failed jobs refund credits.
 - [ ] Record average provider cost in `UNIT_ECONOMICS.md`.
+- [x] Current observed DashScope unit price is CNY 0.60 per 4s/720p use; update economics once the owner confirms bill details.
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
 - [x] Identify at least 3 acceptable demo outputs before public promotion.
 
@@ -88,6 +94,7 @@ Credits and pricing:
 - [ ] Confirm one 4-second 720p generation charges the intended credit amount.
 - [ ] Confirm Render has conservative `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER` values before broad promotion.
 - [ ] Align visible website package amounts, Render variables, Creem product descriptions, and webhook credit grants.
+- [x] Recommended controlled-live path is documented as `$9/40` and `$29/160` credits.
 - [ ] Keep enough margin after provider cost, payment fees, failed jobs, retries, and support.
 
 Storage:
@@ -119,6 +126,7 @@ Do not run broad public promotion until these are true:
 - [ ] Pricing and credit grants match across site, Creem, Render, and webhook logic.
 - [ ] Support email is final and monitored.
 - [ ] At least 3 acceptable demo clips or screenshots are ready.
+- [x] Stage 1 Good outputs are recorded as private candidate demos.
 - [x] Object storage is enabled or the site clearly tells users to download outputs.
 - [ ] Refund policy is visible and matches real operating behavior.
 
@@ -132,6 +140,8 @@ Low-risk tasks that can continue without touching private systems:
 - [x] Prepare a support-response template for failed or distorted generations.
 - [x] Prepare a storage setup review checklist based on `R2_SETUP_GUIDE.md`.
 - [x] Add public download-soon guidance while object storage remains deferred.
+- [x] Prepare guarded launch-kit copy and demo checklist without publishing.
+- [x] Improve smoke/readiness checks without touching production settings.
 
 ## High-Risk Tasks That Need Explicit Confirmation
 

@@ -1,6 +1,6 @@
 # MotionPic AI Owner UAT Checklist
 
-Last updated: 2026-06-03
+Last updated: 2026-06-06
 
 This checklist is for owner acceptance testing before MotionPic AI moves from a controlled MVP to real paid traffic. It separates low-risk public checks from tests that require private access, real generation cost, live payment, storage writes, or backend evidence.
 
@@ -22,6 +22,8 @@ These checks can be done in a normal browser without private tokens:
 
 - [ ] Homepage opens at `https://video.cozyguidehub.com/`.
 - [ ] Homepage explains upload, templates, credits, and generation clearly.
+- [x] Homepage shows signed-in email/account status when email login is active.
+- [x] Homepage offers login before paid checkout when no email session is present.
 - [ ] Template selection is understandable.
 - [ ] Upload guidance is visible before selecting a file.
 - [ ] Credit estimate changes with duration, quality, and high-risk templates.
@@ -50,6 +52,7 @@ Requires owner token or logged-in private session:
 - [x] Ops dashboard shows payments and webhook events.
 - [x] Ops dashboard shows credit ledger movements.
 - [x] Ops dashboard shows estimated provider cost and refund signals.
+- [x] Ops dashboard shows live-payment preflight and owner-only action queue.
 
 ## Database Security UAT
 
@@ -89,7 +92,7 @@ Requires owner confirmation and real payment readiness:
 - [ ] Render live Creem variables are set by the owner or authorized operator.
 - [ ] `CREEM_TEST_MODE=false` only after final confirmation.
 - [ ] Buyer is signed in with email before starting checkout.
-- [ ] Anonymous checkout redirects to login instead of creating a paid checkout.
+- [x] Anonymous checkout redirects to login instead of creating a paid checkout when Supabase Auth is configured.
 - [ ] One small live payment succeeds.
 - [ ] Buyer credits increase after checkout.
 - [ ] Credits persist after refresh.
@@ -118,6 +121,8 @@ Requires owner confirmation because it writes to object storage:
 - [ ] Public support email is final.
 - [ ] Support inbox is monitored.
 - [ ] Refund policy matches real operating behavior.
+- [x] Refund policy explains technical failures versus successful but imperfect AI outputs.
+- [x] Support templates include failed generation, distorted output, payment/credit, account/login, and demo feedback replies.
 - [ ] Support templates are acceptable for failed generations.
 - [ ] Support templates are acceptable for distorted but successful outputs.
 - [ ] Privacy wording is acceptable for uploaded photos and generated videos.
@@ -129,9 +134,11 @@ Do not start broad promotion until:
 
 - [ ] At least one live payment test passes, or owner explicitly chooses a free/test-only launch.
 - [ ] At least 3 demo outputs or screenshots are ready.
+- [x] Stage 1 Good outputs are recorded as private candidate demos before public publishing.
 - [ ] Demo assets do not expose private photos, private dashboards, or credentials.
 - [ ] Directory submission copy is reviewed.
 - [ ] Product Hunt or community posts are reviewed.
+- [x] Launch-kit copy and Xiaohongshu drafts are prepared but not published.
 - [ ] UTM links are ready.
 - [ ] Analytics is confirmed to capture launch traffic.
 
@@ -141,14 +148,14 @@ Use this section as a manual record. Do not include private IDs or secrets.
 
 | Area | Status | Owner note |
 |---|---|---|
-| Public site | In progress | Owner confirmed guide, template, privacy, terms, and refund pages display normally. |
+| Public site | In progress | Owner confirmed guide, template, privacy, terms, refund, homepage login status, and account pages display normally. |
 | Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
 | Database security | In progress | Owner ran the production security fix SQL successfully; waiting for Supabase Advisor warning confirmation. |
-| Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is about CNY 0.60, but output quality still needs tuning. |
+| Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
 | Payment | Pending | |
 | Storage | Pending | |
-| Support and policy | Pending | |
-| Promotion | Pending | |
+| Support and policy | In progress | Public refund/support wording is improved; owner still needs to confirm inbox monitoring and final policy comfort. |
+| Promotion | Drafted, not launched | Demo and launch copy are prepared for review only; no public posting or submission has been performed. |
 
 ## Stop Conditions
 

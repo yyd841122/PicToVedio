@@ -1,6 +1,6 @@
 # MotionPic AI Launch Checklist
 
-Last updated: 2026-06-03
+Last updated: 2026-06-06
 
 Use this checklist before moving from test mode to real public launch.
 
@@ -10,9 +10,11 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `/health` returns `{"ok":true,"provider":"dashscope"}`.
 - [x] Owner UAT checklist is prepared in `OWNER_UAT_CHECKLIST.md`.
 - [ ] Homepage loads without browser console errors.
+- [x] Homepage shows email-login/account status and routes anonymous checkout to login before paid checkout.
 - [x] Upload, generate, and checkout clicks are tracked in analytics.
 - [x] `/admin/analytics` requires the private analytics token.
 - [x] `/admin/ops` requires the same private analytics session.
+- [x] Local smoke test covers public pages, SEO metadata, login-required checkout, ops preflight, and launch-kit copy.
 
 ## 1A. Database Security
 
@@ -34,6 +36,7 @@ Use this checklist before moving from test mode to real public launch.
 ## 3. Credits And Pricing
 
 - [ ] Confirm one 4-second 720p generation charges the intended credit amount.
+- [x] Controlled-live pricing path is documented as `$9/40` and `$29/160` credits.
 - [ ] Update `CREATOR_PACK_CREDITS` and `COMMERCE_PACK_CREDITS` in Render before live payment.
 - [ ] Update Creem product descriptions so checkout text matches Render credit grants.
 - [ ] Keep enough gross margin after provider cost, Creem/payment fees, failed jobs, and support.
@@ -67,8 +70,10 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `/llms.txt` returns 200.
 - [x] `/indexnow-key.txt` returns 200.
 - [x] Homepage source contains title, description, canonical, Open Graph, Twitter Card, and JSON-LD.
+- [x] Homepage FAQ covers login, failed-generation refunds, support details, watermark, downloads, and commercial use.
 - [x] Create a search submission guide.
 - [x] Create a directory submission pack.
+- [x] Low-risk code and SEO review report exists in `reports/LOW_RISK_CODE_SEO_REVIEW_2026-06-06.md`.
 - [ ] After the latest deploy, click `IndexNow` in `/admin/analytics` and confirm the JSON response.
 - [ ] Submit `https://video.cozyguidehub.com/sitemap.xml` to Google Search Console.
 - [ ] Submit the same sitemap to Bing Webmaster Tools.
@@ -83,6 +88,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Guide pages explain photo quality, distortion reduction, and cost.
 - [x] Second-wave guide pages cover ecommerce, pet, and old-photo use cases.
 - [x] Privacy, Terms, and Refund pages are visible from the footer.
+- [x] Refund page explains failed technical jobs, imperfect successful outputs, and support-request details.
 - [ ] Support email is final and monitored.
 
 ## 8. First Promotion Wave
@@ -95,6 +101,8 @@ Use this checklist before moving from test mode to real public launch.
 - [ ] X/Twitter short launch thread.
 - [ ] Reddit post focused on lessons learned, not hard selling.
 - [ ] Xiaohongshu/TikTok/YouTube Shorts demo clip.
+- [x] Launch kit contains guarded copy blocks, UTM links, launch gates, and unpublished social drafts.
+- [x] Demo asset checklist records Stage 1 Good outputs as private candidate demos.
 
 ## 9. First Revenue Goal
 
