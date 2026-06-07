@@ -111,6 +111,7 @@ Payments:
 
 - [x] Controlled Creem test checkout uses the new MotionPic AI Creator Pack at `$9 / 40 credits`.
 - [x] Controlled test payment returned successfully and increased the signed-in balance by exactly 40 credits on 2026-06-07.
+- [x] Ops evidence confirms the matching test payment, `checkout.completed` webhook, and `+40 / creem-checkout` ledger entry.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.
 - [ ] Create live Commerce Pack product.

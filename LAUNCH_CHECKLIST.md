@@ -43,6 +43,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Creem test products and checkout text match the `40 / 160` Render credit grants.
 - [ ] Keep enough gross margin after provider cost, Creem/payment fees, failed jobs, and support.
 - [x] Final Creator Pack test payment succeeded on 2026-06-07 and increased the signed-in balance by exactly 40 credits after return/refresh.
+- [x] `/admin/ops` confirms the matching test payment, `checkout.completed` webhook, and `+40 / creem-checkout` ledger entry.
 
 ## 4. Creem Live Payment
 

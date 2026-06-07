@@ -22,13 +22,16 @@ The controlled Creator Pack test payment passed.
 - The new test product matched the selected controlled-live pricing.
 - Checkout returned to MotionPic AI successfully.
 - The account balance increased by exactly the configured 40 credits.
+- `/admin/ops` showed a matching `creem / creator / 40` payment record.
+- `/admin/ops` showed a matching Creem `checkout.completed` webhook.
+- `/admin/ops` showed a matching `+40 / creem-checkout` ledger entry and balance 61.
 
 ## Still Pending
 
-- Review `/admin/ops` for the matching test payment, webhook, and credit-ledger records.
 - Obtain Creem approval for MotionPic AI as a separate product category.
 - Configure live products, live webhook, and live Render variables only after approval.
 - Run one small live payment only after explicit owner confirmation.
+- Review one historical video job that remains in `processing` state; do not delete or alter it without a separate database review.
 
 No email address, order ID, card data, API key, webhook secret, or private payment identifier is stored in this report.
 
