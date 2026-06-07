@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import net from "node:net";
 import vm from "node:vm";
+import { parseTimestampMs } from "../lib/timestamps.mjs";
 
 const root = new URL("../", import.meta.url);
 const port = await findOpenPort();
@@ -40,6 +41,7 @@ try {
   await assertAnalyticsUrlPrivacy(origin);
   await assertCheckoutRequiresLogin(origin);
   await assertOpsPreflight(origin);
+  assertTimestampParsing();
   await assertInlineScriptsCompile();
   console.log("Smoke checks passed");
 } finally {
@@ -229,6 +231,18 @@ async function assertOpsPreflight(baseUrl) {
   assert(dailyCaps?.status === "10 site / 2 user", "preflight should show controlled daily caps");
   const promotionGate = ops.ownerActionChecklist.find((item) => item.area === "Promotion");
   assert(promotionGate?.status === "Do not publish", "ops should keep promotion publishing gated");
+}
+
+function assertTimestampParsing() {
+  const expected = Date.UTC(2026, 5, 4, 8, 47, 40, 123);
+  [
+    "2026-06-04T08:47:40.123456+00:00",
+    "2026-06-04 08:47:40.123456+00",
+    "2026-06-04T08:47:40.123456+00",
+  ].forEach((value) => {
+    assert(parseTimestampMs(value) === expected, `timestamp parser should support ${value}`);
+  });
+  assert(Number.isNaN(parseTimestampMs("")), "timestamp parser should reject empty values");
 }
 
 async function fetchText(baseUrl, path) {

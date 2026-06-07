@@ -3,6 +3,7 @@ import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeF
 import { createServer } from "node:http";
 import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseTimestampMs } from "./lib/timestamps.mjs";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 const dataDir = join(root, "data");
@@ -2502,14 +2503,14 @@ function statusTone(status) {
 
 function isStalePendingJob(job, now = Date.now()) {
   if (!["queued", "processing", "in_progress"].includes(job?.status)) return false;
-  const createdAt = Date.parse(job.createdAt || "");
-  return Number.isFinite(createdAt) && now - createdAt >= 30 * 60 * 1000;
+  const lastUpdatedAt = parseTimestampMs(job.updatedAt || job.createdAt);
+  return Number.isFinite(lastUpdatedAt) && now - lastUpdatedAt >= 30 * 60 * 1000;
 }
 
 function formatJobAge(job, now = Date.now()) {
-  const createdAt = Date.parse(job?.createdAt || "");
-  if (!Number.isFinite(createdAt)) return "Unknown age";
-  const totalMinutes = Math.max(0, Math.floor((now - createdAt) / 60000));
+  const lastUpdatedAt = parseTimestampMs(job?.updatedAt || job?.createdAt);
+  if (!Number.isFinite(lastUpdatedAt)) return "Unknown age";
+  const totalMinutes = Math.max(0, Math.floor((now - lastUpdatedAt) / 60000));
   if (totalMinutes < 60) return `${totalMinutes}m`;
   const totalHours = Math.floor(totalMinutes / 60);
   if (totalHours < 48) return `${totalHours}h`;
@@ -2578,7 +2579,8 @@ function formatPercent(value) {
 
 function formatDateTime(value) {
   if (!value) return "";
-  return new Date(value).toLocaleString("en-US", { hour12: false });
+  const timestamp = parseTimestampMs(value);
+  return Number.isFinite(timestamp) ? new Date(timestamp).toLocaleString("en-US", { hour12: false }) : "";
 }
 
 async function grantCredits({ userId, amount, source, externalId, plan, provider = "mock", eventId = "" }) {
@@ -3141,6 +3143,7 @@ function rowToJob(row) {
     outputUrl: row.output_url || "",
     inputUrl: row.input_url || "",
     error: row.error || "",
+    updatedAt: row.updated_at || "",
   };
 }
 
