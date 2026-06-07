@@ -22,7 +22,9 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Public `anon` and `authenticated` direct table grants were revoked in the project SQL.
 - [x] Row Level Security was enabled for MotionPic application tables.
 - [x] Supabase advisor confirmation guide exists in `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
-- [ ] Re-run Supabase Advisor or click Resolve Issue and confirm the critical public-access warnings disappear.
+- [x] Supabase Security Advisor was refreshed on 2026-06-07 and shows 0 errors; the prior critical public-access warnings are cleared.
+- [x] Six `RLS Enabled No Policy` info items are expected because browser roles have no direct core-table access and the server uses `service_role`.
+- [x] The remaining leaked-password-protection warning is accepted for the current passwordless Magic Link flow; enabling it requires Supabase Pro.
 
 ## 2. Video Generation
 

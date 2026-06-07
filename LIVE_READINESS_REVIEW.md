@@ -71,7 +71,8 @@ These cannot be completed safely without account access, private tokens, screens
 - [x] Confirm `/admin/analytics` requires the private analytics token in production.
 - [x] Confirm `/admin/ops` requires the private analytics token in production.
 - [x] Confirm upload, generation, checkout click, and checkout redirect events appear in analytics.
-- [ ] Confirm Supabase advisor warnings are cleared after `SUPABASE_SECURITY_FIX.sql`.
+- [x] Supabase Security Advisor shows 0 errors after `SUPABASE_SECURITY_FIX.sql` as of 2026-06-07.
+- [x] Six `RLS Enabled No Policy` info items are intentional for server-only core tables.
 - [ ] Confirm support email is final and monitored.
 - [ ] Confirm final brand name remains MotionPic AI.
 - [ ] Confirm whether Baidu submission matters for the first launch wave.

@@ -22,7 +22,7 @@ This report records the low-risk review pass completed before owner-approved liv
 
 ## Remaining Owner Gates
 
-- Confirm Supabase Advisor warnings are cleared.
+- Supabase Advisor follow-up completed on 2026-06-07: 0 errors. The remaining password-protection warning is accepted for the current passwordless Magic Link flow, and the six `RLS Enabled No Policy` info items are intentional.
 - Confirm support inbox monitoring.
 - Confirm live pricing path and Creem live product copy.
 - Confirm Render live-payment variables before deploy.
@@ -35,4 +35,3 @@ This report records the low-risk review pass completed before owner-approved liv
 
 - `npm test` passed locally.
 - `npm run readiness` ran locally and printed no secret values.
-

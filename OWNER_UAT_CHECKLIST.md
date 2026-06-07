@@ -58,7 +58,8 @@ Requires owner token or logged-in private session:
 
 - [x] Supabase security fix SQL ran successfully in the production SQL Editor.
 - [x] Application SQL no longer disables RLS or grants direct public table access.
-- [ ] Supabase Advisor no longer shows critical `rls_disabled_in_public` or `sensitive_columns_exposed` warnings.
+- [x] Supabase Advisor shows 0 errors and no critical `rls_disabled_in_public` or `sensitive_columns_exposed` warnings as of 2026-06-07.
+- [x] `RLS Enabled No Policy` info items are intentionally retained for server-only core tables.
 
 ## Real Generation UAT
 
@@ -150,7 +151,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 |---|---|---|
 | Public site | In progress | Owner confirmed guide, template, privacy, terms, refund, homepage login status, and account pages display normally. |
 | Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
-| Database security | In progress | Owner ran the production security fix SQL successfully; waiting for Supabase Advisor warning confirmation. |
+| Database security | Passed for current architecture | Owner confirmed 0 Advisor errors on 2026-06-07. Core tables intentionally have RLS with no browser-role policies; server access uses `service_role`. |
 | Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
 | Payment | Pending | |
 | Storage | Pending | |
