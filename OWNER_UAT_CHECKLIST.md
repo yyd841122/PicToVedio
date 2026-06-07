@@ -92,6 +92,8 @@ Requires owner confirmation and real payment readiness:
 - [x] Test-mode Supabase payment record shows `creem / creator / 40`.
 - [x] Test-mode webhook record shows `checkout.completed`.
 - [x] Test-mode credit ledger shows `+40 / creem-checkout` and balance 61.
+- [x] MotionPic AI category pre-review request was sent to Creem on 2026-06-07.
+- [ ] Creem confirms in writing that MotionPic AI is eligible for live mode.
 - [ ] Creem live store is verified.
 - [ ] Live products match visible site package names.
 - [ ] Live product prices match site copy.
@@ -160,7 +162,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 | Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
 | Database security | Passed for current architecture | Owner confirmed 0 Advisor errors on 2026-06-07. Core tables intentionally have RLS with no browser-role policies; server access uses `service_role`. |
 | Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
-| Payment | Test mode passed | Creator Pack test checkout succeeded on 2026-06-07; payment, webhook, ledger, and 21-to-61 balance evidence all match. Live approval and live payment remain pending. |
+| Payment | Test mode passed; pre-review pending | Creator Pack test evidence matches. MotionPic AI category pre-review was sent to Creem on 2026-06-07; live configuration remains frozen pending written approval. |
 | Storage | Pending | |
 | Support and policy | In progress | Public refund/support wording is improved; owner still needs to confirm inbox monitoring and final policy comfort. |
 | Promotion | Drafted, not launched | Demo and launch copy are prepared for review only; no public posting or submission has been performed. |

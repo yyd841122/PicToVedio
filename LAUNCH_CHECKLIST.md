@@ -47,6 +47,8 @@ Use this checklist before moving from test mode to real public launch.
 
 ## 4. Creem Live Payment
 
+- [x] Sent MotionPic AI category pre-review request to Creem on 2026-06-07.
+- [ ] Receive written confirmation that MotionPic AI is eligible for Creem live mode.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.
 - [ ] Create live Commerce Pack product.
