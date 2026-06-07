@@ -98,6 +98,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] `support@cozyguidehub.com` test message was received through Cloudflare Email Routing in the monitored Gmail inbox on 2026-06-07.
 - [x] Resend verified `cozyguidehub.com` for outbound email, and Gmail sent a successful test as `MotionPic AI Support <support@cozyguidehub.com>`.
 - [x] Gmail is configured to reply from the same address that received the message.
+- [x] Public inbound MX, DKIM, return-path MX, SPF, and DMARC records pass `npm run email:dns`.
 
 ## 8. First Promotion Wave
 

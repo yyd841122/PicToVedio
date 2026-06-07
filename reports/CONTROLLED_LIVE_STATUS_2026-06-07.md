@@ -25,6 +25,7 @@ No live payment, provider-spend test, object-storage write, search submission, o
 - A test message to `support@cozyguidehub.com` reached the monitored Gmail destination through Cloudflare Email Routing.
 - Resend verified `cozyguidehub.com`, and an outbound test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`.
 - Gmail is configured to reply from the same address that received the message.
+- Public Cloudflare inbound MX, Resend DKIM, return-path MX, SPF, and DMARC records are verified.
 - The historical processing job received a read-only review and stale diagnostics without provider calls or database changes.
 
 ## Pending External Decision

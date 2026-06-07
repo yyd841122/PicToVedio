@@ -132,6 +132,7 @@ Requires owner confirmation because it writes to object storage:
 - [x] A test message reached the monitored Gmail destination through Cloudflare Email Routing on 2026-06-07.
 - [x] A Resend SMTP test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`.
 - [x] Gmail is set to reply using the same address that received the message.
+- [x] Public inbound MX, DKIM, return-path MX, SPF, and DMARC records are verified.
 - [ ] Refund policy matches real operating behavior.
 - [x] Refund policy explains technical failures versus successful but imperfect AI outputs.
 - [x] Support templates include failed generation, distorted output, payment/credit, account/login, and demo feedback replies.

@@ -80,6 +80,14 @@ npm run readiness
 
 This reads local `.env` and process environment values, then reports low-risk readiness, warnings, blockers, and owner-required work without printing API keys, product IDs, webhook secrets, or tokens. It is a local planning aid only; Render, Supabase, Creem, and search-console actions still require owner confirmation.
 
+Run the public support-email DNS check:
+
+```bash
+npm run email:dns
+```
+
+This verifies the public Cloudflare inbound MX, Resend DKIM, return-path MX, SPF, and DMARC records without reading or printing private credentials.
+
 ## Environment Variables
 
 Required for Creem test checkout:
@@ -339,6 +347,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [reports/OWNER_UAT_FEEDBACK_2026-06-03.md](./reports/OWNER_UAT_FEEDBACK_2026-06-03.md): owner-reported UAT results for admin protection and public page display.
 - [reports/GENERATION_STAGE1_RESULTS_2026-06-04.md](./reports/GENERATION_STAGE1_RESULTS_2026-06-04.md): owner-reported Stage 1 generation smoke-test results and quota-blocked pet test note.
 - [reports/CONTROLLED_LIVE_STATUS_2026-06-07.md](./reports/CONTROLLED_LIVE_STATUS_2026-06-07.md): current controlled-live evidence, remaining gates, and actions that still require owner approval.
+- [reports/EMAIL_OPERATIONS_CHECK_2026-06-07.md](./reports/EMAIL_OPERATIONS_CHECK_2026-06-07.md): support inbox, outbound sender, and public email-DNS verification record.
 
 ## Search Discovery Helpers
 

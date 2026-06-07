@@ -6,7 +6,7 @@ These templates help answer early support messages about failed generations, dis
 
 Public support email currently shown on the site: `support@cozyguidehub.com`.
 
-The receive path was tested successfully through Cloudflare Email Routing to Gmail on 2026-06-07. The domain was also verified in Resend, an outbound test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`, and Gmail was configured to reply from the same address that received the message.
+The receive path was tested successfully through Cloudflare Email Routing to Gmail on 2026-06-07. The domain was also verified in Resend, an outbound test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`, and Gmail was configured to reply from the same address that received the message. Public DKIM, SPF, return-path MX, and DMARC records were also verified.
 
 Keep the Resend SMTP/API credential private. It belongs only in the mail-client SMTP configuration or another approved secret store, never in the repository, screenshots, support replies, or chat.
 
