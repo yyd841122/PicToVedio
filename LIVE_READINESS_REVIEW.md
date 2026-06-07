@@ -76,7 +76,8 @@ These cannot be completed safely without account access, private tokens, screens
 - [x] Confirm `support@cozyguidehub.com` receives mail in the monitored Gmail destination through Cloudflare Email Routing.
 - [ ] Confirm final brand name remains MotionPic AI.
 - [ ] Confirm whether Baidu submission matters for the first launch wave.
-- [ ] Confirm the outbound support reply identity before public paid traffic if the operator's personal Gmail address should remain private.
+- [x] Confirm outbound support mail reaches an external mailbox as `support@cozyguidehub.com` through verified Resend SMTP.
+- [x] Configure Gmail to reply from the same address that received the message.
 
 ## Must Wait Before Public Paid Traffic
 
@@ -131,7 +132,7 @@ Do not run broad public promotion until these are true:
 - [ ] Live payment has been tested once.
 - [ ] Pricing and credit grants match across site, Creem, Render, and webhook logic.
 - [x] Support receive path is tested and monitored.
-- [ ] Outbound replies use an approved sender identity.
+- [x] Outbound replies use the approved `support@cozyguidehub.com` sender identity.
 - [ ] At least 3 acceptable demo clips or screenshots are ready.
 - [x] Stage 1 Good outputs are recorded as private candidate demos.
 - [x] Object storage is enabled or the site clearly tells users to download outputs.

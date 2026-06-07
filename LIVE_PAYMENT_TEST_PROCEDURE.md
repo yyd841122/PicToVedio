@@ -157,7 +157,8 @@ Before changing payment mode:
 - [x] Package credits and visible price labels are aligned with the current Creem test products.
 - [x] `/admin/ops` Live Payment Preflight has been reviewed and its intentional warnings are understood.
 - [x] `support@cozyguidehub.com` test mail was received in the monitored Gmail destination.
-- [ ] Outbound support reply identity is approved.
+- [x] Outbound support mail was delivered externally as `MotionPic AI Support <support@cozyguidehub.com>`.
+- [x] Gmail replies from the same address that received the message.
 - [ ] The owner understands that AI outputs can be distorted and successful jobs are not automatically refunded for aesthetic imperfections.
 
 ## Controlled Live Payment Steps

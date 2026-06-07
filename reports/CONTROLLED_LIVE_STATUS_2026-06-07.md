@@ -23,6 +23,8 @@ No live payment, provider-spend test, object-storage write, search submission, o
 - Email login is active and anonymous paid checkout is gated.
 - Public refund/support wording distinguishes technical failures from successful but aesthetically imperfect AI outputs.
 - A test message to `support@cozyguidehub.com` reached the monitored Gmail destination through Cloudflare Email Routing.
+- Resend verified `cozyguidehub.com`, and an outbound test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`.
+- Gmail is configured to reply from the same address that received the message.
 - The historical processing job received a read-only review and stale diagnostics without provider calls or database changes.
 
 ## Pending External Decision
@@ -33,7 +35,6 @@ Do not create or configure live Creem products, live webhooks, live keys, or a r
 
 ## Pending Owner Confirmation
 
-- Confirm the preferred outbound support reply identity if replies should not expose the operator's personal Gmail address.
 - Confirm the final brand remains MotionPic AI.
 - Confirm whether and when object storage should move from deferred to Cloudflare R2 or Alibaba Cloud OSS.
 - Confirm a budget before the 20-generation quality matrix or any additional real DashScope tests.
@@ -63,7 +64,6 @@ Do not create or configure live Creem products, live webhooks, live keys, or a r
 The next commercial step begins when Creem replies in writing. At that point:
 
 1. Review the exact approval and any restrictions.
-2. Confirm the outbound support reply identity.
-3. Review live product names, prices, descriptions, and credit grants.
-4. Create the live webhook and Render variable plan without exposing secrets.
-5. Ask for explicit owner approval immediately before the live cutover and real payment.
+2. Review live product names, prices, descriptions, and credit grants.
+3. Create the live webhook and Render variable plan without exposing secrets.
+4. Ask for explicit owner approval immediately before the live cutover and real payment.

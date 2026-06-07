@@ -96,7 +96,8 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Privacy, Terms, and Refund pages are visible from the footer.
 - [x] Refund page explains failed technical jobs, imperfect successful outputs, and support-request details.
 - [x] `support@cozyguidehub.com` test message was received through Cloudflare Email Routing in the monitored Gmail inbox on 2026-06-07.
-- [ ] Configure or approve the outbound reply identity if support replies should hide the operator's personal Gmail address.
+- [x] Resend verified `cozyguidehub.com` for outbound email, and Gmail sent a successful test as `MotionPic AI Support <support@cozyguidehub.com>`.
+- [x] Gmail is configured to reply from the same address that received the message.
 
 ## 8. First Promotion Wave
 
