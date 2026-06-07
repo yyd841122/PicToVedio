@@ -50,4 +50,4 @@ Any reconciliation or refund would modify production data and requires separate 
 
 `/admin/ops` now marks queued or processing jobs older than 30 minutes as `Stale processing`, displays their age, and explains that the notice is read-only. It does not call DashScope or alter production records.
 
-Follow-up verification initially showed `1 pending / 0 stale`. The diagnostic now uses the job's `updated_at` timestamp, falling back to `created_at`, and normalizes PostgreSQL/Supabase timestamps with microseconds or a `+00` timezone suffix before calculating age. The production parser is covered by local smoke tests for these timestamp formats.
+Follow-up verification initially showed `1 pending / 0 stale`. The diagnostic now uses the immutable job `created_at` timestamp rather than `updated_at`, because historical polling or save operations may refresh `updated_at` while the job remains unresolved. PostgreSQL/Supabase timestamps with microseconds or a `+00` timezone suffix are normalized before calculating age. The production parser is covered by local smoke tests for these timestamp formats.

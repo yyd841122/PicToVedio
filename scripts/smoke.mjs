@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import net from "node:net";
 import vm from "node:vm";
+import { formatJobAge, isStalePendingJob } from "../lib/job-status.mjs";
 import { parseTimestampMs } from "../lib/timestamps.mjs";
 
 const root = new URL("../", import.meta.url);
@@ -42,6 +43,7 @@ try {
   await assertCheckoutRequiresLogin(origin);
   await assertOpsPreflight(origin);
   assertTimestampParsing();
+  assertStaleJobDetection();
   await assertInlineScriptsCompile();
   console.log("Smoke checks passed");
 } finally {
@@ -243,6 +245,16 @@ function assertTimestampParsing() {
     assert(parseTimestampMs(value) === expected, `timestamp parser should support ${value}`);
   });
   assert(Number.isNaN(parseTimestampMs("")), "timestamp parser should reject empty values");
+}
+
+function assertStaleJobDetection() {
+  const now = Date.UTC(2026, 5, 7, 8, 0, 1);
+  const oldJob = { status: "processing", createdAt: "2026-06-04T08:00:00.123456+00" };
+  const freshJob = { status: "processing", createdAt: "2026-06-07T07:45:00+00" };
+  assert(isStalePendingJob(oldJob, now), "three-day processing job should be stale");
+  assert(formatJobAge(oldJob, now) === "3d", "three-day processing job should display 3d age");
+  assert(!isStalePendingJob(freshJob, now), "15-minute processing job should not be stale");
+  assert(!isStalePendingJob({ ...oldJob, status: "succeeded" }, now), "succeeded job should not be stale");
 }
 
 async function fetchText(baseUrl, path) {

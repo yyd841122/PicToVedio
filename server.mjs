@@ -3,6 +3,7 @@ import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeF
 import { createServer } from "node:http";
 import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { formatJobAge, isStalePendingJob } from "./lib/job-status.mjs";
 import { parseTimestampMs } from "./lib/timestamps.mjs";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
@@ -2499,22 +2500,6 @@ function statusTone(status) {
   if (status === "failed") return "tone-danger";
   if (["queued", "processing", "in_progress"].includes(status)) return "tone-info";
   return "tone-neutral";
-}
-
-function isStalePendingJob(job, now = Date.now()) {
-  if (!["queued", "processing", "in_progress"].includes(job?.status)) return false;
-  const lastUpdatedAt = parseTimestampMs(job.updatedAt || job.createdAt);
-  return Number.isFinite(lastUpdatedAt) && now - lastUpdatedAt >= 30 * 60 * 1000;
-}
-
-function formatJobAge(job, now = Date.now()) {
-  const lastUpdatedAt = parseTimestampMs(job?.updatedAt || job?.createdAt);
-  if (!Number.isFinite(lastUpdatedAt)) return "Unknown age";
-  const totalMinutes = Math.max(0, Math.floor((now - lastUpdatedAt) / 60000));
-  if (totalMinutes < 60) return `${totalMinutes}m`;
-  const totalHours = Math.floor(totalMinutes / 60);
-  if (totalHours < 48) return `${totalHours}h`;
-  return `${Math.floor(totalHours / 24)}d`;
 }
 
 function estimateJobProviderCostCny(job) {
