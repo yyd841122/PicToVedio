@@ -39,10 +39,10 @@ Use this checklist before moving from test mode to real public launch.
 
 - [ ] Confirm one 4-second 720p generation charges the intended credit amount.
 - [x] Controlled-live pricing path is documented as `$9/40` and `$29/160` credits.
-- [ ] Update `CREATOR_PACK_CREDITS` and `COMMERCE_PACK_CREDITS` in Render before live payment.
-- [ ] Update Creem product descriptions so checkout text matches Render credit grants.
+- [x] Render test configuration uses `40 / 160` credits and `10 / 2` daily generation caps.
+- [x] Creem test products and checkout text match the `40 / 160` Render credit grants.
 - [ ] Keep enough gross margin after provider cost, Creem/payment fees, failed jobs, and support.
-- [ ] Do one final Creem test payment and confirm credits persist after refresh.
+- [x] Final Creator Pack test payment succeeded on 2026-06-07 and increased the signed-in balance by exactly 40 credits after return/refresh.
 
 ## 4. Creem Live Payment
 

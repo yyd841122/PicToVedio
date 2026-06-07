@@ -85,6 +85,10 @@ Requires explicit owner approval because it may spend provider credits:
 
 Requires owner confirmation and real payment readiness:
 
+- [x] Test-mode Creator Pack checkout shows `$9 / 40 credits`.
+- [x] Test-mode payment succeeds without a real charge.
+- [x] Test-mode payment increases the signed-in balance by exactly 40 credits.
+- [x] Test-mode credits remain visible after returning to the site and refreshing.
 - [ ] Creem live store is verified.
 - [ ] Live products match visible site package names.
 - [ ] Live product prices match site copy.
@@ -153,7 +157,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 | Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
 | Database security | Passed for current architecture | Owner confirmed 0 Advisor errors on 2026-06-07. Core tables intentionally have RLS with no browser-role policies; server access uses `service_role`. |
 | Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
-| Payment | Pending | |
+| Payment | Test mode passed | Creator Pack test checkout succeeded on 2026-06-07 and increased the signed-in balance from 21 to 61 credits. Live approval and live payment remain pending. |
 | Storage | Pending | |
 | Support and policy | In progress | Public refund/support wording is improved; owner still needs to confirm inbox monitoring and final policy comfort. |
 | Promotion | Drafted, not launched | Demo and launch copy are prepared for review only; no public posting or submission has been performed. |

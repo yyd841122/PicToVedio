@@ -65,6 +65,17 @@ This is acceptable only if you intentionally want the stronger "100 credits" off
 
 Do not create a Creem product that says one credit amount while Render grants another.
 
+## Test-Mode Evidence
+
+Completed on 2026-06-07:
+
+- MotionPic AI Creator Pack checkout displayed `$9 / 40 credits`.
+- Creem clearly displayed Test Mode and processed no real transaction.
+- The signed-in MotionPic balance increased from 21 to 61 credits after return and refresh.
+- No real payment, live key, live product, or live webhook was used.
+
+Private email, order, card, and payment identifiers are intentionally excluded from this record.
+
 ## Creem Live Setup Checklist
 
 Owner steps in Creem:
