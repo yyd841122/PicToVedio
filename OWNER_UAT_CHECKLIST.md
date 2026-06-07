@@ -1,6 +1,6 @@
 # MotionPic AI Owner UAT Checklist
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 
 This checklist is for owner acceptance testing before MotionPic AI moves from a controlled MVP to real paid traffic. It separates low-risk public checks from tests that require private access, real generation cost, live payment, storage writes, or backend evidence.
 
@@ -20,21 +20,21 @@ Do not paste API keys, live product IDs, webhook secrets, full receipts, private
 
 These checks can be done in a normal browser without private tokens:
 
-- [ ] Homepage opens at `https://video.cozyguidehub.com/`.
-- [ ] Homepage explains upload, templates, credits, and generation clearly.
+- [x] Homepage opens at `https://video.cozyguidehub.com/`.
+- [x] Homepage explains upload, templates, credits, and generation clearly.
 - [x] Homepage shows signed-in email/account status when email login is active.
 - [x] Homepage offers login before paid checkout when no email session is present.
-- [ ] Template selection is understandable.
-- [ ] Upload guidance is visible before selecting a file.
-- [ ] Credit estimate changes with duration, quality, and high-risk templates.
+- [x] Template selection is visible and understandable in owner UAT screenshots.
+- [x] Upload guidance is visible before selecting a file.
+- [x] Credit estimate reflects duration, quality, and higher-risk template choices.
 - [x] `/guides` opens and links to all guide pages.
 - [x] Template pages open and their CTAs return to the generator.
 - [x] Privacy, Terms, and Refund pages are visible from the footer.
-- [ ] `/robots.txt` opens.
-- [ ] `/sitemap.xml` opens.
-- [ ] `/llms.txt` opens.
-- [ ] `/indexnow-key.txt` opens.
-- [ ] `/health` returns `{"ok":true,"provider":"dashscope"}`.
+- [x] `/robots.txt` opens.
+- [x] `/sitemap.xml` opens.
+- [x] `/llms.txt` opens.
+- [x] `/indexnow-key.txt` opens.
+- [x] `/health` reports `ok=true`, `provider=dashscope`, build id, and server time.
 
 ## Private Dashboard UAT
 
@@ -75,10 +75,10 @@ Requires explicit owner approval because it may spend provider credits:
 - [x] Old Photo template succeeds or failure is recorded.
 - [x] Portrait / natural motion template succeeds or failure is recorded.
 - [ ] Failed jobs refund credits.
-- [ ] Successful jobs appear in `video_jobs`.
+- [x] Successful jobs appear in `video_jobs` and `/admin/ops`.
 - [x] Output URL opens after completion.
 - [x] At least 3 outputs are good enough for demo use before public promotion.
-- [ ] Provider cost is recorded in `PROVIDER_COST_SAMPLING_WORKSHEET.md` or `UNIT_ECONOMICS.md`.
+- [x] Provider unit cost is recorded as CNY 0.60 in `UNIT_ECONOMICS.md`.
 - [ ] The 20-generation promotion-readiness matrix in `GENERATION_TEST_PLAN.md` is completed before broad promotion.
 
 ## Payment UAT
@@ -149,8 +149,8 @@ Do not start broad promotion until:
 - [ ] Directory submission copy is reviewed.
 - [ ] Product Hunt or community posts are reviewed.
 - [x] Launch-kit copy and Xiaohongshu drafts are prepared but not published.
-- [ ] UTM links are ready.
-- [ ] Analytics is confirmed to capture launch traffic.
+- [x] UTM links are prepared in `/launch-kit`.
+- [x] Analytics is confirmed to capture current direct traffic and product actions.
 
 ## Owner Acceptance Sign-Off
 

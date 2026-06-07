@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 
 ## Done
 
@@ -89,7 +89,7 @@ Last updated: 2026-06-06
 - [x] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
 - [ ] Create Cloudflare R2 bucket and access keys.
-- [ ] Re-run or resolve the Supabase security advisor check and confirm the public-access warnings clear using `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
+- [x] Re-run the Supabase Security Advisor and confirm 0 errors; retain the intentional server-only `RLS Enabled No Policy` info items.
 - [x] Keep Creem in test mode until Stage 1 real generation works.
 - [ ] Keep Creem in test mode until owner approves the controlled live-payment switch.
 - [x] Decide launch access policy: open browsing/upload with low starter credits, require email login before paid checkout, and keep larger promotion gated on live-payment readiness.
@@ -104,7 +104,8 @@ Last updated: 2026-06-06
 - [x] Run one real DashScope image-to-video test.
 - [x] Revise first-pass credit economics before charging real users.
 - [x] Revisit visible Creem package amounts before switching to live mode.
-- [ ] Edit Creem product descriptions and Render credit pack variables together before live mode.
+- [x] Align Creem test product descriptions and Render credit-pack variables at `40 / 160`.
+- [ ] Repeat the product-id, description, and Render-variable alignment for Creem live mode only after written category approval.
 - [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
 - [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
 - [ ] Re-check `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations, 1080p tests, 8-second tests, or audio-on tests.
@@ -120,7 +121,7 @@ Last updated: 2026-06-06
 - [x] Return `429` without deducting credits when daily generation caps are reached.
 - [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
 - [x] Add private `/admin/ops` live-payment preflight checks for Auth, Creem, pricing, caps, and storage.
-- [ ] Switch Creem from test to live only after real generation succeeds.
+- [ ] Switch Creem from test to live only after written category approval and explicit owner confirmation.
 - [ ] Create a low-price live product for first live payment testing.
 - [x] Set the default anonymous starter balance to `STARTER_CREDITS=2`.
 

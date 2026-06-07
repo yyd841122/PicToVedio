@@ -1,13 +1,13 @@
 # MotionPic AI Launch Checklist
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 
 Use this checklist before moving from test mode to real public launch.
 
 ## 1. Production Health
 
 - [x] Render latest deploy is live on `https://video.cozyguidehub.com`.
-- [x] `/health` returns `{"ok":true,"provider":"dashscope"}`.
+- [x] `/health` reports `ok=true`, `provider=dashscope`, a safe short build id, and server time.
 - [x] Owner UAT checklist is prepared in `OWNER_UAT_CHECKLIST.md`.
 - [ ] Homepage loads without browser console errors.
 - [x] Homepage shows email-login/account status and routes anonymous checkout to login before paid checkout.
@@ -29,19 +29,20 @@ Use this checklist before moving from test mode to real public launch.
 ## 2. Video Generation
 
 - [ ] Run at least 5 real DashScope generations with different photo types.
-- [ ] Record average provider cost in `UNIT_ECONOMICS.md`.
+- [x] Record the current provider unit cost in `UNIT_ECONOMICS.md`.
 - [ ] Confirm failed jobs refund credits.
-- [ ] Confirm successful jobs create rows in `video_jobs`.
-- [ ] Confirm `ESTIMATED_VIDEO_COST_CNY` in Render reflects the latest provider cost.
-- [ ] Tune default prompts for less distortion before increasing traffic.
+- [x] Confirm successful jobs create rows in `video_jobs` through `/admin/ops`.
+- [x] Confirm `/admin/ops` reports `ESTIMATED_VIDEO_COST_CNY` as CNY 0.60.
+- [x] Tune default prompts toward subtle motion and stronger identity/object preservation.
 
 ## 3. Credits And Pricing
 
-- [ ] Confirm one 4-second 720p generation charges the intended credit amount.
+- [x] Confirm one standard 4-second 720p generation charges 2 credits.
 - [x] Controlled-live pricing path is documented as `$9/40` and `$29/160` credits.
 - [x] Render test configuration uses `40 / 160` credits and `10 / 2` daily generation caps.
 - [x] Creem test products and checkout text match the `40 / 160` Render credit grants.
-- [ ] Keep enough gross margin after provider cost, Creem/payment fees, failed jobs, and support.
+- [x] Model the controlled-live direct provider margin at `$9/40` and `$29/160`.
+- [ ] Validate actual net margin after Creem/payment fees, retries, refunds, and support.
 - [x] Final Creator Pack test payment succeeded on 2026-06-07 and increased the signed-in balance by exactly 40 credits after return/refresh.
 - [x] `/admin/ops` confirms the matching test payment, `checkout.completed` webhook, and `+40 / creem-checkout` ledger entry.
 
@@ -98,13 +99,13 @@ Use this checklist before moving from test mode to real public launch.
 
 ## 8. First Promotion Wave
 
-- [ ] Product Hunt draft.
+- [x] Product Hunt draft.
 - [ ] Toolify submission.
 - [ ] Futurepedia submission.
 - [ ] There Is An AI For That submission.
-- [ ] Indie Hackers build-in-public post.
-- [ ] X/Twitter short launch thread.
-- [ ] Reddit post focused on lessons learned, not hard selling.
+- [x] Indie Hackers build-in-public draft.
+- [x] X/Twitter short launch thread draft.
+- [x] Reddit draft focused on lessons learned, not hard selling.
 - [ ] Xiaohongshu/TikTok/YouTube Shorts demo clip.
 - [x] Launch kit contains guarded copy blocks, UTM links, launch gates, and unpublished social drafts.
 - [x] Demo asset checklist records Stage 1 Good outputs as private candidate demos.

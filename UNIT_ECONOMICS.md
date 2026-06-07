@@ -1,6 +1,6 @@
 # MotionPic AI Unit Economics
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 
 ## Current Measured Cost
 
@@ -8,7 +8,7 @@ The first real DashScope image-to-video tests show that cost is the main risk be
 
 | Setting | Provider Cost | Notes |
 | --- | ---: | --- |
-| 4s / 720p / audio on | about CNY 1.20 per generation | Too expensive for the current $9 / 100 credits package. |
+| 4s / 720p / audio on | about CNY 1.20 per generation | Too expensive for the former `$9 / 100 credits` marketing path without stricter credit costs. |
 | 4s / 720p / audio off | CNY 0.60 per generation | Owner confirmed Alibaba Cloud / DashScope unit cost on 2026-06-05. |
 
 The owner confirmed the Alibaba Cloud / DashScope billed unit cost is CNY 0.60 per use. Keep Render's `ESTIMATED_VIDEO_COST_CNY=0.6` unless later samples show a different average for:
@@ -27,9 +27,9 @@ The selected controlled-live package display is:
 | Creator Pack | US$9 | 40 credits |
 | Commerce Pack | US$29 | 160 credits |
 
-At an estimated FX rate of roughly CNY 7.2 per US$1, Creator Pack revenue is about CNY 64.8 before Creem/payment fees. If one real generation cost only 1 credit and each generation cost CNY 0.60, then 100 generations would cost about CNY 60 before failed generations, retries, payment fees, server costs, and support. That margin would be too thin.
+At an estimated FX rate of roughly CNY 7.2 per US$1, Creator Pack revenue is about CNY 64.8 before Creem/payment fees. The current backend charges 2 credits for a standard 4-second 720p generation, so the selected 40-credit pack covers about 20 standard generations, or about CNY 12 direct provider cost at the current estimate.
 
-The current backend charges 2 credits for a standard 4-second 720p generation. With the current US$9 / 100 credit pack, that means roughly 50 standard generations per pack, or about CNY 30 provider cost at the current CNY 0.60 estimate. This is more workable, but still needs buffer for payment fees, retries, support, disliked outputs, and provider price changes.
+This leaves a substantially stronger buffer than the former 100-credit marketing path for payment fees, retries, support, disliked outputs, and provider price changes. Actual net margin still needs validation after Creem confirms live eligibility and fee details.
 
 The backend now reads package credits and price labels from Render environment variables:
 

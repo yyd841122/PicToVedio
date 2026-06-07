@@ -18,9 +18,9 @@ const checks = [
 ];
 
 const ownerActions = [
-  "Confirm Supabase Advisor warnings are cleared after the security SQL.",
-  "Choose the live pricing path before creating or editing Creem live products.",
-  "Create or confirm Creem live products and webhook only after explicit approval.",
+  "Wait for written Creem category approval before any live-mode configuration.",
+  "Confirm the public support inbox is actively monitored before paid traffic.",
+  "Create or confirm Creem live products and webhook only after explicit approval and category approval.",
   "Change Render live payment variables only after explicit approval.",
   "Run one small live payment only after explicit approval.",
   "Enable R2/OSS object storage only after explicit approval.",
@@ -38,6 +38,7 @@ const statusCounts = checks.reduce(
 console.log("MotionPic AI readiness");
 console.log("======================");
 console.log(`Source: ${existsSync(join(root, ".env")) ? ".env + process environment" : "process environment only"}`);
+console.log("Scope: local configuration only; this command does not inspect Render or other production dashboards.");
 console.log("");
 
 for (const check of checks) {
@@ -108,8 +109,8 @@ function checkPayment() {
 }
 
 function checkPricing() {
-  const creator = numberValue("CREATOR_PACK_CREDITS", numberValue("CREEM_CREATOR_CREDITS", 100));
-  const commerce = numberValue("COMMERCE_PACK_CREDITS", numberValue("CREEM_COMMERCE_CREDITS", 400));
+  const creator = numberValue("CREATOR_PACK_CREDITS", numberValue("CREEM_CREATOR_CREDITS", 40));
+  const commerce = numberValue("COMMERCE_PACK_CREDITS", numberValue("CREEM_COMMERCE_CREDITS", 160));
   const creatorLabel = value("CREATOR_PACK_PRICE_LABEL", "$9");
   const commerceLabel = value("COMMERCE_PACK_PRICE_LABEL", "$29");
 
@@ -123,8 +124,8 @@ function checkPricing() {
 }
 
 function checkDailyCaps() {
-  const siteCap = numberValue("MAX_DAILY_VIDEO_JOBS", 20);
-  const userCap = numberValue("MAX_DAILY_VIDEO_JOBS_PER_USER", 3);
+  const siteCap = numberValue("MAX_DAILY_VIDEO_JOBS", 10);
+  const userCap = numberValue("MAX_DAILY_VIDEO_JOBS_PER_USER", 2);
   const starterCredits = numberValue("STARTER_CREDITS", 2);
 
   if (siteCap <= 10 && userCap <= 2 && starterCredits <= 2) {

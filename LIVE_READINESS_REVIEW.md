@@ -1,6 +1,6 @@
 # MotionPic AI Live Readiness Review
 
-Last updated: 2026-06-06
+Last updated: 2026-06-07
 
 This review summarizes what is ready, what can still be checked locally, and what must wait for owner confirmation before MotionPic AI moves from a working public MVP toward real paid traffic.
 
@@ -11,7 +11,7 @@ MotionPic AI is public, deployed, and technically close to a controlled live tes
 Current state:
 
 - Public site is live at `https://video.cozyguidehub.com/`.
-- Public `/health` returns `{"ok":true,"provider":"dashscope"}`.
+- Public `/health` reports `ok=true`, `provider=dashscope`, a safe short build id, and server time.
 - DashScope has been configured on Render.
 - Creem test checkout exists.
 - Supabase schema and credit persistence exist.
@@ -83,18 +83,18 @@ These cannot be completed safely without account access, private tokens, screens
 Generation and quality:
 
 - [x] Run at least 4 real DashScope generations with different safer photo types.
-- [ ] Confirm successful jobs create rows in `video_jobs`.
+- [x] Confirm successful jobs create rows in `video_jobs` through `/admin/ops`.
 - [ ] Confirm failed jobs refund credits.
-- [ ] Record average provider cost in `UNIT_ECONOMICS.md`.
+- [x] Record the current CNY 0.60 unit cost in `UNIT_ECONOMICS.md`.
 - [x] Current observed DashScope unit price is CNY 0.60 per 4s/720p use; update economics once the owner confirms bill details.
 - [ ] Tune `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations.
 - [x] Identify at least 3 acceptable demo outputs before public promotion.
 
 Credits and pricing:
 
-- [ ] Confirm one 4-second 720p generation charges the intended credit amount.
-- [ ] Confirm Render has conservative `MAX_DAILY_VIDEO_JOBS` and `MAX_DAILY_VIDEO_JOBS_PER_USER` values before broad promotion.
-- [ ] Align visible website package amounts, Render variables, Creem product descriptions, and webhook credit grants.
+- [x] Confirm one standard 4-second 720p generation charges 2 credits.
+- [x] Confirm Render uses conservative `10 / 2` daily generation caps before broad promotion.
+- [x] Align visible website package amounts, Render variables, Creem test product descriptions, and webhook credit grants.
 - [x] Recommended controlled-live path is documented as `$9/40` and `$29/160` credits.
 - [ ] Keep enough margin after provider cost, payment fees, failed jobs, retries, and support.
 
@@ -134,7 +134,7 @@ Do not run broad public promotion until these are true:
 - [ ] At least 3 acceptable demo clips or screenshots are ready.
 - [x] Stage 1 Good outputs are recorded as private candidate demos.
 - [x] Object storage is enabled or the site clearly tells users to download outputs.
-- [ ] Refund policy is visible and matches real operating behavior.
+- [x] Refund policy is visible and matches the implemented technical-failure refund versus successful-output quality distinction.
 
 ## Safe Next Steps
 

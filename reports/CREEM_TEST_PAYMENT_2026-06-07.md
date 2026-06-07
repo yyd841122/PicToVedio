@@ -31,7 +31,7 @@ The controlled Creator Pack test payment passed.
 - MotionPic AI category pre-review was sent to Creem on 2026-06-07; written eligibility confirmation is pending.
 - Configure live products, live webhook, and live Render variables only after approval.
 - Run one small live payment only after explicit owner confirmation.
-- Review one historical video job that remains in `processing` state; do not delete or alter it without a separate database review.
+- The historical `processing` job received a read-only code/data-flow review and stale-job diagnostics. Provider reconciliation, database changes, or refunds remain pending separate owner approval.
 
 No email address, order ID, card data, API key, webhook secret, or private payment identifier is stored in this report.
 

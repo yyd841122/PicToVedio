@@ -151,11 +151,11 @@ After saving Render variables, click `Save, rebuild, and deploy`, then wait for 
 
 Before changing payment mode:
 
-- [ ] `/health` returns `{"ok":true,"provider":"dashscope"}`.
-- [ ] At least 5 real generation tests are recorded or the owner explicitly accepts the risk.
-- [ ] Failed-generation credit refund behavior has been reviewed.
-- [ ] Package credits and visible price labels are aligned with the intended live Creem products.
-- [ ] `/admin/ops` Live Payment Preflight has been reviewed and any intentional warnings are understood.
+- [x] `/health` reports `ok=true`, `provider=dashscope`, build id, and server time.
+- [x] More than 5 successful real jobs are visible in `/admin/ops`; four core template outputs have owner quality ratings.
+- [x] Failed-generation automatic refund behavior has been reviewed in code and policy; an observed production failure/refund remains a separate acceptance item.
+- [x] Package credits and visible price labels are aligned with the current Creem test products.
+- [x] `/admin/ops` Live Payment Preflight has been reviewed and its intentional warnings are understood.
 - [ ] Support email is final.
 - [ ] The owner understands that AI outputs can be distorted and successful jobs are not automatically refunded for aesthetic imperfections.
 
