@@ -33,7 +33,7 @@ Collect these before the owner approves a live test:
 | Live products | Product names, prices, credit grants, and product IDs are known |
 | Live webhook | Webhook URL is `https://video.cozyguidehub.com/api/creem/webhook` |
 | Render variables | Owner confirms the exact values to set, without exposing secrets in Git |
-| Support email | Public support email is final and monitored |
+| Support email | `support@cozyguidehub.com` receive path is tested; outbound reply identity is approved |
 | Refund policy | Public `/refund` page matches operating rules |
 | Email login | Homepage and `/account` show signed-in state; anonymous checkout redirects to `/login` |
 | Test buyer | Owner confirms who will make the small live payment |
@@ -156,7 +156,8 @@ Before changing payment mode:
 - [x] Failed-generation automatic refund behavior has been reviewed in code and policy; an observed production failure/refund remains a separate acceptance item.
 - [x] Package credits and visible price labels are aligned with the current Creem test products.
 - [x] `/admin/ops` Live Payment Preflight has been reviewed and its intentional warnings are understood.
-- [ ] Support email is final.
+- [x] `support@cozyguidehub.com` test mail was received in the monitored Gmail destination.
+- [ ] Outbound support reply identity is approved.
 - [ ] The owner understands that AI outputs can be distorted and successful jobs are not automatically refunded for aesthetic imperfections.
 
 ## Controlled Live Payment Steps

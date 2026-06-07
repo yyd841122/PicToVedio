@@ -73,10 +73,10 @@ These cannot be completed safely without account access, private tokens, screens
 - [x] Confirm upload, generation, checkout click, and checkout redirect events appear in analytics.
 - [x] Supabase Security Advisor shows 0 errors after `SUPABASE_SECURITY_FIX.sql` as of 2026-06-07.
 - [x] Six `RLS Enabled No Policy` info items are intentional for server-only core tables.
-- [ ] Confirm support email is final and monitored.
+- [x] Confirm `support@cozyguidehub.com` receives mail in the monitored Gmail destination through Cloudflare Email Routing.
 - [ ] Confirm final brand name remains MotionPic AI.
 - [ ] Confirm whether Baidu submission matters for the first launch wave.
-- [ ] Confirm the support inbox is actively monitored before public paid traffic.
+- [ ] Confirm the outbound support reply identity before public paid traffic if the operator's personal Gmail address should remain private.
 
 ## Must Wait Before Public Paid Traffic
 
@@ -130,7 +130,8 @@ Do not run broad public promotion until these are true:
 
 - [ ] Live payment has been tested once.
 - [ ] Pricing and credit grants match across site, Creem, Render, and webhook logic.
-- [ ] Support email is final and monitored.
+- [x] Support receive path is tested and monitored.
+- [ ] Outbound replies use an approved sender identity.
 - [ ] At least 3 acceptable demo clips or screenshots are ready.
 - [x] Stage 1 Good outputs are recorded as private candidate demos.
 - [x] Object storage is enabled or the site clearly tells users to download outputs.

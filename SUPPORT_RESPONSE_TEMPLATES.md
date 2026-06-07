@@ -1,10 +1,12 @@
 # MotionPic AI Support Response Templates
 
-Last updated: 2026-06-03
+Last updated: 2026-06-07
 
 These templates help answer early support messages about failed generations, distorted outputs, credits, duplicate payments, and demo-quality concerns. They are operator drafts only. Do not expose private tokens, provider logs, admin screenshots, Supabase data, or payment-provider dashboards in replies.
 
 Public support email currently shown on the site: `support@cozyguidehub.com`.
+
+The receive path was tested successfully through Cloudflare Email Routing to Gmail on 2026-06-07. Before replying to real users, check the Gmail `From` address: a normal reply may expose the operator's personal Gmail address unless an approved outbound sender identity has been configured.
 
 ## Response Rules
 

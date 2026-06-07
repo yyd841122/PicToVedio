@@ -128,8 +128,9 @@ Requires owner confirmation because it writes to object storage:
 
 ## Support And Policy UAT
 
-- [ ] Public support email is final.
-- [ ] Support inbox is monitored.
+- [x] Public support email is `support@cozyguidehub.com`.
+- [x] A test message reached the monitored Gmail destination through Cloudflare Email Routing on 2026-06-07.
+- [ ] Outbound support replies use an approved sender identity that does not unexpectedly expose a personal Gmail address.
 - [ ] Refund policy matches real operating behavior.
 - [x] Refund policy explains technical failures versus successful but imperfect AI outputs.
 - [x] Support templates include failed generation, distorted output, payment/credit, account/login, and demo feedback replies.
@@ -164,7 +165,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 | Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
 | Payment | Test mode passed; pre-review pending | Creator Pack test evidence matches. MotionPic AI category pre-review was sent to Creem on 2026-06-07; live configuration remains frozen pending written approval. |
 | Storage | Pending | |
-| Support and policy | In progress | Public refund/support wording is improved; owner still needs to confirm inbox monitoring and final policy comfort. |
+| Support and policy | Receive path passed | `support@cozyguidehub.com` successfully forwards to the monitored Gmail inbox. Outbound reply identity and final policy comfort remain to be confirmed. |
 | Promotion | Drafted, not launched | Demo and launch copy are prepared for review only; no public posting or submission has been performed. |
 
 ## Stop Conditions

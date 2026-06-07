@@ -95,7 +95,8 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Second-wave guide pages cover ecommerce, pet, and old-photo use cases.
 - [x] Privacy, Terms, and Refund pages are visible from the footer.
 - [x] Refund page explains failed technical jobs, imperfect successful outputs, and support-request details.
-- [ ] Support email is final and monitored.
+- [x] `support@cozyguidehub.com` test message was received through Cloudflare Email Routing in the monitored Gmail inbox on 2026-06-07.
+- [ ] Configure or approve the outbound reply identity if support replies should hide the operator's personal Gmail address.
 
 ## 8. First Promotion Wave
 
