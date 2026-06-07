@@ -18,6 +18,7 @@ Last updated: 2026-06-06
 - [x] Added Supabase schema and credit persistence.
 - [x] Verified Creem test payment updates Supabase credits.
 - [x] Sanitized payment return-query identifiers from new and historical analytics dashboard views.
+- [x] Added read-only stale-processing diagnostics to `/admin/ops` without provider calls or database changes.
 - [x] Added multilingual UI entry for EN/ZH/DE/IT/FR/ES/JA/KO.
 - [x] Replaced internal demand-analysis copy with user-facing product copy.
 - [x] Added SEO metadata, Open Graph, Twitter Card, JSON-LD, robots.txt, sitemap.xml, and 404.html.

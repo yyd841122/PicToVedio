@@ -1297,10 +1297,10 @@ function buildOwnerActionChecklist(runtime) {
   return [
     {
       area: "Supabase",
-      action: "Confirm the Advisor critical warnings are cleared after the security SQL.",
-      risk: "Dashboard-only verification; do not paste screenshots with secrets into the repo.",
-      status: "Owner check",
-      tone: "tone-info",
+      action: "Security Advisor was confirmed at 0 errors on 2026-06-07. Re-check after future schema or permission changes.",
+      risk: "Keep core tables server-only; do not add public policies merely to remove informational notices.",
+      status: "Passed",
+      tone: "tone-success",
     },
     {
       area: "Creem",
@@ -1353,6 +1353,7 @@ function summarizeOpsData(data) {
   const totalBalances = data.users.reduce((total, user) => total + Number(user.credits || 0), 0);
   const failedJobs = data.jobs.filter((job) => job.status === "failed");
   const pendingJobs = data.jobs.filter((job) => ["queued", "processing", "in_progress"].includes(job.status));
+  const stalePendingJobs = pendingJobs.filter(isStalePendingJob);
   const succeededJobs = data.jobs.filter((job) => job.status === "succeeded");
   const estimatedProviderCostCny = roundMoney(
     succeededJobs.reduce((total, job) => total + estimateJobProviderCostCny(job), 0)
@@ -1377,6 +1378,7 @@ function summarizeOpsData(data) {
       totalBalances,
       failedJobs: failedJobs.length,
       pendingJobs: pendingJobs.length,
+      stalePendingJobs: stalePendingJobs.length,
       refundEntries: refundEntries.length,
       refundedCredits,
       jobCreditsSpent,
@@ -2006,7 +2008,7 @@ function renderOpsDashboard(data) {
   <main>
     <section class="grid metrics">
       ${renderMetricCard("Users", data.totals.users, `${data.totals.totalBalances} credits in visible balances`)}
-      ${renderMetricCard("Video Jobs", data.totals.jobs, `${data.totals.pendingJobs} pending / ${data.totals.failedJobs} failed`)}
+      ${renderMetricCard("Video Jobs", data.totals.jobs, `${data.totals.pendingJobs} pending / ${data.totals.stalePendingJobs} stale / ${data.totals.failedJobs} failed`)}
       ${renderMetricCard("Payments", data.totals.payments, `${data.totals.paymentCredits} paid credits in recent records`)}
       ${renderMetricCard("Ledger Net", data.totals.ledgerCredits, "Recent credit ledger net amount")}
     </section>
@@ -2043,6 +2045,8 @@ function renderOpsDashboard(data) {
       <p>High-risk work that should stay manual until the owner confirms the exact step.</p>
       ${renderOwnerActionTable(data.ownerActionChecklist)}
     </section>
+
+    ${renderStalePendingNotice(data.totals.stalePendingJobs)}
 
     <section class="section grid columns">
       <div class="card">
@@ -2208,7 +2212,7 @@ function renderJobsTable(jobs) {
       .map(
         (job) => `<tr>
           <td>${escapeHtml(formatDateTime(job.createdAt))}</td>
-          <td><span class="badge ${escapeHtml(statusTone(job.status))}">${escapeHtml(statusLabel(job.status))}</span><br><code>${escapeHtml(shortId(job.id || ""))}</code></td>
+          <td><span class="badge ${escapeHtml(isStalePendingJob(job) ? "tone-warning" : statusTone(job.status))}">${escapeHtml(isStalePendingJob(job) ? "Stale processing" : statusLabel(job.status))}</span><br><code>${escapeHtml(shortId(job.id || ""))}</code>${isStalePendingJob(job) ? `<br><span class="muted small">${escapeHtml(formatJobAge(job))} old</span>` : ""}</td>
           <td><code title="${escapeHtml(job.userId || "")}">${escapeHtml(shortId(job.userId || ""))}</code></td>
           <td>${escapeHtml(job.template || "")}<br><span class="muted small">${escapeHtml([job.ratio, job.resolution, job.seconds ? `${job.seconds}s` : ""].filter(Boolean).join(" / "))}</span></td>
           <td>${Number(job.credits || 0)} credits</td>
@@ -2220,6 +2224,14 @@ function renderJobsTable(jobs) {
       )
       .join("")}
   </tbody></table>`;
+}
+
+function renderStalePendingNotice(count) {
+  if (!count) return "";
+  return `<section class="section card">
+    <h2>Stale Pending Jobs</h2>
+    <p><strong>${count}</strong> job${count === 1 ? "" : "s"} has remained queued or processing for more than 30 minutes. MotionPic currently reconciles provider status only when the owning user polls the job endpoint; this notice does not call the provider, change the database, or refund credits. Verify the provider task result before any manual action.</p>
+  </section>`;
 }
 
 function renderPaymentsTable(payments) {
@@ -2486,6 +2498,22 @@ function statusTone(status) {
   if (status === "failed") return "tone-danger";
   if (["queued", "processing", "in_progress"].includes(status)) return "tone-info";
   return "tone-neutral";
+}
+
+function isStalePendingJob(job, now = Date.now()) {
+  if (!["queued", "processing", "in_progress"].includes(job?.status)) return false;
+  const createdAt = Date.parse(job.createdAt || "");
+  return Number.isFinite(createdAt) && now - createdAt >= 30 * 60 * 1000;
+}
+
+function formatJobAge(job, now = Date.now()) {
+  const createdAt = Date.parse(job?.createdAt || "");
+  if (!Number.isFinite(createdAt)) return "Unknown age";
+  const totalMinutes = Math.max(0, Math.floor((now - createdAt) / 60000));
+  if (totalMinutes < 60) return `${totalMinutes}m`;
+  const totalHours = Math.floor(totalMinutes / 60);
+  if (totalHours < 48) return `${totalHours}h`;
+  return `${Math.floor(totalHours / 24)}d`;
 }
 
 function estimateJobProviderCostCny(job) {

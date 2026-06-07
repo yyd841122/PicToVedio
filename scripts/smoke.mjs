@@ -222,6 +222,7 @@ async function assertOpsPreflight(baseUrl) {
   assert(ops.livePaymentPreflight.length >= 8, "preflight should include all launch checks");
   assert(Array.isArray(ops.ownerActionChecklist), "ops should include ownerActionChecklist");
   assert(ops.ownerActionChecklist.length >= 6, "owner action queue should include high-risk gates");
+  assert(ops.totals?.stalePendingJobs === 0, "fresh local ops data should have no stale pending jobs");
   const creditPack = ops.livePaymentPreflight.find((item) => item.label === "Credit Packs");
   assert(creditPack?.status === "$9/40 + $29/160", "preflight should show controlled pack values");
   const dailyCaps = ops.livePaymentPreflight.find((item) => item.label === "Daily Spend Caps");
