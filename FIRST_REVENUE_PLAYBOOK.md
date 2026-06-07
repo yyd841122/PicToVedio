@@ -21,8 +21,8 @@ The product is close to a live test, but should not switch to real paid traffic 
 
 MotionPic now has conservative cost protection for real video generation:
 
-- `MAX_DAILY_VIDEO_JOBS`: sitewide real jobs per UTC day. Default: `20`.
-- `MAX_DAILY_VIDEO_JOBS_PER_USER`: real jobs per anonymous user per UTC day. Default: `3`.
+- `MAX_DAILY_VIDEO_JOBS`: sitewide real jobs per UTC day. Controlled-live default: `10`.
+- `MAX_DAILY_VIDEO_JOBS_PER_USER`: real jobs per user per UTC day. Controlled-live default: `2`.
 - `STARTER_CREDITS`: credits granted to a new anonymous browser account. Default: `2`.
 - If a cap is reached, the API returns `429` and does not deduct credits.
 - Mock jobs do not count toward the caps, so local testing can continue without spending provider budget.
@@ -90,11 +90,11 @@ If keeping the current US$9 Creator Pack:
 - Tell users that AI results can vary.
 - Use this path for marketing simplicity, not maximum margin. At the current observed CNY 0.60 provider cost, US$9 / 100 credits gives about 50 standard generations and roughly CNY 30 direct provider cost before payment fees, retries, support, and disliked outputs.
 
-Decision needed from owner before Creem live setup:
+Owner decision recorded on 2026-06-07:
 
 ```text
-Option A, recommended: keep $9 / $29 prices but reduce grants to 40 / 160 credits.
-Option B: keep current $9 / $29 prices and 100 / 400 credits for a stronger marketing offer.
+Selected: keep $9 / $29 prices and grant 40 / 160 credits.
+Future optional test: 100 / 400 credits only as a deliberate marketing experiment.
 ```
 
 ## Creem Live Switch

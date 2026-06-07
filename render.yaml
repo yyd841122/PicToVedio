@@ -25,3 +25,13 @@ services:
         value: "true"
       - key: STARTER_CREDITS
         value: "2"
+      - key: CREATOR_PACK_CREDITS
+        value: "40"
+      - key: COMMERCE_PACK_CREDITS
+        value: "160"
+      - key: MAX_DAILY_VIDEO_JOBS
+        value: "10"
+      - key: MAX_DAILY_VIDEO_JOBS_PER_USER
+        value: "2"
+      - key: ESTIMATED_VIDEO_COST_CNY
+        value: "0.6"

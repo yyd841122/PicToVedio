@@ -50,8 +50,11 @@ DASHSCOPE_API_KEY=
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
-MAX_DAILY_VIDEO_JOBS=20
-MAX_DAILY_VIDEO_JOBS_PER_USER=3
+CREATOR_PACK_CREDITS=40
+COMMERCE_PACK_CREDITS=160
+MAX_DAILY_VIDEO_JOBS=10
+MAX_DAILY_VIDEO_JOBS_PER_USER=2
+ESTIMATED_VIDEO_COST_CNY=0.6
 MAX_UPLOAD_IMAGE_MB=8
 STARTER_CREDITS=2
 DATA_PROVIDER=supabase
@@ -76,15 +79,15 @@ DASHSCOPE_API_KEY=sk-...
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
-MAX_DAILY_VIDEO_JOBS=20
-MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_DAILY_VIDEO_JOBS=10
+MAX_DAILY_VIDEO_JOBS_PER_USER=2
 MAX_UPLOAD_IMAGE_MB=8
 STARTER_CREDITS=2
 ```
 
 Do not commit the full DashScope key. Add it only in Render Environment Variables or local `.env`.
 
-The two `MAX_DAILY_*` values are cost guardrails for real provider jobs. The defaults allow at most 20 real jobs across the site and 3 real jobs per anonymous user per UTC day. When either cap is reached, the API returns `429`, shows a friendly message on the site, and does not deduct credits. Keep these conservative until real traffic and provider cost are predictable.
+The two `MAX_DAILY_*` values are cost guardrails for real provider jobs. The controlled-live defaults allow at most 10 real jobs across the site and 2 real jobs per user per UTC day. When either cap is reached, the API returns `429`, shows a friendly message on the site, and does not deduct credits. Keep these conservative until real traffic and provider cost are predictable.
 
 `MAX_UPLOAD_IMAGE_MB` controls the maximum uploaded input image size. The default is 8 MB and only JPG, PNG, and WebP uploads are accepted. Unsupported or oversized uploads are rejected before credits are deducted.
 
@@ -297,7 +300,7 @@ Keep the current test setup until the whole flow is stable. When you are ready t
 1. Finish Creem identity, payout, and live store checks.
 2. Choose one live pricing path before creating products.
 
-Current marketing path:
+Optional marketing path:
 
 ```text
 Creator Pack: $9 for 100 credits
@@ -306,7 +309,7 @@ Commerce Pack: $29 for 400 credits
 
 This is acceptable only while a standard 4-second 720p generation costs at least 2 credits. At the current observed DashScope cost of about CNY 0.60 per standard generation, `$9 / 100 credits` gives about 50 standard generations, or about CNY 30 direct provider cost before payment fees, retries, support, and disliked outputs.
 
-Safer first-live path:
+Selected controlled-live path:
 
 ```text
 Creator Pack: $9 for 40 credits

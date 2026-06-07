@@ -18,8 +18,6 @@ const server = spawn(process.execPath, ["server.mjs"], {
     PAYMENT_PROVIDER: "mock",
     SUPABASE_URL: "https://example.supabase.co",
     SUPABASE_AUTH_ANON_KEY: "test-public-key",
-    CREATOR_PACK_CREDITS: "40",
-    COMMERCE_PACK_CREDITS: "160",
     STARTER_CREDITS: "2",
   },
   stdio: "pipe",
@@ -191,6 +189,8 @@ async function assertOpsPreflight(baseUrl) {
   assert(ops.ownerActionChecklist.length >= 6, "owner action queue should include high-risk gates");
   const creditPack = ops.livePaymentPreflight.find((item) => item.label === "Credit Packs");
   assert(creditPack?.status === "$9/40 + $29/160", "preflight should show controlled pack values");
+  const dailyCaps = ops.livePaymentPreflight.find((item) => item.label === "Daily Spend Caps");
+  assert(dailyCaps?.status === "10 site / 2 user", "preflight should show controlled daily caps");
   const promotionGate = ops.ownerActionChecklist.find((item) => item.area === "Promotion");
   assert(promotionGate?.status === "Do not publish", "ops should keep promotion publishing gated");
 }

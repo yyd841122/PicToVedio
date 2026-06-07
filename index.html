@@ -1575,7 +1575,7 @@
                   <span class="price">$9</span>
                 </div>
                 <ul>
-                  <li>100 credits</li>
+                  <li>40 credits, about 20 standard clips</li>
                   <li>1080p no-watermark downloads</li>
                   <li>Create multiple variants</li>
                 </ul>
@@ -1586,7 +1586,7 @@
                   <span class="price">$29</span>
                 </div>
                 <ul>
-                  <li>400 credits</li>
+                  <li>160 credits, about 80 standard clips</li>
                   <li>Product video templates</li>
                   <li>Commercial export workflow</li>
                 </ul>
@@ -2051,10 +2051,10 @@
           free1: "Starter credits for testing",
           free2: "Standard 4s 720p clip uses 2 credits",
           free3: "Good for testing photo quality",
-          creator1: "100 credits, about 50 standard clips",
+          creator1: "40 credits, about 20 standard clips",
           creator2: "1080p no-watermark downloads",
           creator3: "Batch generate 4 versions",
-          commerce1: "400 credits, about 200 standard clips",
+          commerce1: "160 credits, about 80 standard clips",
           commerce2: "Product video templates",
           commerce3: "Commercial export queue",
           conversion: "Use credits for HD no-watermark exports, batch variations, and future commercial template queues.",
@@ -2852,9 +2852,9 @@
           await openCheckout("mock_modal_button");
           return;
         }
-        state.balance += 100;
+        state.balance += 40;
         checkoutModal.classList.remove("open");
-        creditNote.textContent = "Mock payment recorded and 100 credits were added to this account.";
+        creditNote.textContent = "Mock payment recorded and 40 credits were added to this account.";
         updateEstimate();
         trackEvent("mock_payment_success");
         bumpEvent();

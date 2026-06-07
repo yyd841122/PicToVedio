@@ -20,12 +20,12 @@ The owner confirmed the Alibaba Cloud / DashScope billed unit cost is CNY 0.60 p
 
 This is still an early sample. Re-check the average after more traffic, 1080p tests, 8-second tests, audio-on tests, or provider pricing changes.
 
-The current site package display is still:
+The selected controlled-live package display is:
 
 | Package | Price | Shown Credits |
 | --- | ---: | ---: |
-| Creator Pack | US$9 | 100 credits |
-| Commerce Pack | US$29 | 400 credits |
+| Creator Pack | US$9 | 40 credits |
+| Commerce Pack | US$29 | 160 credits |
 
 At an estimated FX rate of roughly CNY 7.2 per US$1, Creator Pack revenue is about CNY 64.8 before Creem/payment fees. If one real generation cost only 1 credit and each generation cost CNY 0.60, then 100 generations would cost about CNY 60 before failed generations, retries, payment fees, server costs, and support. That margin would be too thin.
 
@@ -38,14 +38,14 @@ The backend now reads package credits and price labels from Render environment v
 - `CREATOR_PACK_PRICE_LABEL`
 - `COMMERCE_PACK_PRICE_LABEL`
 
-Defaults remain `100 / 400 credits` and `$9 / $29` until the Creem product copy is edited. Before live launch, update both Creem and Render together so the checkout page, visible site copy, and webhook credit grants match.
+Code and Render blueprint defaults are now `40 / 160 credits` and `$9 / $29`. Before live launch, update the Creem product copy and verify Render so the checkout page, visible site copy, and webhook credit grants match.
 
 The backend also reads daily real-generation limits from Render:
 
 - `MAX_DAILY_VIDEO_JOBS`
 - `MAX_DAILY_VIDEO_JOBS_PER_USER`
 
-Defaults are `20` sitewide real jobs and `3` real jobs per anonymous user per UTC day. These are cost guardrails, not a pricing model. Lower them during the first live-payment test if you want a tighter provider-spend ceiling.
+Controlled-live defaults are `10` sitewide real jobs and `2` real jobs per user per UTC day. These are cost guardrails, not a pricing model.
 
 ## Margin Target
 

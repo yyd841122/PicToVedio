@@ -119,8 +119,8 @@ DASHSCOPE_API_KEY=
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
-MAX_DAILY_VIDEO_JOBS=20
-MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_DAILY_VIDEO_JOBS=10
+MAX_DAILY_VIDEO_JOBS_PER_USER=2
 MAX_UPLOAD_IMAGE_MB=8
 STARTER_CREDITS=2
 OPENAI_API_KEY=
@@ -135,8 +135,8 @@ DASHSCOPE_API_KEY=sk-...
 DASHSCOPE_VIDEO_MODEL=wan2.6-i2v-flash
 DASHSCOPE_AUDIO=false
 DASHSCOPE_PROMPT_EXTEND=false
-MAX_DAILY_VIDEO_JOBS=20
-MAX_DAILY_VIDEO_JOBS_PER_USER=3
+MAX_DAILY_VIDEO_JOBS=10
+MAX_DAILY_VIDEO_JOBS_PER_USER=2
 MAX_UPLOAD_IMAGE_MB=8
 STARTER_CREDITS=2
 ```
@@ -145,8 +145,8 @@ DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`
 
 Real provider jobs are protected by conservative daily caps:
 
-- `MAX_DAILY_VIDEO_JOBS`: sitewide real video jobs per UTC day. Default: `20`.
-- `MAX_DAILY_VIDEO_JOBS_PER_USER`: real video jobs per anonymous user per UTC day. Default: `3`.
+- `MAX_DAILY_VIDEO_JOBS`: sitewide real video jobs per UTC day. Controlled-live default: `10`.
+- `MAX_DAILY_VIDEO_JOBS_PER_USER`: real video jobs per user per UTC day. Controlled-live default: `2`.
 
 Mock jobs do not count toward these caps. If a user exceeds a cap, `/api/video/jobs` returns `429` with a friendly quota message and does not deduct credits.
 
@@ -176,14 +176,14 @@ Until `STORAGE_PROVIDER=r2` is enabled, generated videos use the provider output
 
 ## Credit Packs
 
-- Creator Pack: `$9` for `100 credits`
-- Commerce Pack: `$29` for `400 credits`
+- Creator Pack: `$9` for `40 credits`
+- Commerce Pack: `$29` for `160 credits`
 
 These visible pack amounts and backend credit grants can be configured without a code change:
 
 ```env
-CREATOR_PACK_CREDITS=100
-COMMERCE_PACK_CREDITS=400
+CREATOR_PACK_CREDITS=40
+COMMERCE_PACK_CREDITS=160
 CREATOR_PACK_PRICE_LABEL=$9
 COMMERCE_PACK_PRICE_LABEL=$29
 ```

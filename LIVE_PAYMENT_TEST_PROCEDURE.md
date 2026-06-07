@@ -1,6 +1,6 @@
 # MotionPic AI Live Payment Test Procedure
 
-Last updated: 2026-06-05
+Last updated: 2026-06-07
 
 This procedure prepares the first controlled Creem live payment test. It is a documentation-only checklist. Do not configure Creem live mode, change Render variables, run Supabase SQL, perform a real payment, or inspect private payment records without owner confirmation.
 
@@ -41,20 +41,20 @@ Collect these before the owner approves a live test:
 
 Do not paste API keys, webhook secrets, full receipts, card details, or private customer data into repo files.
 
-## Pricing Decision To Make First
+## Selected Pricing Decision
 
-Choose exactly one pricing path before creating live products or changing Render variables.
+The owner selected the controlled-live path on 2026-06-07.
 
-Recommended controlled-live path:
+Selected controlled-live path:
 
 ```text
 Creator Pack: $9 for 40 credits
 Commerce Pack: $29 for 160 credits
 ```
 
-This is safer while the actual DashScope bill is still being confirmed. At 2 credits per standard 4-second 720p generation, the $9 pack gives about 20 standard generations.
+At the confirmed CNY 0.60 unit cost and 2 credits per standard 4-second 720p generation, the $9 pack gives about 20 standard generations with a stronger cost buffer.
 
-Current marketing path:
+Optional future marketing path:
 
 ```text
 Creator Pack: $9 for 100 credits

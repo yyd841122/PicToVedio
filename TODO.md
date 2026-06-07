@@ -106,7 +106,7 @@ Last updated: 2026-06-06
 - [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
 - [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
 - [ ] Re-check `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations, 1080p tests, 8-second tests, or audio-on tests.
-- [ ] Choose live pricing path: `$9 / 40 credits` controlled-live path or `$9 / 100 credits` marketing path.
+- [x] Chose the controlled-live pricing path: `$9 / 40 credits` and `$29 / 160 credits`, with `10 / 2` daily generation caps.
 - [ ] Run at least 20 real quality tests and track good vs distorted outputs in the analytics dashboard.
 - [ ] Store uploaded photos outside the browser and local JSON.
 - [ ] Store generated videos in object storage.
