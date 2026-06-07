@@ -31,3 +31,7 @@ The controlled Creator Pack test payment passed.
 - Run one small live payment only after explicit owner confirmation.
 
 No email address, order ID, card data, API key, webhook secret, or private payment identifier is stored in this report.
+
+## Analytics Privacy Follow-Up
+
+The test revealed that Creem return-query identifiers could appear in private analytics page URLs. The application now strips request, checkout, order, customer, and other unapproved query parameters both before analytics ingestion and again when historical events are displayed. Only approved attribution fields plus `checkout`, `plan`, and `template` may remain.

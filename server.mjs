@@ -329,10 +329,10 @@ async function handleRecordAnalyticsEvent(req, res) {
     userId,
     sessionId: sanitizeText(body.sessionId, 120),
     name,
-    page: sanitizeText(body.page, 500),
-    referrer: sanitizeText(body.referrer, 500),
+    page: sanitizeAnalyticsLocation(body.page),
+    referrer: sanitizeAnalyticsLocation(body.referrer, true),
     language: sanitizeText(body.language, 12),
-    properties: sanitizeProperties(body.properties),
+    properties: sanitizeAnalyticsProperties(body.properties),
     userAgent: sanitizeText(req.headers["user-agent"], 500),
     ipHash: hashClientIp(req),
     createdAt: new Date().toISOString(),
@@ -1130,10 +1130,10 @@ async function recordAnalyticsEventSafe(event) {
       userId: event.userId || "demo-user",
       sessionId: event.sessionId || "",
       name: event.name,
-      page: event.page || "",
-      referrer: event.referrer || "",
+      page: sanitizeAnalyticsLocation(event.page),
+      referrer: sanitizeAnalyticsLocation(event.referrer, true),
       language: event.language || "",
-      properties: sanitizeProperties(event.properties || {}),
+      properties: sanitizeAnalyticsProperties(event.properties || {}),
       userAgent: event.userAgent || "",
       ipHash: event.ipHash || "",
       createdAt: event.createdAt || new Date().toISOString(),
@@ -1153,7 +1153,7 @@ async function getRecentAnalyticsEvents(limit) {
 
   const db = readDb();
   normalizeDb(db);
-  return db.analyticsEvents.slice(-limit).reverse();
+  return db.analyticsEvents.slice(-limit).reverse().map(sanitizeAnalyticsEventForRead);
 }
 
 async function getAdminOpsData(limit) {
@@ -2965,6 +2965,45 @@ function sanitizeProperties(value) {
   return result;
 }
 
+function sanitizeAnalyticsProperties(value) {
+  const result = sanitizeProperties(value);
+  for (const key of ["landingPage", "page", "referrer", "returnUrl", "url"]) {
+    if (typeof result[key] === "string") {
+      result[key] = sanitizeAnalyticsLocation(result[key], key === "referrer");
+    }
+  }
+  return result;
+}
+
+function sanitizeAnalyticsLocation(value, preserveOrigin = false) {
+  const raw = sanitizeText(value, 2000);
+  if (!raw) return "";
+  try {
+    const url = new URL(raw, config.appUrl);
+    if (!["http:", "https:"].includes(url.protocol)) return "";
+    const allowed = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "checkout", "plan", "template"];
+    const safeQuery = new URLSearchParams();
+    for (const key of allowed) {
+      const entry = sanitizeText(url.searchParams.get(key), 120);
+      if (entry) safeQuery.set(key, entry);
+    }
+    const query = safeQuery.toString();
+    const base = preserveOrigin ? `${url.origin}${url.pathname}` : url.pathname;
+    return sanitizeText(`${base}${query ? `?${query}` : ""}`, 500);
+  } catch {
+    return "";
+  }
+}
+
+function sanitizeAnalyticsEventForRead(event) {
+  return {
+    ...event,
+    page: sanitizeAnalyticsLocation(event.page),
+    referrer: sanitizeAnalyticsLocation(event.referrer, true),
+    properties: sanitizeAnalyticsProperties(event.properties || {}),
+  };
+}
+
 function hashClientIp(req) {
   const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
   const ip = forwarded || req.socket?.remoteAddress || "";
@@ -2989,7 +3028,7 @@ function analyticsEventToRow(event) {
 }
 
 function rowToAnalyticsEvent(row) {
-  return {
+  return sanitizeAnalyticsEventForRead({
     id: row.id,
     userId: row.user_id,
     sessionId: row.session_id,
@@ -2999,7 +3038,7 @@ function rowToAnalyticsEvent(row) {
     language: row.language,
     properties: row.properties || {},
     createdAt: row.created_at,
-  };
+  });
 }
 
 function rowToAdminUser(row) {

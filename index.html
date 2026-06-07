@@ -1891,11 +1891,30 @@
 
       const query = new URLSearchParams(window.location.search);
       const attributionKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+      const analyticsQueryKeys = new Set([...attributionKeys, "checkout", "plan", "template"]);
       const maxUploadImageMb = 8;
       const maxUploadImageBytes = maxUploadImageMb * 1024 * 1024;
       const acceptedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
       const normalizeAttributionValue = (value) => (value || "").trim().slice(0, 120);
+
+      const sanitizeAnalyticsUrl = (value, preserveOrigin = false) => {
+        if (!value) return "";
+        try {
+          const url = new URL(value, window.location.origin);
+          if (!["http:", "https:"].includes(url.protocol)) return "";
+          const safeQuery = new URLSearchParams();
+          analyticsQueryKeys.forEach((key) => {
+            const entry = normalizeAttributionValue(url.searchParams.get(key));
+            if (entry) safeQuery.set(key, entry);
+          });
+          const queryString = safeQuery.toString();
+          const base = preserveOrigin ? `${url.origin}${url.pathname}` : url.pathname;
+          return `${base}${queryString ? `?${queryString}` : ""}`;
+        } catch {
+          return "";
+        }
+      };
 
       const readAttribution = () => {
         let stored = {};
@@ -1915,7 +1934,7 @@
           const next = {
             ...stored,
             ...current,
-            landingPage: `${window.location.pathname}${window.location.search}`,
+            landingPage: sanitizeAnalyticsUrl(window.location.href),
             capturedAt: new Date().toISOString(),
           };
           localStorage.setItem("motionpic-attribution", JSON.stringify(next));
@@ -1982,8 +2001,8 @@
           userId,
           sessionId: getSessionId(),
           name,
-          page: `${window.location.pathname}${window.location.search}`,
-          referrer: document.referrer,
+          page: sanitizeAnalyticsUrl(window.location.href),
+          referrer: sanitizeAnalyticsUrl(document.referrer, true),
           language: document.documentElement.lang || "en",
           properties: currentEventProperties(properties),
         };

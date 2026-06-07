@@ -37,6 +37,7 @@ try {
   await assertSeoMetadata(origin);
   await assertSupportAndLaunchCopy(origin);
   await assertAccountApi(origin);
+  await assertAnalyticsUrlPrivacy(origin);
   await assertCheckoutRequiresLogin(origin);
   await assertOpsPreflight(origin);
   await assertInlineScriptsCompile();
@@ -163,6 +164,40 @@ async function assertAccountApi(baseUrl) {
   assert(account.authenticated === false, "/api/account should report authenticated=false without cookie");
   assert(account.credits === 2, "/api/account should use STARTER_CREDITS=2");
   assert(account.plans?.creator?.credits === 40, "/api/account should expose controlled creator credits");
+}
+
+async function assertAnalyticsUrlPrivacy(baseUrl) {
+  const sensitivePage = "/?checkout=success&plan=creator&request_id=req_private&checkout_id=ch_private&order_id=ord_private&customer_id=cust_private";
+  const response = await fetch(`${baseUrl}/api/analytics/events`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-MotionPic-User-ID": "mp_smoketestuser1234567890",
+    },
+    body: JSON.stringify({
+      name: "privacy_url_check",
+      page: sensitivePage,
+      referrer: `${baseUrl}${sensitivePage}`,
+      properties: {
+        landingPage: sensitivePage,
+        plan: "creator",
+      },
+    }),
+  });
+  assert(response.ok, "analytics privacy event should be accepted");
+
+  const summaryResponse = await fetch(`${baseUrl}/api/admin/analytics?limit=50`);
+  const summary = await summaryResponse.json();
+  assert(summaryResponse.ok, "analytics summary should be available from localhost");
+  const event = summary.recent.find((item) => item.name === "privacy_url_check");
+  assert(event, "analytics privacy event should be returned");
+  assert(event.page === "/?checkout=success&plan=creator", "analytics page should retain only safe query parameters");
+  assert(event.referrer === `${baseUrl}/?checkout=success&plan=creator`, "analytics referrer should retain only safe query parameters");
+  assert(event.properties?.landingPage === "/?checkout=success&plan=creator", "analytics landing page should retain only safe query parameters");
+  const serialized = JSON.stringify(event);
+  ["request_id", "checkout_id", "order_id", "customer_id", "req_private", "ch_private", "ord_private", "cust_private"].forEach((value) => {
+    assert(!serialized.includes(value), `analytics event should not retain ${value}`);
+  });
 }
 
 async function assertCheckoutRequiresLogin(baseUrl) {
