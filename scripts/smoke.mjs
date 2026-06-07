@@ -71,6 +71,8 @@ async function waitForHealth(baseUrl) {
       assert(response.ok, "/health should return 200");
       assert(data.ok === true, "/health should report ok=true");
       assert(data.provider === "mock", "/health should use mock provider in smoke");
+      assert(data.build === "local", "/health should identify the local build");
+      assert(Number.isFinite(Date.parse(data.serverTime)), "/health should include a valid server timestamp");
       return;
     } catch {
       await delay(150);

@@ -55,6 +55,7 @@ const config = {
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
   stripeCreatorPrice: process.env.STRIPE_PRICE_CREATOR || "",
   stripeCommercePrice: process.env.STRIPE_PRICE_COMMERCE || "",
+  buildCommit: String(process.env.RENDER_GIT_COMMIT || "local").slice(0, 7),
 };
 
 ensureDb();
@@ -78,7 +79,12 @@ const server = createServer(async (req, res) => {
     const url = new URL(req.url || "/", config.appUrl);
 
     if (req.method === "GET" && url.pathname === "/health") {
-      return sendJson(res, 200, { ok: true, provider: config.videoProvider });
+      return sendJson(res, 200, {
+        ok: true,
+        provider: config.videoProvider,
+        build: config.buildCommit,
+        serverTime: new Date().toISOString(),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/account") {
