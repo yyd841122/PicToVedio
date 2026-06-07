@@ -36,6 +36,7 @@ server.stderr.on("data", (chunk) => {
 try {
   await waitForHealth(origin);
   await assertPublicPages(origin);
+  await assertFavicon(origin);
   await assertSeoMetadata(origin);
   await assertHomeFormSemantics(origin);
   await assertSupportAndLaunchCopy(origin);
@@ -80,6 +81,17 @@ async function waitForHealth(baseUrl) {
     }
   }
   throw new Error(`Server did not become ready. Output:\n${serverOutput}`);
+}
+
+async function assertFavicon(baseUrl) {
+  const response = await fetch(`${baseUrl}/favicon.ico`);
+  assert(response.ok, "/favicon.ico should resolve without a 404");
+  assert(
+    response.headers.get("content-type") === "image/png",
+    "/favicon.ico should resolve to the existing PNG brand asset",
+  );
+  const content = await response.arrayBuffer();
+  assert(content.byteLength > 1000, "/favicon.ico should return a non-empty image");
 }
 
 async function assertPublicPages(baseUrl) {

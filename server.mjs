@@ -3532,6 +3532,15 @@ function mapSize(ratio, resolution) {
 }
 
 function serveStatic(pathname, res) {
+  if (pathname === "/favicon.ico") {
+    res.writeHead(302, {
+      Location: "/photo-to-video-hero.png",
+      "Cache-Control": "public, max-age=86400",
+    });
+    res.end();
+    return;
+  }
+
   const cleanPath = pathname === "/" ? "/index.html" : pathname;
   let filePath = resolve(join(root, cleanPath));
   const extension = extname(filePath);
