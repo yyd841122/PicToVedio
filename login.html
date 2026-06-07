@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <title>Email Login - MotionPic AI</title>
     <style>
       :root {
@@ -44,13 +46,11 @@
         text-decoration: none;
       }
       .mark {
-        display: grid;
+        display: block;
         width: 34px;
         height: 34px;
-        place-items: center;
         border-radius: 8px;
-        background: linear-gradient(135deg, #0f9f8a, #ef725d);
-        color: white;
+        object-fit: cover;
       }
       h1 {
         margin: 28px 0 8px;
@@ -117,7 +117,7 @@
   <body>
     <main class="panel">
       <a class="brand" href="/">
-        <span class="mark">M</span>
+        <img class="mark" src="/favicon-48.png" alt="" width="34" height="34" />
         <span>MotionPic AI</span>
       </a>
       <h1>Email login</h1>

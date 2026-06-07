@@ -15,7 +15,9 @@ The owner opened the production homepage with Chrome DevTools.
 - The hidden photo file input now has an associated label.
 - The motion prompt textarea keeps its explicit label and now has a stable `name`.
 - Template, aspect-ratio, and quality button collections now use labelled `role="group"` containers instead of form labels targeting ordinary `div` elements.
-- `/favicon.ico` now resolves through the existing public brand preview asset, without generating or adding another image.
+- The owner supplied a dedicated MotionPic AI logo generated outside this project.
+- The supplied image was cropped to exclude its watermark and corner artifact, then converted locally into ICO, browser PNG, Apple touch, PWA, and SEO logo assets.
+- `/favicon.ico` now serves a direct multi-size icon instead of redirecting to the hero image.
 - The smoke suite now checks these semantic associations.
 
 ## Remaining Verification

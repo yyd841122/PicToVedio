@@ -88,6 +88,14 @@ npm run email:dns
 
 This verifies the public Cloudflare inbound MX, Resend DKIM, return-path MX, SPF, and DMARC records without reading or printing private credentials.
 
+Rebuild the website icon set from an owner-approved square logo:
+
+```powershell
+.\scripts\build-icons.ps1 -Source "C:\path\to\approved-logo.png"
+```
+
+The script detects and crops the central colored logo, then creates the multi-size favicon, browser PNGs, Apple touch icon, PWA icons, and SEO logo. Review the crop before publishing whenever the source image changes.
+
 ## Environment Variables
 
 Required for Creem test checkout:

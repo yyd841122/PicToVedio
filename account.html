@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <title>Browser Account - MotionPic AI</title>
     <style>
       :root {
@@ -55,9 +57,19 @@
       }
 
       .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
         font-weight: 850;
         font-size: 18px;
         text-decoration: none;
+      }
+
+      .brand-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        object-fit: cover;
       }
 
       .nav {
@@ -245,7 +257,10 @@
   <body>
     <header class="topbar">
       <div class="shell">
-        <a class="brand" href="/">MotionPic AI</a>
+        <a class="brand" href="/">
+          <img class="brand-icon" src="/favicon-48.png" alt="" width="34" height="34" />
+          <span>MotionPic AI</span>
+        </a>
         <nav class="nav" aria-label="Account navigation">
           <a class="button" href="/">Back to Generator</a>
           <a class="button" id="loginLink" href="/login" hidden>Email Login</a>

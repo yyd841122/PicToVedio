@@ -69,6 +69,8 @@ const mimeTypes = {
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
   ".svg": "image/svg+xml",
+  ".ico": "image/x-icon",
+  ".webmanifest": "application/manifest+json; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
   ".md": "text/plain; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",
@@ -3532,15 +3534,6 @@ function mapSize(ratio, resolution) {
 }
 
 function serveStatic(pathname, res) {
-  if (pathname === "/favicon.ico") {
-    res.writeHead(302, {
-      Location: "/photo-to-video-hero.png",
-      "Cache-Control": "public, max-age=86400",
-    });
-    res.end();
-    return;
-  }
-
   const cleanPath = pathname === "/" ? "/index.html" : pathname;
   let filePath = resolve(join(root, cleanPath));
   const extension = extname(filePath);

@@ -87,11 +87,45 @@ async function assertFavicon(baseUrl) {
   const response = await fetch(`${baseUrl}/favicon.ico`);
   assert(response.ok, "/favicon.ico should resolve without a 404");
   assert(
-    response.headers.get("content-type") === "image/png",
-    "/favicon.ico should resolve to the existing PNG brand asset",
+    response.headers.get("content-type") === "image/x-icon",
+    "/favicon.ico should return an icon response",
   );
-  const content = await response.arrayBuffer();
-  assert(content.byteLength > 1000, "/favicon.ico should return a non-empty image");
+  assert(response.url === `${baseUrl}/favicon.ico`, "/favicon.ico should be served directly");
+  const iconBytes = new Uint8Array(await response.arrayBuffer());
+  assert(iconBytes.byteLength > 1000, "/favicon.ico should return a non-empty image");
+  assert(iconBytes[0] === 0 && iconBytes[1] === 0, "favicon should use the ICO header");
+  assert(iconBytes[2] === 1 && iconBytes[3] === 0, "favicon should identify itself as an icon");
+  assert(iconBytes[4] === 3 && iconBytes[5] === 0, "favicon should include 16, 32, and 48 pixel sizes");
+
+  await assertPngDimensions(baseUrl, "/favicon-32.png", 32);
+  await assertPngDimensions(baseUrl, "/apple-touch-icon.png", 180);
+  await assertPngDimensions(baseUrl, "/icon-192.png", 192);
+  await assertPngDimensions(baseUrl, "/icon-512.png", 512);
+
+  const manifestResponse = await fetch(`${baseUrl}/site.webmanifest`);
+  assert(manifestResponse.ok, "/site.webmanifest should return 200");
+  assert(
+    manifestResponse.headers.get("content-type")?.startsWith("application/manifest+json"),
+    "/site.webmanifest should use the manifest content type",
+  );
+  const manifest = await manifestResponse.json();
+  assert(manifest.name === "MotionPic AI", "manifest should use the product name");
+  assert(manifest.icons?.length === 2, "manifest should include 192 and 512 pixel icons");
+}
+
+async function assertPngDimensions(baseUrl, path, expectedSize) {
+  const response = await fetch(`${baseUrl}${path}`);
+  assert(response.ok, `${path} should return 200`);
+  assert(response.headers.get("content-type") === "image/png", `${path} should be a PNG`);
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  assert(bytes.byteLength > 24, `${path} should contain PNG data`);
+  const signature = [137, 80, 78, 71, 13, 10, 26, 10];
+  signature.forEach((value, index) => {
+    assert(bytes[index] === value, `${path} should have a valid PNG signature`);
+  });
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  assert(view.getUint32(16, false) === expectedSize, `${path} should be ${expectedSize}px wide`);
+  assert(view.getUint32(20, false) === expectedSize, `${path} should be ${expectedSize}px high`);
 }
 
 async function assertPublicPages(baseUrl) {
@@ -112,6 +146,7 @@ async function assertPublicPages(baseUrl) {
     "/templates/pet-animation",
     "/templates/old-photo-alive",
     "/launch-kit",
+    "/site.webmanifest",
     "/robots.txt",
     "/sitemap.xml",
     "/llms.txt",
