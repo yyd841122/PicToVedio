@@ -37,6 +37,7 @@ try {
   await waitForHealth(origin);
   await assertPublicPages(origin);
   await assertSeoMetadata(origin);
+  await assertHomeFormSemantics(origin);
   await assertSupportAndLaunchCopy(origin);
   await assertAccountApi(origin);
   await assertAnalyticsUrlPrivacy(origin);
@@ -110,6 +111,34 @@ async function assertPublicPages(baseUrl) {
     const body = await response.text();
     assert(body.length > 100, `${path} should return content`);
   }
+}
+
+async function assertHomeFormSemantics(baseUrl) {
+  const home = await fetchText(baseUrl, "/");
+  assert(
+    home.includes('<label class="visually-hidden" for="fileInput">'),
+    "homepage file upload should have an associated label",
+  );
+  assert(
+    home.includes('id="templateGrid" role="group" aria-labelledby="templateLabel"'),
+    "template buttons should use a labelled group",
+  );
+  assert(
+    home.includes('class="option-grid" role="group" aria-labelledby="ratioLabel"'),
+    "aspect-ratio buttons should use a labelled group",
+  );
+  assert(
+    home.includes('class="option-grid" role="group" aria-labelledby="qualityLabel"'),
+    "quality buttons should use a labelled group",
+  );
+  assert(
+    !home.includes('<label for="templateGrid">'),
+    "labels should not target non-form containers",
+  );
+  assert(
+    home.includes('setAllText(".editor .field-group > .field-label, .editor .field-group > label"'),
+    "localized field titles should include labels and labelled button groups",
+  );
 }
 
 async function assertSeoMetadata(baseUrl) {

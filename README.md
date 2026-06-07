@@ -348,6 +348,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [reports/GENERATION_STAGE1_RESULTS_2026-06-04.md](./reports/GENERATION_STAGE1_RESULTS_2026-06-04.md): owner-reported Stage 1 generation smoke-test results and quota-blocked pet test note.
 - [reports/CONTROLLED_LIVE_STATUS_2026-06-07.md](./reports/CONTROLLED_LIVE_STATUS_2026-06-07.md): current controlled-live evidence, remaining gates, and actions that still require owner approval.
 - [reports/EMAIL_OPERATIONS_CHECK_2026-06-07.md](./reports/EMAIL_OPERATIONS_CHECK_2026-06-07.md): support inbox, outbound sender, and public email-DNS verification record.
+- [reports/HOMEPAGE_CONSOLE_UAT_2026-06-07.md](./reports/HOMEPAGE_CONSOLE_UAT_2026-06-07.md): owner-observed browser issues, extension-warning classification, and homepage form-semantics fix.
 
 ## Search Discovery Helpers
 

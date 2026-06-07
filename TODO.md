@@ -81,6 +81,7 @@ Last updated: 2026-06-07
 - [x] Added disabled-by-default Supabase Auth magic-link login scaffolding with browser-account merge.
 - [x] Added a local smoke test for key pages, account API, checkout login gating, ops preflight, and inline scripts.
 - [x] Added a local readiness classifier that separates low-risk status, blockers, and owner-required live-launch work without printing secrets.
+- [x] Corrected homepage upload and option-group labels after owner browser-console UAT.
 
 ## In Progress
 
