@@ -36,6 +36,7 @@ Collect these before the owner approves a live test:
 | Support email | `support@cozyguidehub.com` receive path is tested; outbound reply identity is approved |
 | Refund policy | Public `/refund` page matches operating rules |
 | Email login | Homepage and `/account` show signed-in state; anonymous checkout redirects to `/login` |
+| Atomic credits | Owner-approved Supabase payment-credit RPC is applied and verified in test mode |
 | Test buyer | Owner confirms who will make the small live payment |
 | Test amount | Owner confirms the smallest safe live product or test price |
 
@@ -156,6 +157,7 @@ Before changing payment mode:
 - [x] Failed-generation automatic refund behavior has been reviewed in code and policy; an observed production failure/refund remains a separate acceptance item.
 - [x] Package credits and visible price labels are aligned with the current Creem test products.
 - [x] `/admin/ops` Live Payment Preflight has been reviewed and its intentional warnings are understood.
+- [ ] Supabase paid-credit grant has been moved to an owner-approved atomic RPC and verified with Creem test mode.
 - [x] `support@cozyguidehub.com` test mail was received in the monitored Gmail destination.
 - [x] Outbound support mail was delivered externally as `MotionPic AI Support <support@cozyguidehub.com>`.
 - [x] Gmail replies from the same address that received the message.

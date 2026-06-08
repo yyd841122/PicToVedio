@@ -114,6 +114,7 @@ Last updated: 2026-06-08
 - [x] Revisit visible Creem package amounts before switching to live mode.
 - [x] Align Creem test product descriptions and Render credit-pack variables at `40 / 160`.
 - [ ] Repeat the product-id, description, and Render-variable alignment for Creem live mode only after written category approval.
+- [ ] Prepare, owner-approve, and apply the Supabase atomic paid-credit RPC before any live payment test.
 - [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
 - [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
 - [ ] Re-check `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations, 1080p tests, 8-second tests, or audio-on tests.
