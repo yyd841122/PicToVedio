@@ -7,10 +7,11 @@
     "start": "node server.mjs",
     "dev": "node server.mjs",
     "check": "node --check server.mjs",
+    "sql:check": "node scripts/sql-static-check.mjs",
     "email:dns": "node scripts/email-dns-check.mjs",
     "readiness": "node scripts/readiness.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "test": "npm run check && npm run smoke"
+    "test": "npm run check && npm run sql:check && npm run smoke"
   },
   "engines": {
     "node": ">=20"

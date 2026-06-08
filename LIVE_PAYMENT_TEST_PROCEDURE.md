@@ -36,7 +36,7 @@ Collect these before the owner approves a live test:
 | Support email | `support@cozyguidehub.com` receive path is tested; outbound reply identity is approved |
 | Refund policy | Public `/refund` page matches operating rules |
 | Email login | Homepage and `/account` show signed-in state; anonymous checkout redirects to `/login` |
-| Atomic credits | Owner-approved Supabase payment-credit RPC is applied and verified in test mode |
+| Atomic credits | SQL draft exists; owner-approved Supabase payment-credit RPC is applied and verified in test mode |
 | Test buyer | Owner confirms who will make the small live payment |
 | Test amount | Owner confirms the smallest safe live product or test price |
 

@@ -4,6 +4,16 @@ Last updated: 2026-06-08
 
 Status: planning only. Do not run SQL, change Render variables, or switch production code to these RPCs until the owner approves the exact rollout.
 
+SQL draft file: `SUPABASE_ATOMIC_CREDIT_RPC_DRAFT.sql`.
+
+Read-only preflight file: `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql`.
+
+Local static review command:
+
+```bash
+npm run sql:check
+```
+
 ## Why This Exists
 
 The current Supabase path uses several REST calls for operations that should behave as one database transaction:
@@ -52,7 +62,7 @@ Required behavior:
 - Create the user row with 0 credits if needed, then lock that row with `for update`.
 - Use `credit_ledger.id = source || ':' || payment_id` as the canonical credit idempotency key.
 - If the ledger row already exists, return `credited=false` and the stored `balance_after`.
-- If the payment row exists but the ledger row does not, verify it matches the same provider, user, plan, and credits, then complete the missing credit grant.
+- If the payment row exists but the ledger row does not, stop with a reconciliation error. The legacy multi-call path may already have changed the balance before failing, so automatically adding credits again could double-credit the account.
 - If the payment row exists for a different user, plan, provider, or credit amount, raise an exception and do not change the balance.
 - Insert the payment row when missing.
 - Update `app_users.credits` and insert the ledger row in the same transaction.
@@ -80,15 +90,16 @@ It should move the browser account balance and related rows to the authenticated
 ## Rollout Order
 
 1. Owner confirms this migration can be prepared for the production Supabase project.
-2. Draft SQL is reviewed locally and kept out of chat screenshots that contain secrets.
-3. Owner opens Supabase SQL Editor and runs only the approved SQL.
-4. Verify that the functions exist and only `service_role` can execute them.
-5. Update backend code to prefer the payment RPC when Supabase is enabled.
-6. Run local mock tests.
-7. Deploy.
-8. Keep Creem test mode enabled.
-9. Run a Creem test checkout and confirm exactly one payment row, one ledger grant, and one balance increase.
-10. Only after Creem category approval, owner may approve live-mode configuration.
+2. Draft SQL is reviewed locally with `npm run sql:check` and kept out of chat screenshots that contain secrets.
+3. Owner runs `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql` and confirms it returns zero payment rows without matching ledger entries.
+4. Owner opens Supabase SQL Editor and runs only the approved SQL.
+5. Verify that the function exists and only `service_role` can execute it.
+6. Update backend code to prefer the payment RPC when Supabase is enabled.
+7. Run local mock tests.
+8. Deploy.
+9. Keep Creem test mode enabled.
+10. Run a Creem test checkout and confirm exactly one payment row, one ledger grant, and one balance increase.
+11. Only after Creem category approval, owner may approve live-mode configuration.
 
 ## Rollback
 
