@@ -4,6 +4,7 @@ import net from "node:net";
 import vm from "node:vm";
 import { formatJobAge, isStalePendingJob } from "../lib/job-status.mjs";
 import { parseTimestampMs } from "../lib/timestamps.mjs";
+import { safeSameOriginUrl } from "../lib/urls.mjs";
 
 const root = new URL("../", import.meta.url);
 const port = await findOpenPort();
@@ -49,6 +50,7 @@ try {
   await assertOpsPreflight(origin);
   assertTimestampParsing();
   assertStaleJobDetection();
+  assertSameOriginUrls();
   assertReadinessStatus();
   await assertInlineScriptsCompile();
   console.log("Smoke checks passed");
@@ -453,6 +455,33 @@ function assertStaleJobDetection() {
   assert(formatJobAge(oldJob, now) === "3d", "three-day processing job should display 3d age");
   assert(!isStalePendingJob(freshJob, now), "15-minute processing job should not be stale");
   assert(!isStalePendingJob({ ...oldJob, status: "succeeded" }, now), "succeeded job should not be stale");
+}
+
+function assertSameOriginUrls() {
+  const baseUrl = "https://video.cozyguidehub.com";
+  assert(
+    safeSameOriginUrl("/?plan=creator#tool", baseUrl) === "https://video.cozyguidehub.com/?plan=creator#tool",
+    "same-origin relative checkout returns should be preserved",
+  );
+  assert(
+    safeSameOriginUrl("https://video.cozyguidehub.com/account", baseUrl) === "https://video.cozyguidehub.com/account",
+    "same-origin absolute checkout returns should be preserved",
+  );
+  [
+    "https://example.com/phishing",
+    "//example.com/phishing",
+    "javascript:alert(1)",
+    "http://[",
+  ].forEach((value) => {
+    assert(
+      safeSameOriginUrl(value, baseUrl) === "https://video.cozyguidehub.com/",
+      `unsafe checkout return should fall back for ${value}`,
+    );
+  });
+  assert(
+    safeSameOriginUrl("/auth-callback", baseUrl) === "https://video.cozyguidehub.com/auth-callback",
+    "magic-link callback should stay on the configured app origin",
+  );
 }
 
 async function fetchText(baseUrl, path) {

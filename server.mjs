@@ -5,6 +5,7 @@ import { extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatJobAge, isStalePendingJob } from "./lib/job-status.mjs";
 import { parseTimestampMs } from "./lib/timestamps.mjs";
+import { safeSameOriginUrl } from "./lib/urls.mjs";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 const dataDir = join(root, "data");
@@ -597,9 +598,11 @@ async function handleCheckout(req, res) {
     );
   }
   const userId = getRequestUserId(req, body);
+  const returnUrl = safeSameOriginUrl(body.returnUrl, config.appUrl);
+  const checkoutBody = { ...body, returnUrl };
 
   if (config.paymentProvider === "creem") {
-    return await handleCreemCheckout(res, body, plan, userId);
+    return await handleCreemCheckout(res, checkoutBody, plan, userId);
   }
 
   if (config.paymentProvider === "mock") {
@@ -620,8 +623,8 @@ async function handleCheckout(req, res) {
 
   const params = new URLSearchParams({
     mode: "payment",
-    success_url: `${body.returnUrl || config.appUrl}?checkout=success`,
-    cancel_url: `${body.returnUrl || config.appUrl}?checkout=cancelled`,
+    success_url: appendQuery(returnUrl, { checkout: "success" }),
+    cancel_url: appendQuery(returnUrl, { checkout: "cancelled" }),
     "line_items[0][price]": price,
     "line_items[0][quantity]": "1",
     "metadata[plan]": plan,
@@ -645,7 +648,7 @@ async function handleCheckout(req, res) {
   await recordAnalyticsEventSafe({
     userId,
     name: "checkout_created",
-    page: sanitizeText(body.returnUrl, 500),
+    page: sanitizeAnalyticsLocation(returnUrl),
     properties: { provider: "stripe", plan },
   });
 
@@ -666,7 +669,7 @@ async function handleAuthMagicLink(req, res) {
     return sendJson(res, 400, { ok: false, error: "Enter a valid email address." });
   }
 
-  const redirectTo = `${getPublicOrigin(req)}/auth-callback`;
+  const redirectTo = safeSameOriginUrl("/auth-callback", config.appUrl);
   try {
     await supabaseAuthRequest(`otp?redirect_to=${encodeURIComponent(redirectTo)}`, {
       method: "POST",
@@ -751,6 +754,7 @@ async function handleMockConfirmPayment(req, res) {
 
 async function handleCreemCheckout(res, body, plan, userId) {
   const productId = plan === "commerce" ? config.creemCommerceProduct : config.creemCreatorProduct;
+  const returnUrl = safeSameOriginUrl(body.returnUrl, config.appUrl);
 
   if (!config.creemApiKey || !productId) {
     return sendJson(res, 200, {
@@ -776,7 +780,7 @@ async function handleCreemCheckout(res, body, plan, userId) {
       body: JSON.stringify({
         product_id: productId,
         request_id: randomUUID(),
-        success_url: appendQuery(body.returnUrl || config.appUrl, { checkout: "success", plan }),
+        success_url: appendQuery(returnUrl, { checkout: "success", plan }),
         metadata: {
           plan,
           userId,
@@ -797,7 +801,7 @@ async function handleCreemCheckout(res, body, plan, userId) {
   await recordAnalyticsEventSafe({
     userId,
     name: "checkout_created",
-    page: sanitizeText(body.returnUrl, 500),
+    page: sanitizeAnalyticsLocation(returnUrl),
     properties: { provider: "creem", plan, testMode: config.creemTestMode },
   });
 
