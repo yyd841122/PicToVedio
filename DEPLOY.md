@@ -372,7 +372,17 @@ MAX_DAILY_VIDEO_JOBS_PER_USER=2
 STARTER_CREDITS=2
 ```
 
-10. Click `Save, rebuild, and deploy` in Render.
+10. Before live mode, run `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql`. It must return zero rows.
+
+11. After explicit owner approval, apply `SUPABASE_ATOMIC_CREDIT_RPC_DRAFT.sql`, verify only `service_role` can execute it, and test it while Creem remains in test mode.
+
+12. Only after the RPC test succeeds, add:
+
+```env
+SUPABASE_ATOMIC_CREDIT_RPC=true
+```
+
+13. Click `Save, rebuild, and deploy` in Render.
 
 After deploy, create a low-price live product first if possible, pay once yourself, and confirm:
 

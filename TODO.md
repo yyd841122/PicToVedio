@@ -90,6 +90,7 @@ Last updated: 2026-06-08
 - [x] Added current support, private Demo preservation, and local refund-test status to `/launch-kit`.
 - [x] Restricted checkout return URLs and email-login callbacks to the configured MotionPic origin.
 - [x] Drafted the Supabase atomic paid-credit RPC SQL and added local static checks without executing production SQL.
+- [x] Staged backend payment-RPC integration behind a default-off environment flag.
 
 ## In Progress
 

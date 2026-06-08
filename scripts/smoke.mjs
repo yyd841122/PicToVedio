@@ -1,4 +1,5 @@
 import { spawn, spawnSync } from "node:child_process";
+import { createHmac } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import net from "node:net";
 import vm from "node:vm";
@@ -9,6 +10,7 @@ import { safeSameOriginUrl } from "../lib/urls.mjs";
 const root = new URL("../", import.meta.url);
 const port = await findOpenPort();
 const origin = `http://127.0.0.1:${port}`;
+const creemWebhookSecret = "motionpic-local-creem-smoke-secret";
 
 const server = spawn(process.execPath, ["server.mjs"], {
   cwd: root,
@@ -20,6 +22,7 @@ const server = spawn(process.execPath, ["server.mjs"], {
     VIDEO_PROVIDER: "mock",
     MOCK_VIDEO_FAILURE: "true",
     PAYMENT_PROVIDER: "mock",
+    CREEM_WEBHOOK_SECRET: creemWebhookSecret,
     SUPABASE_URL: "https://example.supabase.co",
     SUPABASE_AUTH_ANON_KEY: "test-public-key",
     STARTER_CREDITS: "2",
@@ -44,6 +47,7 @@ try {
   await assertHomeFormSemantics(origin);
   await assertSupportAndLaunchCopy(origin);
   await assertAccountApi(origin);
+  await assertCreemWebhookIdempotency(origin);
   await assertFailedJobRefund(origin);
   await assertAnalyticsUrlPrivacy(origin);
   await assertCheckoutRequiresLogin(origin);
@@ -105,6 +109,10 @@ function assertReadinessStatus() {
   assert(
     !result.stdout.includes("Confirm the public support inbox is actively monitored"),
     "readiness should not list completed support inbox work as an owner action",
+  );
+  assert(
+    result.stdout.includes("RPC integration is staged but off"),
+    "readiness should keep atomic paid credits visibly disabled by default",
   );
 }
 
@@ -370,6 +378,65 @@ async function assertFailedJobRefund(baseUrl) {
   );
 }
 
+async function assertCreemWebhookIdempotency(baseUrl) {
+  const suffix = Date.now();
+  const userId = `mp_creemtest${suffix}`;
+  const headers = { "X-MotionPic-User-ID": userId };
+  const initialResponse = await fetch(`${baseUrl}/api/account`, { headers });
+  const initialAccount = await initialResponse.json();
+  assert(initialResponse.ok, "Creem webhook test account should be created");
+  assert(initialAccount.credits === 2, "Creem webhook test account should start with 2 credits");
+
+  const event = {
+    id: `evt_smoke_${suffix}`,
+    eventType: "checkout.completed",
+    object: {
+      id: `payment_smoke_${suffix}`,
+      metadata: { userId, plan: "creator" },
+    },
+  };
+  const rawBody = JSON.stringify(event);
+  const signature = createHmac("sha256", creemWebhookSecret).update(rawBody).digest("hex");
+
+  const firstResponse = await fetch(`${baseUrl}/api/creem/webhook`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "creem-signature": signature,
+    },
+    body: rawBody,
+  });
+  const firstResult = await firstResponse.json();
+  assert(firstResponse.ok, "first local Creem webhook should succeed");
+  assert(firstResult.duplicate === false, "first local Creem webhook should not be a duplicate");
+
+  const creditedResponse = await fetch(`${baseUrl}/api/account`, { headers });
+  const creditedAccount = await creditedResponse.json();
+  assert(creditedAccount.credits === 42, "Creator webhook should add exactly 40 credits");
+  assert(
+    creditedAccount.recentCredits.filter(
+      (entry) => entry.source === "creem-checkout" && entry.externalId === event.object.id,
+    ).length === 1,
+    "first Creem webhook should create exactly one paid-credit ledger entry",
+  );
+
+  const repeatResponse = await fetch(`${baseUrl}/api/creem/webhook`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "creem-signature": signature,
+    },
+    body: rawBody,
+  });
+  const repeatResult = await repeatResponse.json();
+  assert(repeatResponse.ok, "repeated local Creem webhook should succeed");
+  assert(repeatResult.duplicate === true, "repeated local Creem webhook should be identified as duplicate");
+
+  const finalResponse = await fetch(`${baseUrl}/api/account`, { headers });
+  const finalAccount = await finalResponse.json();
+  assert(finalAccount.credits === 42, "repeated Creem webhook should not grant credits twice");
+}
+
 async function assertAnalyticsUrlPrivacy(baseUrl) {
   const sensitivePage = "/?checkout=success&plan=creator&request_id=req_private&checkout_id=ch_private&order_id=ord_private&customer_id=cust_private";
   const response = await fetch(`${baseUrl}/api/analytics/events`, {
@@ -423,7 +490,7 @@ async function assertOpsPreflight(baseUrl) {
   const ops = await response.json();
   assert(response.ok, "/api/admin/ops should return 200 from localhost");
   assert(Array.isArray(ops.livePaymentPreflight), "ops should include livePaymentPreflight");
-  assert(ops.livePaymentPreflight.length >= 8, "preflight should include all launch checks");
+  assert(ops.livePaymentPreflight.length >= 9, "preflight should include all launch checks");
   assert(Array.isArray(ops.ownerActionChecklist), "ops should include ownerActionChecklist");
   assert(ops.ownerActionChecklist.length >= 6, "owner action queue should include high-risk gates");
   assert(ops.totals?.stalePendingJobs === 0, "fresh local ops data should have no stale pending jobs");
@@ -431,6 +498,8 @@ async function assertOpsPreflight(baseUrl) {
   assert(creditPack?.status === "$9/40 + $29/160", "preflight should show controlled pack values");
   const dailyCaps = ops.livePaymentPreflight.find((item) => item.label === "Daily Spend Caps");
   assert(dailyCaps?.status === "10 site / 2 user", "preflight should show controlled daily caps");
+  const atomicCredits = ops.livePaymentPreflight.find((item) => item.label === "Atomic Paid Credits");
+  assert(atomicCredits?.status === "Off", "atomic payment credits should remain off by default");
   const promotionGate = ops.ownerActionChecklist.find((item) => item.area === "Promotion");
   assert(promotionGate?.status === "Do not publish", "ops should keep promotion publishing gated");
 }

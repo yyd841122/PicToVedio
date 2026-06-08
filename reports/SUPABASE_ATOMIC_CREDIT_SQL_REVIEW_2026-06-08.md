@@ -35,7 +35,15 @@ The RPC does not automatically repair that case because it cannot prove whether 
 - Review the SQL in Supabase SQL Editor without running it.
 - Run `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql`.
 - Obtain explicit owner approval to execute the function creation and grants.
-- After execution, update backend code and verify it while Creem remains in test mode.
+- After execution, enable `SUPABASE_ATOMIC_CREDIT_RPC=true` and verify it while Creem remains in test mode.
+
+## Backend Integration Status
+
+The backend integration is staged behind `SUPABASE_ATOMIC_CREDIT_RPC`, which defaults to `false`. When disabled, the existing payment path remains active. When enabled with Supabase as the active data provider, Creem and Stripe paid-credit grants call `rpc/motionpic_process_payment_credit`.
+
+Ops and the local readiness report display whether the RPC path is active. The local smoke suite also verifies the legacy Creem webhook path grants a 40-credit Creator Pack exactly once when the same signed event is delivered twice.
+
+No production environment variable was added or changed during this work.
 
 Reference:
 

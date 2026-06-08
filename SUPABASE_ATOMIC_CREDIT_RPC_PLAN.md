@@ -94,10 +94,10 @@ It should move the browser account balance and related rows to the authenticated
 3. Owner runs `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql` and confirms it returns zero payment rows without matching ledger entries.
 4. Owner opens Supabase SQL Editor and runs only the approved SQL.
 5. Verify that the function exists and only `service_role` can execute it.
-6. Update backend code to prefer the payment RPC when Supabase is enabled.
+6. Confirm the deployed backend includes the default-off `SUPABASE_ATOMIC_CREDIT_RPC` integration.
 7. Run local mock tests.
-8. Deploy.
-9. Keep Creem test mode enabled.
+8. Keep Creem test mode enabled.
+9. Set `SUPABASE_ATOMIC_CREDIT_RPC=true` in Render and deploy only after owner approval.
 10. Run a Creem test checkout and confirm exactly one payment row, one ledger grant, and one balance increase.
 11. Only after Creem category approval, owner may approve live-mode configuration.
 

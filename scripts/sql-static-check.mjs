@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 const sql = readFileSync(new URL("../SUPABASE_ATOMIC_CREDIT_RPC_DRAFT.sql", import.meta.url), "utf8");
 const preflight = readFileSync(new URL("../SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql", import.meta.url), "utf8");
+const server = readFileSync(new URL("../server.mjs", import.meta.url), "utf8");
 
 assert.match(
   sql,
@@ -28,6 +29,16 @@ assert.match(
   "preflight should find legacy payments without matching ledgers",
 );
 assert.doesNotMatch(preflight, /\b(insert|update|delete|create|drop|alter|grant|revoke|truncate)\b/i, "preflight must be read-only");
+assert.match(
+  server,
+  /process\.env\.SUPABASE_ATOMIC_CREDIT_RPC\s*===\s*"true"/,
+  "backend RPC integration should require an explicit true feature flag",
+);
+assert.match(
+  server,
+  /rpc\/motionpic_process_payment_credit/,
+  "backend should call the reviewed payment-credit RPC endpoint",
+);
 assert.match(
   sql,
   /revoke\s+execute[\s\S]+motionpic_process_payment_credit[\s\S]+from\s+public/i,

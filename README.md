@@ -208,6 +208,14 @@ Keep these Render values aligned with the active Creem product descriptions befo
 
 When Supabase Auth is configured, checkout requires email login before creating a paid credit-pack session. This keeps real purchases tied to a durable account instead of only to browser storage.
 
+Paid-credit webhook writes can use the reviewed Supabase transaction RPC after it has been installed and verified:
+
+```env
+SUPABASE_ATOMIC_CREDIT_RPC=true
+```
+
+Keep this variable unset or `false` until `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql` returns zero rows and `SUPABASE_ATOMIC_CREDIT_RPC_DRAFT.sql` has been owner-approved and applied. With the flag off, the existing payment path remains active.
+
 Current generation credit rules:
 
 - 4s / 720p: `2 credits`
@@ -348,6 +356,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [DIRECTORY_SUBMISSION_CHECKLIST.md](./DIRECTORY_SUBMISSION_CHECKLIST.md): operator checklist for directory, community, and Product Hunt submissions.
 - [DEMO_ASSET_CHECKLIST.md](./DEMO_ASSET_CHECKLIST.md): screenshot and short-video asset checklist for directories and social launch posts.
 - [SUPPORT_RESPONSE_TEMPLATES.md](./SUPPORT_RESPONSE_TEMPLATES.md): support reply templates for failed generations, distorted outputs, credits, payments, and privacy concerns.
+- [SUPABASE_ATOMIC_CREDIT_RPC_PLAN.md](./SUPABASE_ATOMIC_CREDIT_RPC_PLAN.md): staged transaction-RPC rollout and rollback plan.
 - [R2_SETUP_GUIDE.md](./R2_SETUP_GUIDE.md): Cloudflare R2 setup steps for storing uploaded photos and generated videos.
 - [STORAGE_SETUP_REVIEW_CHECKLIST.md](./STORAGE_SETUP_REVIEW_CHECKLIST.md): object-storage cutover review checklist, acceptance criteria, and rollback plan.
 - [reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md](./reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md): public SEO metadata, JSON-LD, internal-link, and endpoint readiness report.

@@ -24,6 +24,7 @@ const config = {
   supabaseUrl: (process.env.SUPABASE_URL || "").replace(/\/$/, ""),
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
   supabaseAuthAnonKey: process.env.SUPABASE_AUTH_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || "",
+  supabaseAtomicCreditRpc: process.env.SUPABASE_ATOMIC_CREDIT_RPC === "true",
   authCookieSecret: process.env.AUTH_COOKIE_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.ANALYTICS_ADMIN_TOKEN || "motionpic-local-auth-cookie",
   openaiApiKey: process.env.OPENAI_API_KEY || "",
   openaiVideoModel: process.env.OPENAI_VIDEO_MODEL || "sora-2",
@@ -819,18 +820,22 @@ async function handleCreemWebhook(req, res) {
   const event = JSON.parse(rawBody);
   const type = event.eventType || event.type;
   const eventId = getEventId(event);
-  const eventRecorded = await recordWebhookEvent({ id: eventId, provider: "creem", type });
-  if (!eventRecorded) return sendJson(res, 200, { received: true, duplicate: true });
+  const grantsCredits = ["checkout.completed", "order.created", "payment.completed"].includes(type);
 
-  if (["checkout.completed", "order.created", "payment.completed"].includes(type)) {
+  if (grantsCredits) {
     const metadata = event.object?.metadata || event.data?.metadata || {};
     const userId = metadata.userId;
     const plan = metadata.plan;
     const paymentId = getPaymentId(event);
 
     if (userId && ["creator", "commerce"].includes(plan)) {
+      if (!useAtomicPaymentCreditRpc()) {
+        const eventRecorded = await recordWebhookEvent({ id: eventId, provider: "creem", type });
+        if (!eventRecorded) return sendJson(res, 200, { received: true, duplicate: true });
+      }
+
       const payment = creditAmountForPlan(plan);
-      await grantCredits({
+      const result = await grantPaymentCredits({
         userId,
         amount: payment.credits,
         source: "creem-checkout",
@@ -838,15 +843,21 @@ async function handleCreemWebhook(req, res) {
         plan,
         provider: "creem",
         eventId,
+        eventType: type,
       });
-      await recordAnalyticsEventSafe({
-        userId,
-        name: "payment_credit_granted",
-        properties: { provider: "creem", plan, credits: payment.credits, eventId },
-      });
+      if (result.credited) {
+        await recordAnalyticsEventSafe({
+          userId,
+          name: "payment_credit_granted",
+          properties: { provider: "creem", plan, credits: payment.credits, eventId },
+        });
+      }
+      return sendJson(res, 200, { received: true, duplicate: !result.credited });
     }
   }
 
+  const eventRecorded = await recordWebhookEvent({ id: eventId, provider: "creem", type });
+  if (!eventRecorded) return sendJson(res, 200, { received: true, duplicate: true });
   return sendJson(res, 200, { received: true });
 }
 
@@ -864,7 +875,7 @@ async function handleStripeWebhook(req, res) {
     const userId = session.metadata?.userId || "demo-user";
     const plan = session.metadata?.plan || "creator";
     const payment = creditAmountForPlan(plan);
-    await grantCredits({
+    const result = await grantPaymentCredits({
       userId,
       amount: payment.credits,
       source: "stripe-checkout",
@@ -872,12 +883,15 @@ async function handleStripeWebhook(req, res) {
       plan,
       provider: "stripe",
       eventId: getEventId(event),
+      eventType: event.type,
     });
-    await recordAnalyticsEventSafe({
-      userId,
-      name: "payment_credit_granted",
-      properties: { provider: "stripe", plan, credits: payment.credits, eventId: getEventId(event) },
-    });
+    if (result.credited) {
+      await recordAnalyticsEventSafe({
+        userId,
+        name: "payment_credit_granted",
+        properties: { provider: "stripe", plan, credits: payment.credits, eventId: getEventId(event) },
+      });
+    }
   }
 
   return sendJson(res, 200, { received: true });
@@ -1233,6 +1247,8 @@ async function addOpsRuntimeConfig(data) {
     storageProvider: config.storageProvider,
     authAvailable: canUseSupabaseAuth(),
     checkoutRequiresLogin: canUseSupabaseAuth(),
+    atomicPaymentCreditRpcConfigured: config.supabaseAtomicCreditRpc,
+    atomicPaymentCreditRpcActive: useAtomicPaymentCreditRpc(),
     creemTestMode: config.creemTestMode,
     creemApiKeyConfigured: Boolean(config.creemApiKey),
     creemCreatorProductConfigured: Boolean(config.creemCreatorProduct),
@@ -1292,6 +1308,24 @@ function buildLivePaymentPreflight(runtime) {
       note: "Shows presence only; secret values are never displayed.",
     },
     {
+      label: "Atomic Paid Credits",
+      status: runtime.atomicPaymentCreditRpcActive
+        ? "Active"
+        : runtime.atomicPaymentCreditRpcConfigured
+          ? "Unavailable"
+          : "Off",
+      tone: runtime.atomicPaymentCreditRpcActive
+        ? "tone-success"
+        : runtime.creemTestMode
+          ? "tone-info"
+          : "tone-danger",
+      note: runtime.atomicPaymentCreditRpcActive
+        ? "Payment webhook grants use the reviewed Supabase transaction RPC."
+        : runtime.atomicPaymentCreditRpcConfigured
+          ? "The flag is enabled, but Supabase is not the active data provider."
+          : "Keep Creem in test mode until the RPC is installed, verified, and explicitly enabled.",
+    },
+    {
       label: "Credit Packs",
       status: `${runtime.creatorPackPriceLabel}/${runtime.creatorPackCredits} + ${runtime.commercePackPriceLabel}/${runtime.commercePackCredits}`,
       tone: controlledCredits ? "tone-success" : marketingCredits ? "tone-info" : "tone-warning",
@@ -1324,6 +1358,15 @@ function buildOwnerActionChecklist(runtime) {
       risk: "Keep core tables server-only; do not add public policies merely to remove informational notices.",
       status: "Passed",
       tone: "tone-success",
+    },
+    {
+      area: "Credit RPC",
+      action: runtime.atomicPaymentCreditRpcActive
+        ? "Verify one Creem test payment creates exactly one payment, ledger grant, and balance increase."
+        : "Run the read-only preflight, apply the reviewed SQL, then enable the flag only after explicit approval.",
+      risk: "Changes the durable payment-credit transaction path.",
+      status: runtime.atomicPaymentCreditRpcActive ? "Test required" : "Owner approval",
+      tone: runtime.atomicPaymentCreditRpcActive ? "tone-warning" : "tone-info",
     },
     {
       area: "Creem",
@@ -2658,8 +2701,50 @@ async function grantCredits({ userId, amount, source, externalId, plan, provider
   return { credited, balance: db.users[userId].credits };
 }
 
+async function grantPaymentCredits({
+  userId,
+  amount,
+  source,
+  externalId,
+  plan,
+  provider,
+  eventId,
+  eventType,
+}) {
+  if (!useAtomicPaymentCreditRpc()) {
+    return await grantCredits({ userId, amount, source, externalId, plan, provider, eventId });
+  }
+
+  const result = await supabaseRequest("rpc/motionpic_process_payment_credit", {
+    method: "POST",
+    body: {
+      p_provider: provider,
+      p_event_id: eventId,
+      p_event_type: eventType,
+      p_payment_id: externalId,
+      p_user_id: userId,
+      p_plan: plan,
+      p_credits: amount,
+      p_source: source,
+    },
+  });
+  const row = Array.isArray(result) ? result[0] : result;
+  if (!row || typeof row.credited !== "boolean" || !Number.isFinite(Number(row.balance))) {
+    throw new Error("Supabase atomic payment-credit RPC returned an invalid response");
+  }
+  return {
+    credited: row.credited,
+    balance: Number(row.balance),
+    duplicateReason: sanitizeText(row.duplicate_reason, 80),
+  };
+}
+
 function useSupabase() {
   return config.dataProvider === "supabase" && Boolean(config.supabaseUrl && config.supabaseServiceRoleKey);
+}
+
+function useAtomicPaymentCreditRpc() {
+  return useSupabase() && config.supabaseAtomicCreditRpc;
 }
 
 function canReadAdminAnalytics(req, url) {

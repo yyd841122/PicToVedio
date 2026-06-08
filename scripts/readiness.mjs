@@ -11,6 +11,7 @@ const checks = [
   checkVideoProvider(),
   checkAuth(),
   checkPayment(),
+  checkAtomicCredits(),
   checkPricing(),
   checkDailyCaps(),
   checkStorage(),
@@ -19,6 +20,7 @@ const checks = [
 
 const ownerActions = [
   "Wait for written Creem category approval before any live-mode configuration.",
+  "Run the read-only Supabase credit preflight and apply the RPC only after explicit approval.",
   "Create or confirm Creem live products and webhook only after explicit approval and category approval.",
   "Change Render live payment variables only after explicit approval.",
   "Run one small live payment only after explicit approval.",
@@ -105,6 +107,25 @@ function checkPayment() {
     return owner("Creem Live Checkout", "Creem live mode appears selected. Verify owner approval, live products, webhook, and rollback plan.");
   }
   return block("Creem Checkout", "Creem is selected but API key, product IDs, or webhook secret presence is incomplete.");
+}
+
+function checkAtomicCredits() {
+  const enabled = boolValue("SUPABASE_ATOMIC_CREDIT_RPC", false);
+  const supabaseReady = value("DATA_PROVIDER", "file") === "supabase"
+    && has("SUPABASE_URL")
+    && has("SUPABASE_SERVICE_ROLE_KEY");
+  const liveMode = !boolValue("CREEM_TEST_MODE", true);
+
+  if (enabled && supabaseReady) {
+    return owner(
+      "Atomic Paid Credits",
+      "RPC integration is enabled. Confirm the SQL function and service-role-only grants before payment testing.",
+    );
+  }
+  if (liveMode) {
+    return block("Atomic Paid Credits", "Creem live mode must not proceed while the atomic paid-credit RPC is disabled.");
+  }
+  return warn("Atomic Paid Credits", "RPC integration is staged but off. Keep Creem in test mode until SQL is installed and verified.");
 }
 
 function checkPricing() {
