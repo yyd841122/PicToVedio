@@ -148,13 +148,13 @@ Post copy:
 
 Before using demo assets in submissions:
 
-- [ ] Confirm the homepage still loads correctly.
-- [ ] Confirm the selected template pages return 200.
+- [x] Confirm the homepage still loads correctly.
+- [x] Confirm the selected template pages return 200.
 - [ ] Confirm generated clips do not expose private source photos.
 - [ ] Confirm clips do not show severe face, pet, or product distortion.
-- [ ] Confirm the support email shown on the site is acceptable.
-- [ ] Download and save useful generated outputs promptly because provider links may expire before object storage is enabled.
-- [ ] Save final assets in a local folder outside the repo unless they are intentionally public marketing assets.
+- [x] Confirm the support email shown on the site is acceptable.
+- [x] Download and save useful generated outputs promptly because provider links may expire before object storage is enabled.
+- [x] Save preserved candidate assets in a local folder outside the repo.
 
 ## Do Not Do Without Confirmation
 

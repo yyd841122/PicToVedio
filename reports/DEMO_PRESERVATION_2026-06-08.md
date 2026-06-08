@@ -4,6 +4,8 @@
 
 The owner confirmed that at least three Stage 1 Good generated-video files were downloaded and saved privately outside the expiring DashScope provider URLs.
 
+The public homepage and template routes are covered by the local smoke suite, and the configured support address has completed inbound and outbound checks. The preserved video files themselves remain outside the repository.
+
 The candidate set comes from these successful Stage 1 templates:
 
 - Product Motion
