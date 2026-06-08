@@ -17,6 +17,7 @@ const server = spawn(process.execPath, ["server.mjs"], {
     APP_URL: origin,
     DATA_PROVIDER: "file",
     VIDEO_PROVIDER: "mock",
+    MOCK_VIDEO_FAILURE: "true",
     PAYMENT_PROVIDER: "mock",
     SUPABASE_URL: "https://example.supabase.co",
     SUPABASE_AUTH_ANON_KEY: "test-public-key",
@@ -42,6 +43,7 @@ try {
   await assertHomeFormSemantics(origin);
   await assertSupportAndLaunchCopy(origin);
   await assertAccountApi(origin);
+  await assertFailedJobRefund(origin);
   await assertAnalyticsUrlPrivacy(origin);
   await assertCheckoutRequiresLogin(origin);
   await assertOpsPreflight(origin);
@@ -297,6 +299,65 @@ async function assertAccountApi(baseUrl) {
   assert(account.authenticated === false, "/api/account should report authenticated=false without cookie");
   assert(account.credits === 2, "/api/account should use STARTER_CREDITS=2");
   assert(account.plans?.creator?.credits === 40, "/api/account should expose controlled creator credits");
+}
+
+async function assertFailedJobRefund(baseUrl) {
+  const userId = `mp_refundtest${Date.now()}`;
+  const headers = {
+    "Content-Type": "application/json",
+    "X-MotionPic-User-ID": userId,
+  };
+  const createResponse = await fetch(`${baseUrl}/api/video/jobs`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      imageData: "data:image/png;base64,iVBORw0KGgo=",
+      prompt: "subtle motion",
+      template: "Portrait",
+      ratio: "9:16",
+      resolution: "720p",
+      seconds: 4,
+    }),
+  });
+  const failedJob = await createResponse.json();
+  assert(createResponse.ok, "mock failed job should return its final job state");
+  assert(failedJob.status === "failed", "mock failure mode should create a failed job");
+  assert(failedJob.credits === 2, "failed standard job should record a 2-credit cost");
+  assert(failedJob.remainingCredits === 2, "failed job should restore the starter balance");
+  assert(failedJob.error.includes("Credits were refunded automatically"), "failed job should explain the refund");
+
+  const accountResponse = await fetch(`${baseUrl}/api/account`, {
+    headers: { "X-MotionPic-User-ID": userId },
+  });
+  const account = await accountResponse.json();
+  assert(accountResponse.ok, "refund test account should be readable");
+  assert(account.credits === 2, "refund test account should retain its original balance");
+  const jobEntries = account.recentCredits.filter((entry) => entry.externalId === failedJob.id);
+  assert(jobEntries.length === 2, "failed job should have exactly one debit and one refund ledger entry");
+  assert(
+    jobEntries.some((entry) => entry.source === "video-debit" && entry.amount === -2),
+    "failed job should retain its debit ledger entry",
+  );
+  assert(
+    jobEntries.some((entry) => entry.source === "video-refund" && entry.amount === 2),
+    "failed job should create one refund ledger entry",
+  );
+
+  const repeatResponse = await fetch(`${baseUrl}/api/video/jobs/${encodeURIComponent(failedJob.id)}`, {
+    headers: { "X-MotionPic-User-ID": userId },
+  });
+  assert(repeatResponse.ok, "failed job should remain readable");
+  const repeatedAccountResponse = await fetch(`${baseUrl}/api/account`, {
+    headers: { "X-MotionPic-User-ID": userId },
+  });
+  const repeatedAccount = await repeatedAccountResponse.json();
+  assert(repeatedAccount.credits === 2, "reading a failed job again should not change the balance");
+  assert(
+    repeatedAccount.recentCredits.filter(
+      (entry) => entry.externalId === failedJob.id && entry.source === "video-refund",
+    ).length === 1,
+    "reading a failed job again should not create a duplicate refund",
+  );
 }
 
 async function assertAnalyticsUrlPrivacy(baseUrl) {

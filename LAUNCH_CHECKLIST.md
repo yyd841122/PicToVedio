@@ -32,6 +32,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Complete Stage 1 real-generation checks for Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait.
 - [ ] Complete the 20-generation promotion-readiness matrix before broad promotion.
 - [x] Record the current provider unit cost in `UNIT_ECONOMICS.md`.
+- [x] Confirm the failed-job refund path end to end with the local mock provider, including duplicate-refund protection.
 - [ ] Confirm failed jobs refund credits.
 - [x] Confirm successful jobs create rows in `video_jobs` through `/admin/ops`.
 - [x] Confirm `/admin/ops` reports `ESTIMATED_VIDEO_COST_CNY` as CNY 0.60.

@@ -85,6 +85,7 @@ Last updated: 2026-06-08
 - [x] Replaced the temporary favicon with an owner-supplied MotionPic AI logo set for browser, Apple, PWA, navigation, and SEO use.
 - [x] Added baseline browser security headers and disabled caching for JSON API responses.
 - [x] Synced the local readiness report with the confirmed support inbox, outbound sender, and public email DNS status.
+- [x] Added an end-to-end local mock test for failed-job debit, automatic refund, restored balance, and refund idempotency.
 
 ## In Progress
 

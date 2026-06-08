@@ -18,6 +18,7 @@ const config = {
   port: Number(process.env.PORT || 8787),
   appUrl: process.env.APP_URL || "http://localhost:8787",
   videoProvider: process.env.VIDEO_PROVIDER || "mock",
+  mockVideoFailure: process.env.MOCK_VIDEO_FAILURE === "true",
   dataProvider: process.env.DATA_PROVIDER || "file",
   supabaseUrl: (process.env.SUPABASE_URL || "").replace(/\/$/, ""),
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
@@ -302,8 +303,14 @@ async function handleCreateVideoJob(req, res) {
   }
 
   if (config.videoProvider === "mock") {
-    job.status = "succeeded";
-    job.outputUrl = `${config.appUrl}/mock-output.mp4`;
+    if (config.mockVideoFailure) {
+      job.status = "failed";
+      job.error = "Video generation failed. Credits were refunded automatically. Mock failure used for local testing.";
+      remainingCredits = await refundCreditsForFailedJob(job);
+    } else {
+      job.status = "succeeded";
+      job.outputUrl = `${config.appUrl}/mock-output.mp4`;
+    }
     await saveJob(job);
   }
 
