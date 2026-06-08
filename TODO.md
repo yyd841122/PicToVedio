@@ -87,6 +87,7 @@ Last updated: 2026-06-08
 - [x] Synced the local readiness report with the confirmed support inbox, outbound sender, and public email DNS status.
 - [x] Added an end-to-end local mock test for failed-job debit, automatic refund, restored balance, and refund idempotency.
 - [x] Updated `/account` copy so released email login is no longer described as a future feature.
+- [x] Added current support, private Demo preservation, and local refund-test status to `/launch-kit`.
 
 ## In Progress
 

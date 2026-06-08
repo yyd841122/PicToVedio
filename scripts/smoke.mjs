@@ -290,6 +290,8 @@ async function assertSupportAndLaunchCopy(baseUrl) {
   assert(launchKit.includes("Launch gates"), "launch kit should show launch gates");
   assert(launchKit.includes("Owner only"), "launch kit should show owner-only guardrails");
   assert(launchKit.includes("一张照片变 AI 短视频"), "launch kit should keep Xiaohongshu copy readable");
+  assert(launchKit.includes("At least three Stage 1 Good videos are saved privately"), "launch kit should show preserved demo status");
+  assert(launchKit.includes("A real provider failure is still unverified"), "launch kit should distinguish local refund tests from production proof");
   ["涓€", "鎴", "瀹", "�"].forEach((garbled) => {
     assert(!launchKit.includes(garbled), `launch kit should not contain garbled text marker ${garbled}`);
   });
