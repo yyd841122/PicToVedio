@@ -29,7 +29,8 @@ Use this checklist before moving from test mode to real public launch.
 
 ## 2. Video Generation
 
-- [ ] Run at least 5 real DashScope generations with different photo types.
+- [x] Complete Stage 1 real-generation checks for Product Motion, Pet Motion, Old Photo Alive, and Natural Portrait.
+- [ ] Complete the 20-generation promotion-readiness matrix before broad promotion.
 - [x] Record the current provider unit cost in `UNIT_ECONOMICS.md`.
 - [ ] Confirm failed jobs refund credits.
 - [x] Confirm successful jobs create rows in `video_jobs` through `/admin/ops`.

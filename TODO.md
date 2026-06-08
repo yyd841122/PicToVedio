@@ -84,17 +84,18 @@ Last updated: 2026-06-08
 - [x] Corrected homepage upload and option-group labels after owner browser-console UAT.
 - [x] Replaced the temporary favicon with an owner-supplied MotionPic AI logo set for browser, Apple, PWA, navigation, and SEO use.
 - [x] Added baseline browser security headers and disabled caching for JSON API responses.
+- [x] Synced the local readiness report with the confirmed support inbox, outbound sender, and public email DNS status.
 
 ## In Progress
 
-- [ ] Prepare the site for real video generation.
+- [x] Prepare the site for real video generation.
 - [x] Decide the first real video API provider: Alibaba Cloud Model Studio / Bailian DashScope.
 - [x] Configure Render with `DASHSCOPE_API_KEY` and switch `VIDEO_PROVIDER=dashscope`.
 - [ ] Decide object storage provider.
 - [ ] Create Cloudflare R2 bucket and access keys.
 - [x] Re-run the Supabase Security Advisor and confirm 0 errors; retain the intentional server-only `RLS Enabled No Policy` info items.
 - [x] Keep Creem in test mode until Stage 1 real generation works.
-- [ ] Keep Creem in test mode until owner approves the controlled live-payment switch.
+- [x] Keep Creem in test mode until owner approves the controlled live-payment switch.
 - [x] Decide launch access policy: open browsing/upload with low starter credits, require email login before paid checkout, and keep larger promotion gated on live-payment readiness.
 - [x] Build the first SEO/GEO content layer around the homepage and templates.
 
