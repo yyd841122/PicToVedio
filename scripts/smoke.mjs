@@ -272,6 +272,12 @@ async function assertSeoMetadata(baseUrl) {
 }
 
 async function assertSupportAndLaunchCopy(baseUrl) {
+  const account = await fetchText(baseUrl, "/account");
+  assert(account.includes("<title>Account - MotionPic AI</title>"), "account page should use the current account title");
+  assert(account.includes("Email login is available now"), "account page should say email login is available");
+  assert(account.includes("Sign in with email to keep access across browser sessions and devices"), "browser accounts should explain the login benefit");
+  assert(!account.includes("Email login is planned"), "account page should not describe released email login as planned");
+
   const refund = await fetchText(baseUrl, "/refund");
   assert(refund.includes("If a provider request fails technically"), "refund page should explain failed generation refunds");
   assert(refund.includes("If a job succeeds but the result is aesthetically imperfect"), "refund page should explain imperfect successful outputs");

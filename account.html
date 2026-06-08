@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <title>Browser Account - MotionPic AI</title>
+    <title>Account - MotionPic AI</title>
     <style>
       :root {
         --ink: #14231d;
@@ -276,14 +276,14 @@
           <div>
             <h1 id="accountTitle">Your Browser Account</h1>
             <p id="accountDescription">
-              This browser keeps a local account ID for credits, payments, and generation records. Email login is planned before broader promotion.
+              This account keeps your credits, payments, and generation history together. Email login is available now for access beyond this browser.
             </p>
           </div>
           <aside class="card metric">
             <span class="label">Current credits</span>
             <strong class="credits" id="creditBalance">...</strong>
             <p style="color: rgba(255, 255, 255, 0.72); margin-bottom: 0">
-              Browser account ID: <code id="userId" style="color: white">...</code>
+              Account ID: <code id="userId" style="color: white">...</code>
             </p>
             <p id="authState" style="color: rgba(255, 255, 255, 0.72); margin-bottom: 0">Checking login...</p>
           </aside>
@@ -492,7 +492,7 @@
           accountTitle.textContent = account.authenticated ? "Your MotionPic Account" : "Your Browser Account";
           accountDescription.textContent = account.authenticated
             ? "Your email login is connected. Credits, payments, and generation records now follow this signed-in account."
-            : "This browser keeps a local account ID for credits, payments, and generation records. Email login is planned before broader promotion.";
+            : "This browser keeps a local account ID for credits, payments, and generation records. Sign in with email to keep access across browser sessions and devices.";
           authState.textContent = account.authenticated
             ? `Signed in as ${account.email || "email user"}`
             : account.authAvailable

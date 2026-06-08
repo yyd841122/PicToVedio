@@ -86,6 +86,7 @@ Last updated: 2026-06-08
 - [x] Added baseline browser security headers and disabled caching for JSON API responses.
 - [x] Synced the local readiness report with the confirmed support inbox, outbound sender, and public email DNS status.
 - [x] Added an end-to-end local mock test for failed-job debit, automatic refund, restored balance, and refund idempotency.
+- [x] Updated `/account` copy so released email login is no longer described as a future feature.
 
 ## In Progress
 
