@@ -1,6 +1,6 @@
 # MotionPic AI Owner UAT Checklist
 
-Last updated: 2026-06-07
+Last updated: 2026-06-08
 
 This checklist is for owner acceptance testing before MotionPic AI moves from a controlled MVP to real paid traffic. It separates low-risk public checks from tests that require private access, real generation cost, live payment, storage writes, or backend evidence.
 
@@ -147,6 +147,7 @@ Do not start broad promotion until:
 
 - [ ] At least one live payment test passes, or owner explicitly chooses a free/test-only launch.
 - [ ] At least 3 demo outputs or screenshots are ready.
+- [x] At least 3 Stage 1 Good output files are preserved privately outside expiring provider URLs.
 - [x] Stage 1 Good outputs are recorded as private candidate demos before public publishing.
 - [ ] Demo assets do not expose private photos, private dashboards, or credentials.
 - [ ] Directory submission copy is reviewed.

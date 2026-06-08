@@ -114,6 +114,7 @@ Use this checklist before moving from test mode to real public launch.
 - [ ] Xiaohongshu/TikTok/YouTube Shorts demo clip.
 - [x] Launch kit contains guarded copy blocks, UTM links, launch gates, and unpublished social drafts.
 - [x] Demo asset checklist records Stage 1 Good outputs as private candidate demos.
+- [x] At least 3 Stage 1 Good output files are preserved privately outside expiring provider URLs.
 
 ## 9. First Revenue Goal
 

@@ -1,6 +1,6 @@
 # MotionPic AI Demo Asset Checklist
 
-Last updated: 2026-06-06
+Last updated: 2026-06-08
 
 Use this checklist to prepare screenshots and short demo clips for directories, Product Hunt, Xiaohongshu, TikTok, YouTube Shorts, and launch posts. This is a planning document only; it does not require real payments, live submissions, or external posting.
 
@@ -14,7 +14,11 @@ Create a small set of clean, reusable demo assets that show MotionPic AI clearly
 - One old-photo-animation demo.
 - Optional: one AI Kiss Video demo only after content and privacy concerns are reviewed.
 
-Stage 1 already produced four owner-reported Good outputs. Save those privately as candidate demos before provider links expire.
+Stage 1 produced four owner-reported Good outputs. On 2026-06-08, the owner confirmed that at least three of those outputs were saved privately outside the expiring provider URLs.
+
+- [x] Preserve at least three Stage 1 Good output files privately.
+- [ ] Confirm the saved source photos are owned or approved for public use.
+- [ ] Complete privacy and final visual review before publishing any saved clip.
 
 ## Safety Rules
 

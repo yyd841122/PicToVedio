@@ -134,6 +134,7 @@ Do not run broad public promotion until these are true:
 - [x] Support receive path is tested and monitored.
 - [x] Outbound replies use the approved `support@cozyguidehub.com` sender identity.
 - [ ] At least 3 acceptable demo clips or screenshots are ready.
+- [x] At least 3 Stage 1 Good output files are preserved privately outside expiring provider URLs.
 - [x] Stage 1 Good outputs are recorded as private candidate demos.
 - [x] Object storage is enabled or the site clearly tells users to download outputs.
 - [x] Refund policy is visible and matches the implemented technical-failure refund versus successful-output quality distinction.
