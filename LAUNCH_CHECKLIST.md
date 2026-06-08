@@ -1,6 +1,6 @@
 # MotionPic AI Launch Checklist
 
-Last updated: 2026-06-07
+Last updated: 2026-06-08
 
 Use this checklist before moving from test mode to real public launch.
 
@@ -9,12 +9,13 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Render latest deploy is live on `https://video.cozyguidehub.com`.
 - [x] `/health` reports `ok=true`, `provider=dashscope`, a safe short build id, and server time.
 - [x] Owner UAT checklist is prepared in `OWNER_UAT_CHECKLIST.md`.
-- [ ] Homepage loads without browser console errors.
+- [x] Homepage loads without site-owned browser console errors; observed `content.js` runtime messages belong to the browser translation extension.
 - [x] Homepage shows email-login/account status and routes anonymous checkout to login before paid checkout.
 - [x] Upload, generate, and checkout clicks are tracked in analytics.
 - [x] `/admin/analytics` requires the private analytics token.
 - [x] `/admin/ops` requires the same private analytics session.
 - [x] Local smoke test covers public pages, SEO metadata, login-required checkout, ops preflight, and launch-kit copy.
+- [x] HTML, static, JSON, and 404 responses include baseline browser security headers; JSON API responses use `no-store`.
 
 ## 1A. Database Security
 

@@ -35,6 +35,7 @@ server.stderr.on("data", (chunk) => {
 
 try {
   await waitForHealth(origin);
+  await assertSecurityHeaders(origin);
   await assertPublicPages(origin);
   await assertFavicon(origin);
   await assertSeoMetadata(origin);
@@ -51,6 +52,38 @@ try {
 } finally {
   server.kill("SIGTERM");
   setTimeout(() => server.kill("SIGKILL"), 1000).unref();
+}
+
+async function assertSecurityHeaders(baseUrl) {
+  const paths = ["/", "/login", "/favicon.ico", "/health", "/missing-security-check"];
+
+  for (const path of paths) {
+    const response = await fetch(`${baseUrl}${path}`);
+    assert(
+      response.headers.get("x-content-type-options") === "nosniff",
+      `${path} should disable MIME sniffing`,
+    );
+    assert(
+      response.headers.get("x-frame-options") === "DENY",
+      `${path} should block framing`,
+    );
+    assert(
+      response.headers.get("referrer-policy") === "strict-origin-when-cross-origin",
+      `${path} should limit referrer disclosure`,
+    );
+    assert(
+      response.headers.get("permissions-policy") === "camera=(), microphone=(), geolocation=()",
+      `${path} should disable unused sensitive browser permissions`,
+    );
+  }
+
+  const accountResponse = await fetch(`${baseUrl}/api/account`, {
+    headers: { "X-MotionPic-User-ID": "mp_securitycheckuser1234567890" },
+  });
+  assert(
+    accountResponse.headers.get("cache-control") === "no-store",
+    "JSON account responses should not be cached",
+  );
 }
 
 async function findOpenPort() {

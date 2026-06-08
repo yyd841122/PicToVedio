@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-06-07
+Last updated: 2026-06-08
 
 ## Done
 
@@ -83,6 +83,7 @@ Last updated: 2026-06-07
 - [x] Added a local readiness classifier that separates low-risk status, blockers, and owner-required live-launch work without printing secrets.
 - [x] Corrected homepage upload and option-group labels after owner browser-console UAT.
 - [x] Replaced the temporary favicon with an owner-supplied MotionPic AI logo set for browser, Apple, PWA, navigation, and SEO use.
+- [x] Added baseline browser security headers and disabled caching for JSON API responses.
 
 ## In Progress
 

@@ -77,6 +77,8 @@ const mimeTypes = {
 };
 
 const server = createServer(async (req, res) => {
+  applyBaseSecurityHeaders(res);
+
   try {
     const url = new URL(req.url || "/", config.appUrl);
 
@@ -3564,6 +3566,13 @@ function serveStatic(pathname, res) {
   createReadStream(filePath).pipe(res);
 }
 
+function applyBaseSecurityHeaders(res) {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+}
+
 function appendQuery(url, params) {
   const next = new URL(url, config.appUrl);
   for (const [key, value] of Object.entries(params)) {
@@ -3782,6 +3791,7 @@ function providerFailureRecord(error) {
 function sendJson(res, status, data) {
   res.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
     "X-Robots-Tag": "noindex, nofollow",
   });
   res.end(JSON.stringify(data));

@@ -357,6 +357,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [reports/CONTROLLED_LIVE_STATUS_2026-06-07.md](./reports/CONTROLLED_LIVE_STATUS_2026-06-07.md): current controlled-live evidence, remaining gates, and actions that still require owner approval.
 - [reports/EMAIL_OPERATIONS_CHECK_2026-06-07.md](./reports/EMAIL_OPERATIONS_CHECK_2026-06-07.md): support inbox, outbound sender, and public email-DNS verification record.
 - [reports/HOMEPAGE_CONSOLE_UAT_2026-06-07.md](./reports/HOMEPAGE_CONSOLE_UAT_2026-06-07.md): owner-observed browser issues, extension-warning classification, and homepage form-semantics fix.
+- [reports/PRODUCTION_SECURITY_HEADERS_2026-06-08.md](./reports/PRODUCTION_SECURITY_HEADERS_2026-06-08.md): baseline response-header hardening and JSON cache-control verification.
 
 ## Search Discovery Helpers
 
