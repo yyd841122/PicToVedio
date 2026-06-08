@@ -19,7 +19,6 @@ const checks = [
 
 const ownerActions = [
   "Wait for written Creem category approval before any live-mode configuration.",
-  "Confirm the public support inbox is actively monitored before paid traffic.",
   "Create or confirm Creem live products and webhook only after explicit approval and category approval.",
   "Change Render live payment variables only after explicit approval.",
   "Run one small live payment only after explicit approval.",
@@ -149,7 +148,7 @@ function checkStorage() {
 }
 
 function checkSupportAndPolicies() {
-  return ok("Policies And Support", "Privacy, Terms, Refund, and support templates exist. Owner still needs to confirm inbox monitoring.");
+  return ok("Policies And Support", "Privacy, Terms, Refund, support templates, inbox receive, outbound sender, and public email DNS are confirmed.");
 }
 
 function readDotEnv(path) {

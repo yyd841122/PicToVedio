@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import net from "node:net";
 import vm from "node:vm";
@@ -47,6 +47,7 @@ try {
   await assertOpsPreflight(origin);
   assertTimestampParsing();
   assertStaleJobDetection();
+  assertReadinessStatus();
   await assertInlineScriptsCompile();
   console.log("Smoke checks passed");
 } finally {
@@ -83,6 +84,23 @@ async function assertSecurityHeaders(baseUrl) {
   assert(
     accountResponse.headers.get("cache-control") === "no-store",
     "JSON account responses should not be cached",
+  );
+}
+
+function assertReadinessStatus() {
+  const result = spawnSync(process.execPath, ["scripts/readiness.mjs"], {
+    cwd: root,
+    env: process.env,
+    encoding: "utf8",
+  });
+  assert(result.status === 0, "readiness command should complete successfully");
+  assert(
+    result.stdout.includes("inbox receive, outbound sender, and public email DNS are confirmed"),
+    "readiness should report the confirmed support email path",
+  );
+  assert(
+    !result.stdout.includes("Confirm the public support inbox is actively monitored"),
+    "readiness should not list completed support inbox work as an owner action",
   );
 }
 
