@@ -55,6 +55,7 @@ Use this checklist before moving from test mode to real public launch.
 
 - [x] Sent MotionPic AI category pre-review request to Creem on 2026-06-07.
 - [x] Received conditional category guidance on 2026-06-11: MotionPic AI should generally be acceptable if buyer data is not saved.
+- [x] Sent Creem a clarification of the limited transaction-reference and Supabase Auth email boundary on 2026-06-11.
 - [ ] Confirm with Creem that limited transaction references and Supabase Auth email handling satisfy the buyer-data condition.
 - [ ] Complete KYC/KYB and receive actual Creem live-mode activation; conditional guidance is not guaranteed approval.
 - [ ] Finish Creem live store verification.

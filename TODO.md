@@ -116,6 +116,7 @@ Last updated: 2026-06-11
 - [x] Revisit visible Creem package amounts before switching to live mode.
 - [x] Align Creem test product descriptions and Render credit-pack variables at `40 / 160`.
 - [x] Receive conditional Creem category guidance: generally acceptable if buyer data is not saved, subject to KYC/KYB.
+- [x] Send Creem the current limited transaction-reference and Supabase Auth email boundary for clarification.
 - [ ] Confirm the current limited payment/event references and Supabase Auth email boundary satisfy Creem's buyer-data condition.
 - [ ] Repeat the product-id, description, and Render-variable alignment only after KYC/KYB and actual live-mode activation.
 - [ ] Prepare, owner-approve, and apply the Supabase atomic paid-credit RPC before any live payment test.

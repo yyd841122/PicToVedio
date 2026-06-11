@@ -38,13 +38,15 @@ Supabase Auth separately processes the user's email address for magic-link login
 
 ## Remaining Gates
 
-- Ask Creem whether limited payment/event references and Supabase Auth email handling satisfy its condition.
+- Await Creem's answer on whether limited payment/event references and Supabase Auth email handling satisfy its condition. The clarification was sent on 2026-06-11.
 - Complete Creem KYC/KYB and receive actual live-mode activation.
 - Apply and test the reviewed Supabase atomic paid-credit RPC after explicit owner approval.
 - Create or confirm live products and webhook only after live access is available.
 - Change Render variables and run a real payment only after explicit owner confirmation.
 
-## Suggested Clarification Reply
+## Clarification Sent
+
+The following clarification was sent to Creem on 2026-06-11:
 
 ```text
 Hi Nicole,

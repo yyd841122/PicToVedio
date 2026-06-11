@@ -29,7 +29,7 @@ Collect these before the owner approves a live test:
 
 | Item | Required evidence |
 |---|---|
-| Creem eligibility | Conditional category guidance received; limited transaction/auth data boundary clarified with Creem |
+| Creem eligibility | Conditional category guidance received; clarification sent; Creem confirmation of the limited transaction/auth data boundary still required |
 | Creem live store | Owner confirms live store and payout setup are ready |
 | Live products | Product names, prices, credit grants, and product IDs are known |
 | Live webhook | Webhook URL is `https://video.cozyguidehub.com/api/creem/webhook` |

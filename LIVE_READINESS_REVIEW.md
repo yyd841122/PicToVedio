@@ -115,6 +115,7 @@ Payments:
 - [x] Ops evidence confirms the matching test payment, `checkout.completed` webhook, and `+40 / creem-checkout` ledger entry.
 - [x] MotionPic AI category pre-review request was sent to Creem on 2026-06-07.
 - [x] Creem provided conditional category guidance on 2026-06-11: the product should generally be acceptable if buyer data is not saved.
+- [x] Sent the limited payment/event-reference and Supabase Auth email boundary to Creem for clarification on 2026-06-11.
 - [ ] Confirm the limited payment/event references and Supabase Auth email boundary with Creem.
 - [ ] Complete KYC/KYB and receive actual live-mode activation before any live configuration.
 - [ ] Finish Creem live store verification.
