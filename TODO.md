@@ -1,6 +1,6 @@
 # MotionPic AI TODO
 
-Last updated: 2026-06-08
+Last updated: 2026-06-11
 
 ## Done
 
@@ -115,7 +115,9 @@ Last updated: 2026-06-08
 - [x] Revise first-pass credit economics before charging real users.
 - [x] Revisit visible Creem package amounts before switching to live mode.
 - [x] Align Creem test product descriptions and Render credit-pack variables at `40 / 160`.
-- [ ] Repeat the product-id, description, and Render-variable alignment for Creem live mode only after written category approval.
+- [x] Receive conditional Creem category guidance: generally acceptable if buyer data is not saved, subject to KYC/KYB.
+- [ ] Confirm the current limited payment/event references and Supabase Auth email boundary satisfy Creem's buyer-data condition.
+- [ ] Repeat the product-id, description, and Render-variable alignment only after KYC/KYB and actual live-mode activation.
 - [ ] Prepare, owner-approve, and apply the Supabase atomic paid-credit RPC before any live payment test.
 - [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
 - [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
@@ -132,7 +134,7 @@ Last updated: 2026-06-08
 - [x] Return `429` without deducting credits when daily generation caps are reached.
 - [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
 - [x] Add private `/admin/ops` live-payment preflight checks for Auth, Creem, pricing, caps, and storage.
-- [ ] Switch Creem from test to live only after written category approval and explicit owner confirmation.
+- [ ] Switch Creem from test to live only after data-boundary clarification, KYC/KYB, actual live activation, and explicit owner confirmation.
 - [ ] Create a low-price live product for first live payment testing.
 - [x] Set the default anonymous starter balance to `STARTER_CREDITS=2`.
 

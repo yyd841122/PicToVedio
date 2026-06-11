@@ -1,6 +1,6 @@
 # MotionPic AI Live Payment Test Procedure
 
-Last updated: 2026-06-07
+Last updated: 2026-06-11
 
 This procedure prepares the first controlled Creem live payment test. It is a documentation-only checklist. Do not configure Creem live mode, change Render variables, run Supabase SQL, perform a real payment, or inspect private payment records without owner confirmation.
 
@@ -29,6 +29,7 @@ Collect these before the owner approves a live test:
 
 | Item | Required evidence |
 |---|---|
+| Creem eligibility | Conditional category guidance received; limited transaction/auth data boundary clarified with Creem |
 | Creem live store | Owner confirms live store and payout setup are ready |
 | Live products | Product names, prices, credit grants, and product IDs are known |
 | Live webhook | Webhook URL is `https://video.cozyguidehub.com/api/creem/webhook` |
@@ -41,6 +42,8 @@ Collect these before the owner approves a live test:
 | Test amount | Owner confirms the smallest safe live product or test price |
 
 Do not paste API keys, webhook secrets, full receipts, card details, or private customer data into repo files.
+
+Creem's 2026-06-11 reply is conditional guidance, not guaranteed approval. Keep test mode enabled until Creem confirms the limited operational data boundary is acceptable, KYC/KYB is complete, and live mode is actually available.
 
 ## Selected Pricing Decision
 
@@ -76,6 +79,8 @@ Completed on 2026-06-07:
 - No real payment, live key, live product, or live webhook was used.
 
 Private email, order, card, and payment identifiers are intentionally excluded from this record.
+
+MotionPic stores only limited operational payment references: provider, payment/event IDs, internal account ID, plan, credits, and timestamps. It does not store full card data, billing addresses, or complete Creem customer/webhook objects. Supabase Auth handles login email separately; confirm this boundary with Creem before live activation.
 
 ## Creem Live Setup Checklist
 

@@ -114,6 +114,10 @@ function assertReadinessStatus() {
     result.stdout.includes("RPC integration is staged but off"),
     "readiness should keep atomic paid credits visibly disabled by default",
   );
+  assert(
+    result.stdout.includes("complete KYC/KYB and confirm live-mode activation"),
+    "readiness should describe Creem guidance as conditional rather than final approval",
+  );
 }
 
 async function findOpenPort() {
@@ -490,7 +494,7 @@ async function assertOpsPreflight(baseUrl) {
   const ops = await response.json();
   assert(response.ok, "/api/admin/ops should return 200 from localhost");
   assert(Array.isArray(ops.livePaymentPreflight), "ops should include livePaymentPreflight");
-  assert(ops.livePaymentPreflight.length >= 9, "preflight should include all launch checks");
+  assert(ops.livePaymentPreflight.length >= 10, "preflight should include all launch checks");
   assert(Array.isArray(ops.ownerActionChecklist), "ops should include ownerActionChecklist");
   assert(ops.ownerActionChecklist.length >= 6, "owner action queue should include high-risk gates");
   assert(ops.totals?.stalePendingJobs === 0, "fresh local ops data should have no stale pending jobs");
@@ -500,6 +504,10 @@ async function assertOpsPreflight(baseUrl) {
   assert(dailyCaps?.status === "10 site / 2 user", "preflight should show controlled daily caps");
   const atomicCredits = ops.livePaymentPreflight.find((item) => item.label === "Atomic Paid Credits");
   assert(atomicCredits?.status === "Off", "atomic payment credits should remain off by default");
+  const buyerDataScope = ops.livePaymentPreflight.find((item) => item.label === "Buyer Data Scope");
+  assert(buyerDataScope?.status === "Minimized", "preflight should show minimized buyer-data persistence");
+  const creemGate = ops.ownerActionChecklist.find((item) => item.area === "Creem");
+  assert(creemGate?.status === "KYC/KYB pending", "ops should keep Creem live activation gated");
   const promotionGate = ops.ownerActionChecklist.find((item) => item.area === "Promotion");
   assert(promotionGate?.status === "Do not publish", "ops should keep promotion publishing gated");
 }

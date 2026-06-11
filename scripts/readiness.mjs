@@ -19,9 +19,10 @@ const checks = [
 ];
 
 const ownerActions = [
-  "Wait for written Creem category approval before any live-mode configuration.",
+  "Creem gave conditional category guidance on 2026-06-11; complete KYC/KYB and confirm live-mode activation before live configuration.",
+  "Ask Creem to confirm that limited payment/event references and Supabase Auth email handling fit its buyer-data condition.",
   "Run the read-only Supabase credit preflight and apply the RPC only after explicit approval.",
-  "Create or confirm Creem live products and webhook only after explicit approval and category approval.",
+  "Create or confirm Creem live products and webhook only after explicit approval and live-mode activation.",
   "Change Render live payment variables only after explicit approval.",
   "Run one small live payment only after explicit approval.",
   "Enable R2/OSS object storage only after explicit approval.",

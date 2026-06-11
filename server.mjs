@@ -1308,6 +1308,12 @@ function buildLivePaymentPreflight(runtime) {
       note: "Shows presence only; secret values are never displayed.",
     },
     {
+      label: "Buyer Data Scope",
+      status: "Minimized",
+      tone: "tone-info",
+      note: "Payments retain operational IDs, plan, credits, and timestamps; no full card, billing, or Creem customer object.",
+    },
+    {
       label: "Atomic Paid Credits",
       status: runtime.atomicPaymentCreditRpcActive
         ? "Active"
@@ -1371,10 +1377,10 @@ function buildOwnerActionChecklist(runtime) {
     {
       area: "Creem",
       action: runtime.creemTestMode
-        ? "Keep test mode until live products, webhook, pricing, and rollback are reviewed."
+        ? "Conditional category guidance was received on 2026-06-11. Keep test mode until buyer-data scope, KYC/KYB, live activation, products, webhook, pricing, and rollback are confirmed."
         : "Live mode appears selected. Watch payments, webhooks, and credit ledger immediately.",
-      risk: "Can affect real checkout and customer credits.",
-      status: runtime.creemTestMode ? "Waiting" : "Live risk",
+      risk: "Conditional guidance is not guaranteed approval and real checkout can affect customer credits.",
+      status: runtime.creemTestMode ? "KYC/KYB pending" : "Live risk",
       tone: runtime.creemTestMode ? "tone-warning" : "tone-danger",
     },
     {

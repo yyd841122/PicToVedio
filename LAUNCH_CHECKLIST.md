@@ -1,6 +1,6 @@
 # MotionPic AI Launch Checklist
 
-Last updated: 2026-06-08
+Last updated: 2026-06-11
 
 Use this checklist before moving from test mode to real public launch.
 
@@ -54,7 +54,9 @@ Use this checklist before moving from test mode to real public launch.
 ## 4. Creem Live Payment
 
 - [x] Sent MotionPic AI category pre-review request to Creem on 2026-06-07.
-- [ ] Receive written confirmation that MotionPic AI is eligible for Creem live mode.
+- [x] Received conditional category guidance on 2026-06-11: MotionPic AI should generally be acceptable if buyer data is not saved.
+- [ ] Confirm with Creem that limited transaction references and Supabase Auth email handling satisfy the buyer-data condition.
+- [ ] Complete KYC/KYB and receive actual Creem live-mode activation; conditional guidance is not guaranteed approval.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.
 - [ ] Create live Commerce Pack product.

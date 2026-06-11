@@ -135,7 +135,7 @@
     </header>
     <main class="shell">
       <h1>Privacy Policy</h1>
-      <p>Last updated: May 28, 2026</p>
+      <p>Last updated: June 11, 2026</p>
       <div class="panel">
         <p>
           MotionPic AI helps users turn uploaded photos into short AI videos. This policy explains what information we process and how we use it.
@@ -145,7 +145,8 @@
         <ul>
           <li>Uploaded photos and prompts used to create video generation jobs.</li>
           <li>Generated video URLs, job status, credit usage, and basic account identifiers.</li>
-          <li>Payment events from Creem, including product, plan, transaction identifiers, and credit amounts.</li>
+          <li>Email addresses handled by Supabase Auth for account login. MotionPic AI does not copy the email address into its payment table.</li>
+          <li>Limited payment confirmation data from Creem: provider, payment and event identifiers, internal account ID, plan, credit amount, and timestamp.</li>
           <li>Technical information such as browser-local anonymous user IDs, request logs, errors, and device/browser data.</li>
         </ul>
 
@@ -164,7 +165,7 @@
 
         <h2>Payments</h2>
         <p>
-          Payments are processed by Creem. MotionPic AI does not store full card numbers. We receive payment confirmation events so credits can be added to the correct account.
+          Payments are processed on Creem's hosted checkout. MotionPic AI does not receive or store full payment card numbers, security codes, or billing addresses. We do not retain the full Creem customer or webhook object. We keep only limited operational references needed to add credits, prevent duplicate grants, investigate refunds, and provide support.
         </p>
 
         <h2>Data Retention</h2>
