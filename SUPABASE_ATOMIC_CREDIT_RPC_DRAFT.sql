@@ -1,5 +1,5 @@
 -- MotionPic AI atomic paid-credit RPC draft
--- Last updated: 2026-06-08
+-- Last updated: 2026-06-13
 --
 -- REVIEW ONLY until the owner explicitly approves running production SQL.
 -- This function is intended for the Render backend using SUPABASE_SERVICE_ROLE_KEY.
@@ -38,6 +38,8 @@ declare
   v_existing_event record;
   v_existing_ledger record;
   v_existing_payment record;
+  v_ledger_found boolean := false;
+  v_payment_found boolean := false;
   v_current_credits integer;
   v_new_balance integer;
   v_now timestamptz := pg_catalog.now();
@@ -83,18 +85,15 @@ begin
   select e.provider, e.type
     into v_existing_event
   from public.webhook_events as e
-  where e.id = v_event_id;
+  where e.id = v_event_id
+  for update;
 
   if not found then
     raise exception 'Webhook event row could not be created or read: %', v_event_id using errcode = 'P0001';
   end if;
 
-  if v_existing_event.provider <> v_provider
-    or (
-      v_event_type <> ''
-      and v_existing_event.type is not null
-      and v_existing_event.type <> v_event_type
-    )
+  if v_existing_event.provider is distinct from v_provider
+    or coalesce(v_existing_event.type, '') is distinct from v_event_type
   then
     raise exception 'Existing webhook event does not match the attempted payment event: %', v_event_id
       using errcode = '23505';
@@ -114,32 +113,72 @@ begin
     raise exception 'User row could not be created or locked: %', v_user_id using errcode = 'P0001';
   end if;
 
-  select l.id, l.balance_after
+  if exists (
+    select 1
+    from public.payments as p
+    where p.event_id = v_event_id
+      and p.id <> v_payment_id
+  ) then
+    raise exception 'Existing webhook event is already linked to a different payment: %', v_event_id
+      using errcode = '23505';
+  end if;
+
+  select p.id, p.provider, p.event_id, p.user_id, p.plan, p.credits
+    into v_existing_payment
+  from public.payments as p
+  where p.id = v_payment_id;
+  v_payment_found := found;
+
+  if v_payment_found then
+    if v_existing_payment.provider is distinct from v_provider
+      or (
+        v_existing_payment.event_id is not null
+        and v_existing_payment.event_id is distinct from v_event_id
+      )
+      or v_existing_payment.user_id is distinct from v_user_id
+      or v_existing_payment.plan is distinct from v_plan
+      or v_existing_payment.credits is distinct from p_credits
+    then
+      raise exception 'Existing payment row does not match the attempted credit grant: %', v_payment_id
+        using errcode = '23505';
+    end if;
+  end if;
+
+  select
+    l.id,
+    l.user_id,
+    l.amount,
+    l.source,
+    l.external_id,
+    l.plan,
+    l.balance_after
     into v_existing_ledger
   from public.credit_ledger as l
   where l.id = v_ledger_id;
+  v_ledger_found := found;
 
-  if found then
+  if v_ledger_found then
+    if v_existing_ledger.user_id is distinct from v_user_id
+      or v_existing_ledger.amount is distinct from p_credits
+      or v_existing_ledger.source is distinct from v_source
+      or v_existing_ledger.external_id is distinct from v_payment_id
+      or v_existing_ledger.plan is distinct from v_plan
+    then
+      raise exception 'Existing credit ledger row does not match the attempted credit grant: %', v_ledger_id
+        using errcode = '23505';
+    end if;
+
+    if not v_payment_found then
+      raise exception 'Existing credit ledger has no payment row and requires manual reconciliation: %', v_ledger_id
+        using errcode = 'P0001';
+    end if;
+
     return query
       select false, v_existing_ledger.balance_after::integer, 'credit_ledger'::text;
     return;
   end if;
 
-  select p.id, p.provider, p.user_id, p.plan, p.credits
-    into v_existing_payment
-  from public.payments as p
-  where p.id = v_payment_id;
-
-  if found then
-    if v_existing_payment.provider <> v_provider
-      or v_existing_payment.user_id <> v_user_id
-      or v_existing_payment.plan <> v_plan
-      or v_existing_payment.credits <> p_credits
-    then
-      raise exception 'Existing payment row does not match the attempted credit grant: %', v_payment_id
-        using errcode = '23505';
-    end if;
-
+  if v_payment_found then
     raise exception 'Existing payment has no credit ledger row and requires manual reconciliation: %', v_payment_id
       using errcode = 'P0001';
   else

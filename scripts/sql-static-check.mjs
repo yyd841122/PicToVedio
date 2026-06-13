@@ -13,6 +13,11 @@ assert.match(
 assert.match(sql, /security\s+definer/i, "RPC should use security definer");
 assert.match(sql, /set\s+search_path\s*=\s*''/i, "RPC should pin an empty search_path");
 assert.match(sql, /for\s+update/i, "RPC should lock the user balance row");
+assert.match(
+  sql,
+  /from\s+public\.webhook_events\s+as\s+e[\s\S]+where\s+e\.id\s*=\s*v_event_id[\s\S]+for\s+update/i,
+  "RPC should lock the webhook event row before checking its payment linkage",
+);
 assert.match(sql, /on\s+conflict\s*\(id\)\s+do\s+nothing/i, "RPC should tolerate duplicate event/user inserts");
 assert.match(sql, /credit_ledger/i, "RPC should write or inspect credit_ledger");
 assert.match(sql, /webhook_events/i, "RPC should record webhook_events in the same transaction");
@@ -24,10 +29,27 @@ assert.match(
   "legacy payment rows without ledgers should stop for manual review",
 );
 assert.match(
+  sql,
+  /Existing credit ledger has no payment row and requires manual reconciliation/i,
+  "ledger rows without payments should stop for manual review",
+);
+assert.match(
+  sql,
+  /Existing credit ledger row does not match the attempted credit grant/i,
+  "duplicate ledger rows should be validated before returning success",
+);
+assert.match(
+  sql,
+  /Existing webhook event is already linked to a different payment/i,
+  "one webhook event must not grant more than one payment",
+);
+assert.match(
   preflight,
   /left\s+join\s+public\.credit_ledger[\s\S]+where\s+l\.id\s+is\s+null/i,
   "preflight should find legacy payments without matching ledgers",
 );
+assert.match(preflight, /payment_ledger_mismatch/i, "preflight should find payment and ledger field mismatches");
+assert.match(preflight, /payment_event_reused/i, "preflight should find event ids linked to multiple payments");
 assert.doesNotMatch(preflight, /\b(insert|update|delete|create|drop|alter|grant|revoke|truncate)\b/i, "preflight must be read-only");
 assert.match(
   server,

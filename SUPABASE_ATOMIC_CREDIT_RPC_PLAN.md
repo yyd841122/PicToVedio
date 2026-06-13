@@ -59,9 +59,11 @@ Required behavior:
 
 - Reject blank `payment_id`, blank `user_id`, unsupported provider, unsupported plan, or non-positive credits.
 - Insert or keep the webhook event id without treating that alone as a completed credit grant.
+- Lock the webhook event row and reject an event id already linked to a different payment.
 - Create the user row with 0 credits if needed, then lock that row with `for update`.
 - Use `credit_ledger.id = source || ':' || payment_id` as the canonical credit idempotency key.
-- If the ledger row already exists, return `credited=false` and the stored `balance_after`.
+- If the ledger row already exists, verify its user, amount, source, external id, and plan before returning `credited=false` and the stored `balance_after`.
+- If the ledger row exists without its matching payment row, stop with a reconciliation error.
 - If the payment row exists but the ledger row does not, stop with a reconciliation error. The legacy multi-call path may already have changed the balance before failing, so automatically adding credits again could double-credit the account.
 - If the payment row exists for a different user, plan, provider, or credit amount, raise an exception and do not change the balance.
 - Insert the payment row when missing.
