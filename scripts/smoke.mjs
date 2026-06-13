@@ -115,8 +115,8 @@ function assertReadinessStatus() {
     "readiness should keep atomic paid credits visibly disabled by default",
   );
   assert(
-    result.stdout.includes("complete KYC/KYB and confirm live-mode activation"),
-    "readiness should describe Creem guidance as conditional rather than final approval",
+    result.stdout.includes("Creem accepted the buyer-data boundary on 2026-06-13"),
+    "readiness should record Creem buyer-data acceptance",
   );
 }
 
@@ -505,7 +505,7 @@ async function assertOpsPreflight(baseUrl) {
   const atomicCredits = ops.livePaymentPreflight.find((item) => item.label === "Atomic Paid Credits");
   assert(atomicCredits?.status === "Off", "atomic payment credits should remain off by default");
   const buyerDataScope = ops.livePaymentPreflight.find((item) => item.label === "Buyer Data Scope");
-  assert(buyerDataScope?.status === "Minimized", "preflight should show minimized buyer-data persistence");
+  assert(buyerDataScope?.status === "Creem accepted", "preflight should show Creem buyer-data acceptance");
   const creemGate = ops.ownerActionChecklist.find((item) => item.area === "Creem");
   assert(creemGate?.status === "KYC/KYB pending", "ops should keep Creem live activation gated");
   const promotionGate = ops.ownerActionChecklist.find((item) => item.area === "Promotion");

@@ -6,7 +6,7 @@ Date: 2026-06-11
 
 Creem replied that MotionPic AI should generally be acceptable if it does not save buyer data. Creem also stated that approval cannot be guaranteed because live access remains subject to KYC/KYB verification.
 
-This is useful conditional category guidance. It is not final live-mode activation or a guarantee that KYC/KYB will pass.
+On 2026-06-13, Creem explicitly confirmed that MotionPic's limited operational payment fields and separate Supabase Auth email handling are acceptable. The buyer-data review is therefore complete. This is not final live-mode activation or a guarantee that KYC/KYB will pass.
 
 ## Current Data Boundary
 
@@ -38,7 +38,6 @@ Supabase Auth separately processes the user's email address for magic-link login
 
 ## Remaining Gates
 
-- Await Creem's answer on whether limited payment/event references and Supabase Auth email handling satisfy its condition. The clarification was sent on 2026-06-11.
 - Complete Creem KYC/KYB and receive actual live-mode activation.
 - Apply and test the reviewed Supabase atomic paid-credit RPC after explicit owner approval.
 - Create or confirm live products and webhook only after live access is available.
@@ -60,3 +59,14 @@ Does this limited setup satisfy the buyer-data condition you mentioned, subject 
 Best,
 Yingdong
 ```
+
+## Creem Acceptance
+
+Creem replied on 2026-06-13 that:
+
+- The operational fields retained for fulfillment and support are acceptable.
+- No card or sensitive payment data is being saved.
+- Supabase Auth handling email separately for login is standard and acceptable.
+- The account will now proceed through the normal KYC/KYB review.
+
+This completes the buyer-data clarification. It does not authorize switching Render or Creem to live mode before KYC/KYB and live activation are complete.

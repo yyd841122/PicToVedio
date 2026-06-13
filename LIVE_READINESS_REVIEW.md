@@ -1,6 +1,6 @@
 # MotionPic AI Live Readiness Review
 
-Last updated: 2026-06-11
+Last updated: 2026-06-13
 
 This review summarizes what is ready, what can still be checked locally, and what must wait for owner confirmation before MotionPic AI moves from a working public MVP toward real paid traffic.
 
@@ -116,7 +116,7 @@ Payments:
 - [x] MotionPic AI category pre-review request was sent to Creem on 2026-06-07.
 - [x] Creem provided conditional category guidance on 2026-06-11: the product should generally be acceptable if buyer data is not saved.
 - [x] Sent the limited payment/event-reference and Supabase Auth email boundary to Creem for clarification on 2026-06-11.
-- [ ] Confirm the limited payment/event references and Supabase Auth email boundary with Creem.
+- [x] Creem accepted the limited payment/event references and separate Supabase Auth email boundary on 2026-06-13.
 - [ ] Complete KYC/KYB and receive actual live-mode activation before any live configuration.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.

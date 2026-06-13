@@ -1309,9 +1309,9 @@ function buildLivePaymentPreflight(runtime) {
     },
     {
       label: "Buyer Data Scope",
-      status: "Minimized",
-      tone: "tone-info",
-      note: "Payments retain operational IDs, plan, credits, and timestamps; no full card, billing, or Creem customer object.",
+      status: "Creem accepted",
+      tone: "tone-success",
+      note: "Accepted on 2026-06-13: operational IDs, plan, credits, timestamps, and separate Supabase Auth email handling.",
     },
     {
       label: "Atomic Paid Credits",
@@ -1377,9 +1377,9 @@ function buildOwnerActionChecklist(runtime) {
     {
       area: "Creem",
       action: runtime.creemTestMode
-        ? "Conditional category guidance was received on 2026-06-11. Keep test mode until buyer-data scope, KYC/KYB, live activation, products, webhook, pricing, and rollback are confirmed."
+        ? "Buyer-data scope was accepted on 2026-06-13. Keep test mode until KYC/KYB, live activation, products, webhook, pricing, and rollback are confirmed."
         : "Live mode appears selected. Watch payments, webhooks, and credit ledger immediately.",
-      risk: "Conditional guidance is not guaranteed approval and real checkout can affect customer credits.",
+      risk: "Buyer-data acceptance does not guarantee KYC/KYB approval; real checkout can affect customer credits.",
       status: runtime.creemTestMode ? "KYC/KYB pending" : "Live risk",
       tone: runtime.creemTestMode ? "tone-warning" : "tone-danger",
     },

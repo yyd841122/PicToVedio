@@ -1,6 +1,6 @@
 # MotionPic AI First Revenue Playbook
 
-Last updated: 2026-06-11
+Last updated: 2026-06-13
 
 This playbook is the final operating checklist for turning the current working test product into a small live product that can earn the first real paid order.
 
@@ -101,8 +101,7 @@ Future optional test: 100 / 400 credits only as a deliberate marketing experimen
 
 Owner actions required:
 
-- Treat Creem's 2026-06-11 response as conditional category guidance, not guaranteed live approval.
-- Confirm that limited payment/event references and Supabase Auth email handling satisfy Creem's buyer-data condition.
+- Treat Creem's 2026-06-13 buyer-data acceptance as completion of the data-scope review, not guaranteed live approval.
 - Complete KYC/KYB and confirm that Creem has actually enabled live mode.
 - Finish Creem live store verification.
 - Create live Creator Pack and Commerce Pack products in the live Creem dashboard.

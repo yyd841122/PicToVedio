@@ -1,6 +1,6 @@
 # MotionPic AI Owner UAT Checklist
 
-Last updated: 2026-06-11
+Last updated: 2026-06-13
 
 This checklist is for owner acceptance testing before MotionPic AI moves from a controlled MVP to real paid traffic. It separates low-risk public checks from tests that require private access, real generation cost, live payment, storage writes, or backend evidence.
 
@@ -95,7 +95,7 @@ Requires owner confirmation and real payment readiness:
 - [x] MotionPic AI category pre-review request was sent to Creem on 2026-06-07.
 - [x] Creem provided conditional category guidance on 2026-06-11, subject to not saving buyer data and successful KYC/KYB.
 - [x] A detailed data-boundary clarification was sent to Creem on 2026-06-11.
-- [ ] Creem confirms the current limited transaction references and Supabase Auth email boundary satisfy its buyer-data condition.
+- [x] Creem confirmed on 2026-06-13 that the current limited transaction references and Supabase Auth email boundary satisfy its buyer-data condition.
 - [ ] Creem KYC/KYB passes and live mode is actually activated.
 - [ ] Creem live store is verified.
 - [ ] Live products match visible site package names.
@@ -169,7 +169,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 | Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
 | Database security | Passed for current architecture | Owner confirmed 0 Advisor errors on 2026-06-07. Core tables intentionally have RLS with no browser-role policies; server access uses `service_role`. |
 | Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
-| Payment | Test mode passed; clarification sent | Creem indicated on 2026-06-11 that the category should generally be acceptable if buyer data is not saved. A detailed data-boundary clarification was sent the same day; KYC/KYB and live activation are not guaranteed. Live configuration remains frozen pending Creem's answer. |
+| Payment | Buyer-data review passed; KYC/KYB pending | Creem confirmed on 2026-06-13 that the limited operational payment references and separate Supabase Auth email handling are acceptable. Live configuration remains frozen until KYC/KYB passes and Creem actually enables live mode. |
 | Storage | Pending | |
 | Support and policy | Email operations passed | `support@cozyguidehub.com` receives through Cloudflare Email Routing and sends through verified Resend SMTP. Gmail replies from the receiving address. Final policy comfort remains an owner judgment. |
 | Promotion | Drafted, not launched | Demo and launch copy are prepared for review only; no public posting or submission has been performed. |
