@@ -1,8 +1,8 @@
-# MotionPic AI Search Engine Submission Checklist
+# FrameVela AI Search Engine Submission Checklist
 
 Last updated: 2026-06-03
 
-Use this checklist when you are ready to submit MotionPic AI to search engines. This file is an operator checklist only; it does not replace Google Search Console, Bing Webmaster Tools, or the protected IndexNow admin endpoint.
+Use this checklist when you are ready to submit FrameVela AI to search engines. This file is an operator checklist only; it does not replace Google Search Console, Bing Webmaster Tools, or the protected IndexNow admin endpoint.
 
 ## Before Submitting
 

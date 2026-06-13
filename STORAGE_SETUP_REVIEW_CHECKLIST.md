@@ -1,4 +1,4 @@
-# MotionPic AI Storage Setup Review Checklist
+# FrameVela AI Storage Setup Review Checklist
 
 Last updated: 2026-06-03
 
@@ -6,7 +6,7 @@ This checklist prepares the Cloudflare R2 or compatible object-storage cutover r
 
 ## Purpose
 
-MotionPic AI can run real image-to-video jobs, but public paid traffic should not rely only on browser-local data or temporary provider URLs. Storage setup should prove that uploaded photos and generated videos can persist after refreshes, redeploys, and provider URL expiry.
+FrameVela AI can run real image-to-video jobs, but public paid traffic should not rely only on browser-local data or temporary provider URLs. Storage setup should prove that uploaded photos and generated videos can persist after refreshes, redeploys, and provider URL expiry.
 
 Use this checklist with:
 

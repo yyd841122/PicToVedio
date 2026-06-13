@@ -1,8 +1,8 @@
-# MotionPic AI Search Submission Guide
+# FrameVela AI Search Submission Guide
 
 Last updated: 2026-06-02
 
-Use this guide after each important public-page deploy. The goal is to help Google, Bing, and AI discovery systems find MotionPic AI quickly.
+Use this guide after each important public-page deploy. The goal is to help Google, Bing, and AI discovery systems find FrameVela AI quickly.
 
 ## Submission URLs
 
@@ -78,7 +78,7 @@ Steps:
 
 Notes:
 
-- MotionPic now includes a protected IndexNow helper. After a public-page deploy, open `/admin/analytics`, log in, and click `IndexNow`. The JSON result should show `ok: true` or an upstream status/error to review.
+- FrameVela now includes a protected IndexNow helper. After a public-page deploy, open `/admin/analytics`, log in, and click `IndexNow`. The JSON result should show `ok: true` or an upstream status/error to review.
 - The public verification key is available at `https://video.cozyguidehub.com/indexnow-key.txt`.
 - Bing can be useful because it also feeds parts of the Microsoft search ecosystem.
 
@@ -120,7 +120,7 @@ Expected:
 
 - `robots.txt` allows normal public pages and references the sitemap.
 - `sitemap.xml` includes homepage, templates, guides, policy pages, and `llms.txt`.
-- `llms.txt` explains what MotionPic AI does, best use cases, important pages, and editorial notes for AI answers.
+- `llms.txt` explains what FrameVela AI does, best use cases, important pages, and editorial notes for AI answers.
 
 ## What To Watch
 
@@ -130,7 +130,7 @@ Weekly checks:
 - Indexed pages count.
 - Search queries that mention photo to video, image to video, product video, pet animation, old photo animation, or AI kiss video.
 - Bing Webmaster Tools crawl/index status.
-- MotionPic `/admin/analytics` upload and checkout conversion.
+- FrameVela `/admin/analytics` upload and checkout conversion.
 
 If a page gets impressions but low clicks:
 

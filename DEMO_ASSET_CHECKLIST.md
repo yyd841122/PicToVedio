@@ -1,4 +1,4 @@
-# MotionPic AI Demo Asset Checklist
+# FrameVela AI Demo Asset Checklist
 
 Last updated: 2026-06-08
 
@@ -6,7 +6,7 @@ Use this checklist to prepare screenshots and short demo clips for directories, 
 
 ## Goal
 
-Create a small set of clean, reusable demo assets that show MotionPic AI clearly:
+Create a small set of clean, reusable demo assets that show FrameVela AI clearly:
 
 - One homepage/generator screenshot.
 - One product-photo-to-video demo.
@@ -93,13 +93,13 @@ Step 4: Generate a short preview.
 
 Result: A short video for social posts, product pages, pets, couples, or old memories.
 
-CTA: Try MotionPic AI.
+CTA: Try FrameVela AI.
 ```
 
 ## 30-Second Demo Script
 
 ```text
-MotionPic AI turns one photo into a short AI video.
+FrameVela AI turns one photo into a short AI video.
 
 The workflow is simple:
 1. Upload a photo.
@@ -126,7 +126,7 @@ Title ideas:
 Post copy:
 
 ```text
-我最近在做一个 AI 照片转视频工具：MotionPic AI。
+我最近在做一个 AI 照片转视频工具：FrameVela AI。
 
 流程很简单：
 1. 上传一张照片

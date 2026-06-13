@@ -1,12 +1,12 @@
-# MotionPic AI Live Readiness Review
+# FrameVela AI Live Readiness Review
 
 Last updated: 2026-06-13
 
-This review summarizes what is ready, what can still be checked locally, and what must wait for owner confirmation before MotionPic AI moves from a working public MVP toward real paid traffic.
+This review summarizes what is ready, what can still be checked locally, and what must wait for owner confirmation before FrameVela AI moves from a working public MVP toward real paid traffic.
 
 ## Current Readiness Summary
 
-MotionPic AI is public, deployed, and technically close to a controlled live test. The site should not be treated as fully ready for public paid traffic until live payment, storage, support, and generation-quality checks are completed.
+FrameVela AI is public, deployed, and technically close to a controlled live test. The site should not be treated as fully ready for public paid traffic until live payment, storage, support, and generation-quality checks are completed.
 
 Current state:
 
@@ -74,7 +74,8 @@ These cannot be completed safely without account access, private tokens, screens
 - [x] Supabase Security Advisor shows 0 errors after `SUPABASE_SECURITY_FIX.sql` as of 2026-06-07.
 - [x] Six `RLS Enabled No Policy` info items are intentional for server-only core tables.
 - [x] Confirm `support@cozyguidehub.com` receives mail in the monitored Gmail destination through Cloudflare Email Routing.
-- [ ] Confirm final brand name remains MotionPic AI.
+- [x] Confirm final brand name is FrameVela AI.
+- [ ] Replace legacy M favicon/PWA artwork with approved FrameVela artwork.
 - [ ] Confirm whether Baidu submission matters for the first launch wave.
 - [x] Confirm outbound support mail reaches an external mailbox as `support@cozyguidehub.com` through verified Resend SMTP.
 - [x] Configure Gmail to reply from the same address that received the message.
@@ -110,13 +111,14 @@ Storage:
 
 Payments:
 
-- [x] Controlled Creem test checkout uses the new MotionPic AI Creator Pack at `$9 / 40 credits`.
+- [x] Controlled Creem test checkout proved the `$9 / 40 credits` grant path under the former MotionPic AI product name.
 - [x] Controlled test payment returned successfully and increased the signed-in balance by exactly 40 credits on 2026-06-07.
 - [x] Ops evidence confirms the matching test payment, `checkout.completed` webhook, and `+40 / creem-checkout` ledger entry.
-- [x] MotionPic AI category pre-review request was sent to Creem on 2026-06-07.
+- [x] The same AI photo-to-video product was pre-reviewed under the former MotionPic AI name on 2026-06-07.
 - [x] Creem provided conditional category guidance on 2026-06-11: the product should generally be acceptable if buyer data is not saved.
 - [x] Sent the limited payment/event-reference and Supabase Auth email boundary to Creem for clarification on 2026-06-11.
 - [x] Creem accepted the limited payment/event references and separate Supabase Auth email boundary on 2026-06-13.
+- [ ] Rename the two Creem test products to FrameVela AI before resuming KYC/KYB.
 - [ ] Complete KYC/KYB and receive actual live-mode activation before any live configuration.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.

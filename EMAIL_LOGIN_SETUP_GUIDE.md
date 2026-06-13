@@ -1,15 +1,15 @@
-# MotionPic AI Email Login Setup Guide
+# FrameVela AI Email Login Setup Guide
 
 Last updated: 2026-06-05
 
-MotionPic AI has a real email magic-link login path. It stays disabled automatically until Supabase Auth and the Render Auth variables are configured.
+FrameVela AI has a real email magic-link login path. It stays disabled automatically until Supabase Auth and the Render Auth variables are configured.
 
 ## Current Behavior
 
 - Public visitors can browse, upload, choose templates, and use the small anonymous starter balance.
 - Browser-local accounts still work through `motionpic-user-id`.
 - `/login` can request a magic link only after Supabase Auth is configured.
-- `/auth-callback` exchanges the Supabase Auth access token for a MotionPic HttpOnly session cookie.
+- `/auth-callback` exchanges the Supabase Auth access token for a FrameVela HttpOnly session cookie.
 - After login, the backend uses the signed cookie instead of trusting the browser-local user id.
 - The current browser account is merged into the durable email account so credits, jobs, payments, ledger rows, and analytics move forward together.
 - When Auth is available, the homepage shows a real login/account state and checkout requires email login before buying credits.
@@ -21,15 +21,15 @@ Do not use a fake login button. A real login must prove ownership of an email ad
 This implementation does that:
 
 - Supabase sends the magic link.
-- MotionPic validates the Supabase access token server-side.
-- MotionPic sets an HttpOnly cookie.
+- FrameVela validates the Supabase access token server-side.
+- FrameVela sets an HttpOnly cookie.
 - Sensitive generation and checkout endpoints prefer the verified cookie over localStorage.
 
 ## Supabase Steps
 
 Do these in Supabase only when you are ready to enable email login.
 
-1. Open the MotionPic Supabase project.
+1. Open the FrameVela Supabase project.
 2. Go to `Authentication -> URL Configuration`.
 3. Set or confirm Site URL:
 
@@ -87,7 +87,7 @@ After deploy:
 ## Acceptance Criteria
 
 - [ ] `/login` sends a magic link after Render variables are configured.
-- [ ] `/auth-callback` creates a signed MotionPic session.
+- [ ] `/auth-callback` creates a signed FrameVela session.
 - [ ] `/account` shows signed-in email state.
 - [ ] Homepage shows `Email Login` for anonymous visitors and `Account` for signed-in visitors.
 - [ ] Existing browser credits merge into the email account.

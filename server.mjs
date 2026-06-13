@@ -183,7 +183,7 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(config.port, () => {
-  console.log(`MotionPic AI listening on ${config.appUrl}`);
+  console.log(`FrameVela AI listening on ${config.appUrl}`);
   console.log(`Video provider: ${config.videoProvider}`);
 });
 
@@ -1675,7 +1675,7 @@ function renderAnalyticsDashboard(summary, url) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>MotionPic Analytics Dashboard</title>
+  <title>FrameVela Analytics Dashboard</title>
   <style>
     :root {
       color-scheme: light;
@@ -1870,7 +1870,7 @@ function renderAnalyticsDashboard(summary, url) {
 <body>
   <header>
     <div>
-      <h1>MotionPic Analytics</h1>
+      <h1>FrameVela Analytics</h1>
       <p>Private product analytics for upload, generation, and checkout behavior.</p>
     </div>
     <div class="actions">
@@ -1953,7 +1953,7 @@ function renderOpsDashboard(data) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>MotionPic Ops Dashboard</title>
+  <title>FrameVela Ops Dashboard</title>
   <style>
     :root {
       color-scheme: light;
@@ -2065,7 +2065,7 @@ function renderOpsDashboard(data) {
 <body>
   <header>
     <div>
-      <h1>MotionPic Ops</h1>
+      <h1>FrameVela Ops</h1>
       <p>Private operations view for credits, payments, video jobs, and webhooks.</p>
     </div>
     <div class="actions">
@@ -2164,7 +2164,7 @@ function renderAnalyticsLoginPage(hasError = false) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Analytics Login - MotionPic AI</title>
+  <title>Analytics Login - FrameVela AI</title>
   <style>
     body {
       margin: 0;
@@ -2238,7 +2238,7 @@ function renderAdminMessage(title, message) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>${escapeHtml(title)} - MotionPic AI</title>
+  <title>${escapeHtml(title)} - FrameVela AI</title>
   <style>
     body { margin: 0; background: #faf8f3; color: #16231d; font-family: system-ui, sans-serif; }
     main { max-width: 680px; margin: 14vh auto; padding: 28px; background: white; border: 1px solid #ded8ce; border-radius: 8px; }
@@ -2302,7 +2302,7 @@ function renderStalePendingNotice(count) {
   if (!count) return "";
   return `<section class="section card">
     <h2>Stale Pending Jobs</h2>
-    <p><strong>${count}</strong> job${count === 1 ? "" : "s"} has remained queued or processing for more than 30 minutes. MotionPic currently reconciles provider status only when the owning user polls the job endpoint; this notice does not call the provider, change the database, or refund credits. Verify the provider task result before any manual action.</p>
+    <p><strong>${count}</strong> job${count === 1 ? "" : "s"} has remained queued or processing for more than 30 minutes. FrameVela currently reconciles provider status only when the owning user polls the job endpoint; this notice does not call the provider, change the database, or refund credits. Verify the provider task result before any manual action.</p>
   </section>`;
 }
 

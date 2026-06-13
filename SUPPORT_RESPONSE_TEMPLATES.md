@@ -1,4 +1,4 @@
-# MotionPic AI Support Response Templates
+# FrameVela AI Support Response Templates
 
 Last updated: 2026-06-07
 
@@ -6,7 +6,7 @@ These templates help answer early support messages about failed generations, dis
 
 Public support email currently shown on the site: `support@cozyguidehub.com`.
 
-The receive path was tested successfully through Cloudflare Email Routing to Gmail on 2026-06-07. The domain was also verified in Resend, an outbound test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`, and Gmail was configured to reply from the same address that received the message. Public DKIM, SPF, return-path MX, and DMARC records were also verified.
+The receive path was tested successfully through Cloudflare Email Routing to Gmail on 2026-06-07. The domain was also verified in Resend, an outbound test reached an external mailbox under the former display name `MotionPic AI Support <support@cozyguidehub.com>`, and Gmail was configured to reply from the same address that received the message. Public DKIM, SPF, return-path MX, and DMARC records were also verified. Change the Gmail sender display name to `FrameVela AI Support` before the next public support reply.
 
 Keep the Resend SMTP/API credential private. It belongs only in the mail-client SMTP configuration or another approved secret store, never in the repository, screenshots, support replies, or chat.
 
@@ -27,7 +27,7 @@ Keep the Resend SMTP/API credential private. It belongs only in the mail-client 
 Subject:
 
 ```text
-MotionPic AI generation issue
+FrameVela AI generation issue
 ```
 
 Reply:
@@ -35,10 +35,10 @@ Reply:
 ```text
 Hi,
 
-Thanks for letting us know. If the AI video request failed technically, MotionPic AI is designed to return the credits for that failed job.
+Thanks for letting us know. If the AI video request failed technically, FrameVela AI is designed to return the credits for that failed job.
 
 Please send us:
-- Your MotionPic account ID from the /account page
+- Your FrameVela account ID from the /account page
 - The approximate time of the generation
 - The template and settings you used
 - Whether the job showed a failed/error state or completed with an output
@@ -46,7 +46,7 @@ Please send us:
 We will check the job record and credit ledger. If the failed job did not refund credits automatically, we will review it and correct the credit balance where appropriate.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Distorted But Successful Output
@@ -54,7 +54,7 @@ MotionPic AI Support
 Subject:
 
 ```text
-MotionPic AI output quality review
+FrameVela AI output quality review
 ```
 
 Reply:
@@ -62,7 +62,7 @@ Reply:
 ```text
 Hi,
 
-Thanks for trying MotionPic AI and sharing the result. AI video outputs can vary, especially with faces, hands, pets, product edges, old photos, or low-resolution images.
+Thanks for trying FrameVela AI and sharing the result. AI video outputs can vary, especially with faces, hands, pets, product edges, old photos, or low-resolution images.
 
 If the job completed successfully, credits are not automatically refunded for aesthetic imperfections. Still, your feedback helps us improve templates and photo guidance.
 
@@ -76,7 +76,7 @@ For a cleaner result, please try:
 If you believe this was a technical failure rather than an output-quality issue, send your account ID from /account and the approximate generation time so we can review the job record.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Duplicate Or Accidental Payment
@@ -84,7 +84,7 @@ MotionPic AI Support
 Subject:
 
 ```text
-MotionPic AI payment review
+FrameVela AI payment review
 ```
 
 Reply:
@@ -97,13 +97,13 @@ Thanks for contacting us. We can review duplicate or accidental payments.
 Please send:
 - The order ID or payment receipt
 - The email used for the purchase, if applicable
-- Your MotionPic account ID from the /account page
+- Your FrameVela account ID from the /account page
 - A short description of what happened
 
 We will compare the payment record with the credit ledger and review the request according to the refund policy shown on the site.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Login Or Account Access Issue
@@ -111,7 +111,7 @@ MotionPic AI Support
 Subject:
 
 ```text
-MotionPic AI account access help
+FrameVela AI account access help
 ```
 
 Reply:
@@ -119,18 +119,18 @@ Reply:
 ```text
 Hi,
 
-Thanks for reaching out. Email login helps keep credits, purchases, and generation history connected to your MotionPic account instead of only one browser.
+Thanks for reaching out. Email login helps keep credits, purchases, and generation history connected to your FrameVela account instead of only one browser.
 
 Please send:
 - The email address you used for login
-- Your MotionPic account ID from /account, if you can access it
+- Your FrameVela account ID from /account, if you can access it
 - Whether you changed browser, cleared storage, or used a different device
 - A short description of what you expected to see
 
 Please do not send passwords, private photos, payment card details, or screenshots that show private tokens.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Credits Not Updated After Checkout
@@ -138,7 +138,7 @@ MotionPic AI Support
 Subject:
 
 ```text
-MotionPic AI credit balance review
+FrameVela AI credit balance review
 ```
 
 Reply:
@@ -150,13 +150,13 @@ Thanks for the report. Credit updates can depend on the checkout return and paym
 
 Please send:
 - Your order ID or checkout receipt
-- Your MotionPic account ID from the /account page
+- Your FrameVela account ID from the /account page
 - The approximate purchase time
 
 We will check whether the payment was recorded and whether the credits were added to the correct account. If the payment succeeded and credits were not granted, we will review and correct the balance where appropriate.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Privacy Or Uploaded Image Concern
@@ -164,7 +164,7 @@ MotionPic AI Support
 Subject:
 
 ```text
-MotionPic AI privacy request
+FrameVela AI privacy request
 ```
 
 Reply:
@@ -175,14 +175,14 @@ Hi,
 Thanks for reaching out. Please do not send private images in the support email unless we specifically request them.
 
 To help us review your request, please send:
-- Your MotionPic account ID from the /account page
+- Your FrameVela account ID from the /account page
 - The approximate generation time
 - A short description of the privacy concern
 
 We will review the request according to the Privacy Policy and respond with the next safe step.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Demo Asset Or Public Use Question
@@ -190,7 +190,7 @@ MotionPic AI Support
 Subject:
 
 ```text
-MotionPic AI demo output question
+FrameVela AI demo output question
 ```
 
 Reply:
@@ -203,7 +203,7 @@ Thanks for checking. Before publishing an AI video publicly, please make sure yo
 For launch-quality demo assets, we recommend using owned product photos, pet photos with permission, or non-sensitive images. Avoid private family photos, children, medical images, and identifiable strangers unless you have explicit permission.
 
 Thanks,
-MotionPic AI Support
+FrameVela AI Support
 ```
 
 ## Manual Review Checklist
@@ -211,7 +211,7 @@ MotionPic AI Support
 Before replying to a support request, check:
 
 - [ ] Is this about a failed technical job or a successful but imperfect output?
-- [ ] Does the user provide a MotionPic account ID from `/account`?
+- [ ] Does the user provide a FrameVela account ID from `/account`?
 - [ ] Does a payment issue include an order ID or receipt?
 - [ ] Does the request involve private photos or personal data?
 - [ ] Does the response avoid exposing private dashboards, keys, logs, or provider data?

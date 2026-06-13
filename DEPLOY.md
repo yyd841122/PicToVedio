@@ -1,6 +1,6 @@
 # Deploy To Render And Cloudflare
 
-This guide deploys MotionPic AI to:
+This guide deploys FrameVela AI to:
 
 ```text
 https://video.cozyguidehub.com
@@ -13,7 +13,7 @@ Create a new GitHub repository, then run these commands in this folder:
 ```bash
 git init
 git add .
-git commit -m "Initial MotionPic AI MVP"
+git commit -m "Initial FrameVela AI MVP"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 git push -u origin main
@@ -127,7 +127,7 @@ AUTH_COOKIE_SECRET=choose_a_long_random_private_string
 
 Before adding those values, configure Supabase Auth redirect URLs using `EMAIL_LOGIN_SETUP_GUIDE.md`.
 
-If your Supabase project was created before analytics tracking was added, do not use any SQL that grants `anon` or `authenticated` direct access to product tables. MotionPic's browser pages should call the Render backend only, and the backend should use `SUPABASE_SERVICE_ROLE_KEY`.
+If your Supabase project was created before analytics tracking was added, do not use any SQL that grants `anon` or `authenticated` direct access to product tables. FrameVela's browser pages should call the Render backend only, and the backend should use `SUPABASE_SERVICE_ROLE_KEY`.
 
 Preferred safe path:
 
@@ -189,7 +189,7 @@ This uses the same protected cookie and shows recent users, credit balances, vid
 
 ## 5. Optional: Add Cloudflare R2 Object Storage
 
-Use this before real traffic so uploaded photos and generated videos are stored by MotionPic instead of only relying on temporary provider URLs.
+Use this before real traffic so uploaded photos and generated videos are stored by FrameVela instead of only relying on temporary provider URLs.
 
 In Cloudflare:
 
@@ -283,7 +283,7 @@ https://video.cozyguidehub.com/api/creem/webhook
 checkout.completed
 ```
 
-If Creem also offers equivalent successful payment events in your account, enable them only when you intentionally want to test those event types. The MotionPic webhook code can recognize `checkout.completed`, `order.created`, and `payment.completed`, but the safest first setup is one clear successful-checkout event.
+If Creem also offers equivalent successful payment events in your account, enable them only when you intentionally want to test those event types. The FrameVela webhook code can recognize `checkout.completed`, `order.created`, and `payment.completed`, but the safest first setup is one clear successful-checkout event.
 
 6. Copy the webhook secret into Render:
 

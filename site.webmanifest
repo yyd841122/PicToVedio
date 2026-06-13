@@ -1,6 +1,6 @@
 {
-  "name": "MotionPic AI",
-  "short_name": "MotionPic",
+  "name": "FrameVela AI",
+  "short_name": "FrameVela",
   "description": "Turn one photo into a short AI video.",
   "start_url": "/",
   "display": "standalone",

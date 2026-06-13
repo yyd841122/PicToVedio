@@ -1,5 +1,7 @@
 # MotionPic AI Project History
 
+> On 2026-06-13, the public product name changed from MotionPic AI to FrameVela AI after an exact-name conflict was found in the same product category. This file preserves the original name where it records historical work.
+
 This document records how MotionPic AI was built from idea to the current deployed MVP.
 
 ## 2026-05-27: Idea And Market Direction

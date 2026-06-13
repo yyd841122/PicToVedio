@@ -1,4 +1,4 @@
-# MotionPic AI First Revenue Playbook
+# FrameVela AI First Revenue Playbook
 
 Last updated: 2026-06-13
 
@@ -6,7 +6,7 @@ This playbook is the final operating checklist for turning the current working t
 
 ## Current Position
 
-MotionPic AI already has:
+FrameVela AI already has:
 
 - A public English homepage at `https://video.cozyguidehub.com`.
 - Real DashScope image-to-video generation.
@@ -19,7 +19,7 @@ The product is close to a live test, but should not switch to real paid traffic 
 
 ## Current Safety Guardrails
 
-MotionPic now has conservative cost protection for real video generation:
+FrameVela now has conservative cost protection for real video generation:
 
 - `MAX_DAILY_VIDEO_JOBS`: sitewide real jobs per UTC day. Controlled-live default: `10`.
 - `MAX_DAILY_VIDEO_JOBS_PER_USER`: real jobs per user per UTC day. Controlled-live default: `2`.

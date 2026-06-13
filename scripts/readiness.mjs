@@ -36,7 +36,7 @@ const statusCounts = checks.reduce(
   {}
 );
 
-console.log("MotionPic AI readiness");
+console.log("FrameVela AI readiness");
 console.log("======================");
 console.log(`Source: ${existsSync(join(root, ".env")) ? ".env + process environment" : "process environment only"}`);
 console.log("Scope: local configuration only; this command does not inspect Render or other production dashboards.");

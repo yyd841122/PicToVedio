@@ -1,4 +1,4 @@
-# MotionPic AI Live Payment Test Procedure
+# FrameVela AI Live Payment Test Procedure
 
 Last updated: 2026-06-13
 
@@ -73,14 +73,14 @@ Do not create a Creem product that says one credit amount while Render grants an
 
 Completed on 2026-06-07:
 
-- MotionPic AI Creator Pack checkout displayed `$9 / 40 credits`.
+- FrameVela AI Creator Pack checkout displayed `$9 / 40 credits`.
 - Creem clearly displayed Test Mode and processed no real transaction.
-- The signed-in MotionPic balance increased from 21 to 61 credits after return and refresh.
+- The signed-in FrameVela balance increased from 21 to 61 credits after return and refresh.
 - No real payment, live key, live product, or live webhook was used.
 
 Private email, order, card, and payment identifiers are intentionally excluded from this record.
 
-MotionPic stores only limited operational payment references: provider, payment/event IDs, internal account ID, plan, credits, and timestamps. It does not store full card data, billing addresses, or complete Creem customer/webhook objects. Supabase Auth handles login email separately; confirm this boundary with Creem before live activation.
+FrameVela stores only limited operational payment references: provider, payment/event IDs, internal account ID, plan, credits, and timestamps. It does not store full card data, billing addresses, or complete Creem customer/webhook objects. Supabase Auth handles login email separately. Creem accepted this boundary on 2026-06-13; request another review only if the stored fields change.
 
 ## Creem Live Setup Checklist
 
@@ -164,7 +164,8 @@ Before changing payment mode:
 - [x] `/admin/ops` Live Payment Preflight has been reviewed and its intentional warnings are understood.
 - [ ] Supabase paid-credit grant has been moved to an owner-approved atomic RPC and verified with Creem test mode.
 - [x] `support@cozyguidehub.com` test mail was received in the monitored Gmail destination.
-- [x] Outbound support mail was delivered externally as `MotionPic AI Support <support@cozyguidehub.com>`.
+- [x] Outbound support mail was delivered externally under the former display name `MotionPic AI Support <support@cozyguidehub.com>`.
+- [ ] Repeat the outbound test after changing the Gmail sender display name to `FrameVela AI Support`.
 - [x] Gmail replies from the same address that received the message.
 - [ ] The owner understands that AI outputs can be distorted and successful jobs are not automatically refunded for aesthetic imperfections.
 

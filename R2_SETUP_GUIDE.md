@@ -1,6 +1,6 @@
-# Cloudflare R2 Setup Guide For MotionPic AI
+# Cloudflare R2 Setup Guide For FrameVela AI
 
-This guide explains how to connect MotionPic AI to Cloudflare R2 so uploaded photos and generated videos are stored outside the browser and outside Render.
+This guide explains how to connect FrameVela AI to Cloudflare R2 so uploaded photos and generated videos are stored outside the browser and outside Render.
 
 ## Why This Matters
 

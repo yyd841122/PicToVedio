@@ -1,15 +1,15 @@
-# MotionPic AI Directory Submission Pack
+# FrameVela AI Directory Submission Pack
 
 Last updated: 2026-06-02
 
-This file contains the fields to copy when submitting MotionPic AI to AI tool directories and launch communities.
+This file contains the fields to copy when submitting FrameVela AI to AI tool directories and launch communities.
 
 ## Core Product Fields
 
 Name:
 
 ```text
-MotionPic AI
+FrameVela AI
 ```
 
 Website:
@@ -27,13 +27,13 @@ Turn one photo into short AI videos for creators, sellers, pets, couples, and me
 Short description:
 
 ```text
-MotionPic AI turns one uploaded photo into a short AI video for TikTok, Reels, product pages, pet animations, couple videos, and old photo memories.
+FrameVela AI turns one uploaded photo into a short AI video for TikTok, Reels, product pages, pet animations, couple videos, and old photo memories.
 ```
 
 Long description:
 
 ```text
-MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a focused motion template, and create short videos for social posts, product pages, ads, or memories. The product uses credits for generation and export workflows and includes templates such as Product Video Ad, Pet Animation, AI Kiss Video, and Old Photo Alive.
+FrameVela AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a focused motion template, and create short videos for social posts, product pages, ads, or memories. The product uses credits for generation and export workflows and includes templates such as Product Video Ad, Pet Animation, AI Kiss Video, and Old Photo Alive.
 ```
 
 Categories:
@@ -95,7 +95,7 @@ https://www.futurepedia.io/submit-tool
 Notes:
 
 - Futurepedia may offer paid listing options.
-- If a free or basic option is unavailable, wait until MotionPic has stronger demo videos and first real revenue proof.
+- If a free or basic option is unavailable, wait until FrameVela has stronger demo videos and first real revenue proof.
 
 There Is An AI For That:
 
@@ -135,7 +135,7 @@ Notes:
 Product name:
 
 ```text
-MotionPic AI
+FrameVela AI
 ```
 
 Tagline:
@@ -147,13 +147,13 @@ Turn one photo into short AI videos for creators and sellers.
 Description:
 
 ```text
-MotionPic AI is a photo-to-video generator for short, practical AI videos. Upload one photo, choose a template, and generate clips for Reels, TikTok, product pages, pet animations, couple videos, or old photo memories.
+FrameVela AI is a photo-to-video generator for short, practical AI videos. Upload one photo, choose a template, and generate clips for Reels, TikTok, product pages, pet animations, couple videos, or old photo memories.
 ```
 
 Maker comment:
 
 ```text
-Hi Product Hunt! I built MotionPic AI to make photo-to-video creation feel simple and practical.
+Hi Product Hunt! I built FrameVela AI to make photo-to-video creation feel simple and practical.
 
 The idea is straightforward: upload one photo, choose a focused motion template, and create a short AI video for social posts, product pages, pets, couples, or old memories.
 
@@ -195,15 +195,15 @@ Keep this submission pack mostly English because most AI tool directories ask fo
 Use these when submitting:
 
 ```text
-https://video.cozyguidehub.com/?utm_source=toolify&utm_medium=directory&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=futurepedia&utm_medium=directory&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=theresanaiforthat&utm_medium=directory&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=saashub&utm_medium=directory&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=producthunt&utm_medium=launch&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=indiehackers&utm_medium=community&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=reddit&utm_medium=community&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=x&utm_medium=social&utm_campaign=motionpic-ai
-https://video.cozyguidehub.com/?utm_source=xiaohongshu&utm_medium=social&utm_campaign=motionpic-ai
+https://video.cozyguidehub.com/?utm_source=toolify&utm_medium=directory&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=futurepedia&utm_medium=directory&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=theresanaiforthat&utm_medium=directory&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=saashub&utm_medium=directory&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=producthunt&utm_medium=launch&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=indiehackers&utm_medium=community&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=reddit&utm_medium=community&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=x&utm_medium=social&utm_campaign=framevela-ai
+https://video.cozyguidehub.com/?utm_source=xiaohongshu&utm_medium=social&utm_campaign=framevela-ai
 ```
 
 ## Submission Order

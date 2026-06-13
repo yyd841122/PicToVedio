@@ -1,4 +1,4 @@
-# MotionPic AI Supabase Atomic Credit RPC Plan
+# FrameVela AI Supabase Atomic Credit RPC Plan
 
 Last updated: 2026-06-08
 

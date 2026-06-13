@@ -38,7 +38,7 @@ After the advisor warning clears, check the live app still works:
 
 ## Why This Is Safe
 
-MotionPic AI does not use Supabase directly from public browser JavaScript. The public site talks to the Node backend, and the backend uses `SUPABASE_SERVICE_ROLE_KEY`. That means public `anon` and `authenticated` table access is not needed for the current architecture.
+FrameVela AI does not use Supabase directly from public browser JavaScript. The public site talks to the Node backend, and the backend uses `SUPABASE_SERVICE_ROLE_KEY`. That means public `anon` and `authenticated` table access is not needed for the current architecture.
 
 ## If Something Breaks
 
@@ -49,4 +49,4 @@ Do not re-enable public table access. First check:
 - The service was rebuilt after environment changes.
 - Supabase SQL did not remove `service_role` grants.
 
-The expected grants are backend-only `service_role` access to the MotionPic tables.
+The expected grants are backend-only `service_role` access to the FrameVela tables.

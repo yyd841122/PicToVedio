@@ -1,6 +1,6 @@
-# MotionPic AI
+# FrameVela AI
 
-MotionPic AI is a publishable MVP for an AI photo-to-video generator. It lets users upload a photo, choose a short-video template, estimate credits, and upgrade through a Creem test checkout flow.
+FrameVela AI is a publishable MVP for an AI photo-to-video generator. It lets users upload a photo, choose a short-video template, estimate credits, and upgrade through a Creem test checkout flow.
 
 The current build is intentionally lightweight: a static front end plus a zero-dependency Node.js server. Video generation runs in mock mode by default, so payment, credits, deployment, and product flow can be tested before spending money on model APIs.
 
@@ -157,7 +157,7 @@ MAX_UPLOAD_IMAGE_MB=8
 STARTER_CREDITS=2
 ```
 
-DashScope image-to-video jobs are async. MotionPic stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. MotionPic defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
+DashScope image-to-video jobs are async. FrameVela stores the returned `task_id`, polls `/api/v1/tasks/{task_id}`, and maps provider statuses to `queued`, `processing`, `succeeded`, or `failed`. FrameVela defaults to silent video generation with `DASHSCOPE_AUDIO=false` to reduce cost. If a provider request fails, credits are refunded through the ledger.
 
 Real provider jobs are protected by conservative daily caps:
 
@@ -186,7 +186,7 @@ CLOUDFLARE_R2_BUCKET=motionpic-assets
 CLOUDFLARE_R2_PUBLIC_BASE_URL=https://assets.example.com
 ```
 
-When R2 is enabled, uploaded photos are saved under `uploads/{userId}/{jobId}` and generated videos are copied under `outputs/{userId}/{jobId}.mp4`. If a public R2 URL is configured, MotionPic also passes that image URL to the video provider instead of a browser data URL.
+When R2 is enabled, uploaded photos are saved under `uploads/{userId}/{jobId}` and generated videos are copied under `outputs/{userId}/{jobId}.mp4`. If a public R2 URL is configured, FrameVela also passes that image URL to the video provider instead of a browser data URL.
 
 Until `STORAGE_PROVIDER=r2` is enabled, generated videos use the provider output URL. Those links may expire, so the public generator tells users to open or download useful outputs soon after generation.
 
@@ -229,7 +229,7 @@ The server recalculates the credit cost for each generation request. It does not
 
 ## Accounts And Login
 
-MotionPic creates a browser-local user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this browser account id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
+FrameVela creates a browser-local user id such as `mp_...` and sends it with API requests in the `X-MotionPic-User-ID` header. Credits, payments, and generation jobs are bound to this browser account id, so visitors no longer share a single `demo-user` balance. The old `demo-user` fallback remains only for old local tests and requests that do not send a valid anonymous id.
 
 Users can open `/account` from the homepage credit panel to view their current account ID, credit balance, recent credit ledger entries, and recent video generation jobs. This page is marked `noindex` and excluded from `robots.txt` because it is an account utility page, not a public SEO landing page.
 
@@ -239,7 +239,7 @@ Anonymous credits are still low-friction for early testing, but users can lose a
 
 ## Analytics
 
-MotionPic records lightweight product events in `analytics_events`:
+FrameVela records lightweight product events in `analytics_events`:
 
 - `page_view`
 - `upload_click`
@@ -284,7 +284,7 @@ The browser must not connect to Supabase directly. All public pages call the Ren
 
 If Supabase sends warnings such as `rls_disabled_in_public` or `sensitive_columns_exposed`, run `SUPABASE_SECURITY_FIX.sql` in the Supabase SQL Editor. This migration:
 
-- Enables Row Level Security on all MotionPic tables.
+- Enables Row Level Security on all FrameVela tables.
 - Revokes direct `anon` and `authenticated` access to public tables, sequences, and functions.
 - Keeps `service_role` access for the Render backend.
 
@@ -404,7 +404,7 @@ These guide pages answer practical questions around input quality, provider cost
 
 ## AI Discovery
 
-- `/llms.txt`: concise MotionPic AI context for AI search, answer engines, and directory reviewers.
+- `/llms.txt`: concise FrameVela AI context for AI search, answer engines, and directory reviewers.
 
 ## Important Notes
 

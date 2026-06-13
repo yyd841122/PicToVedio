@@ -1,6 +1,6 @@
-# MotionPic AI SEO, GEO, And Promotion Plan
+# FrameVela AI SEO, GEO, And Promotion Plan
 
-This plan adapts the SEO workflow from `鱼厂 SEO 优化工作流.md` to MotionPic AI.
+This plan adapts the SEO workflow from `鱼厂 SEO 优化工作流.md` to FrameVela AI.
 
 ## 1. Default Homepage TDK
 
@@ -9,7 +9,7 @@ This plan adapts the SEO workflow from `鱼厂 SEO 优化工作流.md` to Motion
 Template:
 
 ```text
-AI Photo to Video Generator - MotionPic AI | Turn Photos into Viral Short Videos
+AI Photo to Video Generator - FrameVela AI | Turn Photos into Viral Short Videos
 ```
 
 Rules:
@@ -39,7 +39,7 @@ Rules:
 Homepage keywords:
 
 ```text
-AI photo to video, photo to video generator, image to video AI, AI video generator, product video maker, pet animation, old photo animation, AI kiss video, MotionPic AI
+AI photo to video, photo to video generator, image to video AI, AI video generator, product video maker, pet animation, old photo animation, AI kiss video, FrameVela AI
 ```
 
 Rules:
@@ -105,7 +105,7 @@ Homepage:
   - Generator.
   - Use cases.
   - Popular templates.
-  - Why choose MotionPic AI.
+  - Why choose FrameVela AI.
   - FAQ.
 - H3 should be used inside cards and FAQ items.
 - No internal wording such as demand validation, MVP metrics, or paid willingness.
@@ -151,17 +151,17 @@ Next:
 
 ## 6. GEO Content Strategy
 
-Goal: help AI search engines understand and cite MotionPic AI.
+Goal: help AI search engines understand and cite FrameVela AI.
 
 Core entity statement:
 
 ```text
-MotionPic AI is a web-based AI photo-to-video generator that turns one uploaded photo into a short video for social posts, product pages, pet animations, couple videos, and old photo memories.
+FrameVela AI is a web-based AI photo-to-video generator that turns one uploaded photo into a short video for social posts, product pages, pet animations, couple videos, and old photo memories.
 ```
 
 Homepage should answer:
 
-- What is MotionPic AI?
+- What is FrameVela AI?
 - What is an AI photo-to-video generator?
 - Which photos work best?
 - How do credits work?
@@ -171,7 +171,7 @@ Homepage should answer:
 
 Future GEO pages:
 
-- MotionPic AI vs general AI video generator.
+- FrameVela AI vs general AI video generator.
 - Best AI photo to video generator for ecommerce. Implemented as `/guides/ecommerce-product-video-ads`.
 - How to turn pet photos into short AI videos. Implemented as `/guides/pet-photo-animation`.
 - How to animate old photos with AI. Implemented as `/guides/old-photo-animation`.
@@ -233,7 +233,7 @@ Social channels:
 
 Content channels:
 
-- Blog posts on the MotionPic AI site.
+- Blog posts on the FrameVela AI site.
 - Medium or dev/build-in-public posts.
 - Guest posts or listicle submissions if available.
 

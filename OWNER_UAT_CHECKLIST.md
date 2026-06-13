@@ -1,8 +1,8 @@
-# MotionPic AI Owner UAT Checklist
+# FrameVela AI Owner UAT Checklist
 
 Last updated: 2026-06-13
 
-This checklist is for owner acceptance testing before MotionPic AI moves from a controlled MVP to real paid traffic. It separates low-risk public checks from tests that require private access, real generation cost, live payment, storage writes, or backend evidence.
+This checklist is for owner acceptance testing before FrameVela AI moves from a controlled MVP to real paid traffic. It separates low-risk public checks from tests that require private access, real generation cost, live payment, storage writes, or backend evidence.
 
 ## Purpose
 
@@ -92,10 +92,12 @@ Requires owner confirmation and real payment readiness:
 - [x] Test-mode Supabase payment record shows `creem / creator / 40`.
 - [x] Test-mode webhook record shows `checkout.completed`.
 - [x] Test-mode credit ledger shows `+40 / creem-checkout` and balance 61.
-- [x] MotionPic AI category pre-review request was sent to Creem on 2026-06-07.
+- [x] The current product category was pre-reviewed under the former MotionPic AI name on 2026-06-07.
 - [x] Creem provided conditional category guidance on 2026-06-11, subject to not saving buyer data and successful KYC/KYB.
 - [x] A detailed data-boundary clarification was sent to Creem on 2026-06-11.
 - [x] Creem confirmed on 2026-06-13 that the current limited transaction references and Supabase Auth email boundary satisfy its buyer-data condition.
+- [x] Public branding changed to FrameVela AI on 2026-06-13 before KYC/KYB completion.
+- [ ] Creem test product names and descriptions show FrameVela AI before KYC/KYB resumes.
 - [ ] Creem KYC/KYB passes and live mode is actually activated.
 - [ ] Creem live store is verified.
 - [ ] Live products match visible site package names.
@@ -133,7 +135,8 @@ Requires owner confirmation because it writes to object storage:
 
 - [x] Public support email is `support@cozyguidehub.com`.
 - [x] A test message reached the monitored Gmail destination through Cloudflare Email Routing on 2026-06-07.
-- [x] A Resend SMTP test reached an external mailbox as `MotionPic AI Support <support@cozyguidehub.com>`.
+- [x] A Resend SMTP test reached an external mailbox under the former sender display name `MotionPic AI Support`.
+- [ ] A new external test reaches the mailbox as `FrameVela AI Support <support@cozyguidehub.com>`.
 - [x] Gmail is set to reply using the same address that received the message.
 - [x] Public inbound MX, DKIM, return-path MX, SPF, and DMARC records are verified.
 - [ ] Refund policy matches real operating behavior.

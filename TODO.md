@@ -1,4 +1,4 @@
-# MotionPic AI TODO
+# FrameVela AI TODO
 
 Last updated: 2026-06-13
 
@@ -82,13 +82,15 @@ Last updated: 2026-06-13
 - [x] Added a local smoke test for key pages, account API, checkout login gating, ops preflight, and inline scripts.
 - [x] Added a local readiness classifier that separates low-risk status, blockers, and owner-required live-launch work without printing secrets.
 - [x] Corrected homepage upload and option-group labels after owner browser-console UAT.
-- [x] Replaced the temporary favicon with an owner-supplied MotionPic AI logo set for browser, Apple, PWA, navigation, and SEO use.
+- [x] Replaced the temporary favicon with the owner-supplied legacy MotionPic AI logo set.
+- [x] Replaced the visible navigation logo with a temporary text-based FrameVela `F` mark.
+- [ ] Replace the legacy M favicon/PWA assets with owner-approved FrameVela artwork.
 - [x] Added baseline browser security headers and disabled caching for JSON API responses.
 - [x] Synced the local readiness report with the confirmed support inbox, outbound sender, and public email DNS status.
 - [x] Added an end-to-end local mock test for failed-job debit, automatic refund, restored balance, and refund idempotency.
 - [x] Updated `/account` copy so released email login is no longer described as a future feature.
 - [x] Added current support, private Demo preservation, and local refund-test status to `/launch-kit`.
-- [x] Restricted checkout return URLs and email-login callbacks to the configured MotionPic origin.
+- [x] Restricted checkout return URLs and email-login callbacks to the configured FrameVela origin.
 - [x] Drafted the Supabase atomic paid-credit RPC SQL and added local static checks without executing production SQL.
 - [x] Staged backend payment-RPC integration behind a default-off environment flag.
 
@@ -194,4 +196,6 @@ Last updated: 2026-06-13
 - [ ] Object storage account and access keys.
 - [ ] Creem live API key, live product IDs, and live webhook signing secret.
 - [x] Public contact email placeholder.
-- [ ] Final brand name confirmation if changing away from MotionPic AI.
+- [x] Confirmed the public brand name `FrameVela AI` on 2026-06-13 after an exact-name conflict review.
+- [ ] Rename the two Creem test products from MotionPic AI to FrameVela AI before resuming KYC/KYB.
+- [ ] Update the Gmail sender display name from MotionPic AI Support to FrameVela AI Support.

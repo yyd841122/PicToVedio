@@ -1,4 +1,4 @@
-# MotionPic AI Launch Checklist
+# FrameVela AI Launch Checklist
 
 Last updated: 2026-06-13
 
@@ -21,7 +21,7 @@ Use this checklist before moving from test mode to real public launch.
 
 - [x] Production Supabase security fix SQL ran successfully.
 - [x] Public `anon` and `authenticated` direct table grants were revoked in the project SQL.
-- [x] Row Level Security was enabled for MotionPic application tables.
+- [x] Row Level Security was enabled for FrameVela application tables.
 - [x] Supabase advisor confirmation guide exists in `SUPABASE_ADVISOR_CONFIRMATION_GUIDE.md`.
 - [x] Supabase Security Advisor was refreshed on 2026-06-07 and shows 0 errors; the prior critical public-access warnings are cleared.
 - [x] Six `RLS Enabled No Policy` info items are expected because browser roles have no direct core-table access and the server uses `service_role`.
@@ -53,10 +53,12 @@ Use this checklist before moving from test mode to real public launch.
 
 ## 4. Creem Live Payment
 
-- [x] Sent MotionPic AI category pre-review request to Creem on 2026-06-07.
-- [x] Received conditional category guidance on 2026-06-11: MotionPic AI should generally be acceptable if buyer data is not saved.
+- [x] Sent a category pre-review request to Creem under the former MotionPic AI name on 2026-06-07.
+- [x] Received conditional category guidance on 2026-06-11 for the same AI photo-to-video product: it should generally be acceptable if buyer data is not saved.
 - [x] Sent Creem a clarification of the limited transaction-reference and Supabase Auth email boundary on 2026-06-11.
 - [x] Creem confirmed on 2026-06-13 that limited operational payment references and separate Supabase Auth email handling satisfy its buyer-data condition.
+- [x] Renamed the public product to FrameVela AI on 2026-06-13 before completing KYC/KYB.
+- [ ] Rename the two Creem test products to FrameVela AI and verify their descriptions still show `$9 / 40` and `$29 / 160`.
 - [ ] Complete KYC/KYB and receive actual Creem live-mode activation; conditional guidance is not guaranteed approval.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.
@@ -104,7 +106,8 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Privacy, Terms, and Refund pages are visible from the footer.
 - [x] Refund page explains failed technical jobs, imperfect successful outputs, and support-request details.
 - [x] `support@cozyguidehub.com` test message was received through Cloudflare Email Routing in the monitored Gmail inbox on 2026-06-07.
-- [x] Resend verified `cozyguidehub.com` for outbound email, and Gmail sent a successful test as `MotionPic AI Support <support@cozyguidehub.com>`.
+- [x] Resend verified `cozyguidehub.com` for outbound email, and Gmail sent a successful test under the former sender display name `MotionPic AI Support`.
+- [ ] Update the Gmail sender display name to `FrameVela AI Support` and send one new external test.
 - [x] Gmail is configured to reply from the same address that received the message.
 - [x] Public inbound MX, DKIM, return-path MX, SPF, and DMARC records pass `npm run email:dns`.
 
@@ -128,4 +131,4 @@ Use this checklist before moving from test mode to real public launch.
 - [ ] Watch `/admin/ops` after every payment.
 - [ ] Save the first successful paid order ID.
 - [ ] Confirm the first real user can spend credits and receive a usable video.
-- [ ] Write a short post about earning the first 1 RMB/USD from MotionPic AI.
+- [ ] Write a short post about earning the first 1 RMB/USD from FrameVela AI.

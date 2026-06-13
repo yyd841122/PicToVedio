@@ -1,4 +1,4 @@
-# MotionPic AI Generation Test Plan
+# FrameVela AI Generation Test Plan
 
 Last updated: 2026-06-03
 

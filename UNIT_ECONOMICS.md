@@ -1,4 +1,4 @@
-# MotionPic AI Unit Economics
+# FrameVela AI Unit Economics
 
 Last updated: 2026-06-07
 
@@ -139,7 +139,7 @@ Future provider testing:
 
 - Test Wan2.1/Wan2.2/Wan2.6 variants if available and compare cost/quality.
 - Test Kling, MiniMax/Hailuo, Volcano/ByteDance, and Replicate-style providers if payment/recharge is easier.
-- Keep a provider abstraction so MotionPic can route jobs by price, quality, and region.
+- Keep a provider abstraction so FrameVela can route jobs by price, quality, and region.
 
 ## Before Live Payment
 

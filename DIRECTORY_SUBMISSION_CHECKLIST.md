@@ -1,8 +1,8 @@
-# MotionPic AI Directory Submission Checklist
+# FrameVela AI Directory Submission Checklist
 
 Last updated: 2026-06-03
 
-Use this checklist when submitting MotionPic AI to AI tool directories, product directories, and launch communities. This file is an operator checklist only; do not treat it as proof that a submission has been completed.
+Use this checklist when submitting FrameVela AI to AI tool directories, product directories, and launch communities. This file is an operator checklist only; do not treat it as proof that a submission has been completed.
 
 ## Before Submitting
 
@@ -30,7 +30,7 @@ PROMOTION_COPY.md
 Core fields:
 
 ```text
-Name: MotionPic AI
+Name: FrameVela AI
 Website: https://video.cozyguidehub.com
 Category: AI Video Generator / Image to Video / Photo Animation
 Primary tagline: Turn one photo into short AI videos for creators, sellers, pets, couples, and memories.
@@ -77,7 +77,7 @@ Checklist:
 
 - [ ] Submit in English.
 - [ ] Use the same core fields from `DIRECTORY_SUBMISSION_PACK.md`.
-- [ ] If pricing is requested, describe MotionPic AI as credit-based with paid packs and free/testing paths where available.
+- [ ] If pricing is requested, describe FrameVela AI as credit-based with paid packs and free/testing paths where available.
 - [ ] Use `photo-to-video-hero.png` or a clean homepage generator screenshot as media.
 - [ ] Save the submitted listing URL if one is generated.
 
@@ -108,7 +108,7 @@ https://www.futurepedia.io/submit-tool
 Checklist:
 
 - [ ] Check whether Futurepedia offers a free/basic submission path.
-- [ ] If only paid placement is available, pause until MotionPic has stronger demo media or first revenue proof.
+- [ ] If only paid placement is available, pause until FrameVela has stronger demo media or first revenue proof.
 - [ ] Submit in English.
 - [ ] Use practical, outcome-focused wording rather than hype.
 - [ ] Save the submitted listing URL if one is generated.

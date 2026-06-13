@@ -1,8 +1,8 @@
-# MotionPic AI Promotion Copy
+# FrameVela AI Promotion Copy
 
 Last updated: 2026-06-04
 
-Use these snippets when submitting MotionPic AI to directories, communities, and social platforms.
+Use these snippets when submitting FrameVela AI to directories, communities, and social platforms.
 
 ## Core One-Liners
 
@@ -29,7 +29,7 @@ AI photo-to-video generator for creators, sellers, pets, couples, and memories.
 Name:
 
 ```text
-MotionPic AI
+FrameVela AI
 ```
 
 Website:
@@ -41,13 +41,13 @@ https://video.cozyguidehub.com
 Short description:
 
 ```text
-MotionPic AI turns one uploaded photo into a short AI video for TikTok, Reels, product pages, pet animations, couple videos, and old photo memories.
+FrameVela AI turns one uploaded photo into a short AI video for TikTok, Reels, product pages, pet animations, couple videos, and old photo memories.
 ```
 
 Long description:
 
 ```text
-MotionPic AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a focused motion template, and create short videos for social posts, product pages, ads, or memories. The product uses credits for generation and export workflows and includes templates such as AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
+FrameVela AI is an AI photo-to-video generator for creators, ecommerce sellers, pet owners, couples, and families. Upload a person, pet, product, or old photo, choose a focused motion template, and create short videos for social posts, product pages, ads, or memories. The product uses credits for generation and export workflows and includes templates such as AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive.
 ```
 
 Categories:
@@ -84,13 +84,13 @@ Turn one photo into short AI videos for creators and sellers.
 Maker comment:
 
 ```text
-Hi Product Hunt! I built MotionPic AI to make photo-to-video creation feel simple and practical.
+Hi Product Hunt! I built FrameVela AI to make photo-to-video creation feel simple and practical.
 
 The idea is straightforward: upload one photo, choose a template, and create a short AI video for social posts, product pages, pets, couples, or old memories.
 
 I started with the most common use cases I kept seeing: creators need more short-form assets, ecommerce sellers need product videos, and people love emotional formats like pet animations, couple videos, and old photo memories.
 
-Right now MotionPic AI supports a credit-based flow, HD/no-watermark upgrade path, and templates such as AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive. I am continuing to improve real generation quality, storage, and template coverage.
+Right now FrameVela AI supports a credit-based flow, HD/no-watermark upgrade path, and templates such as AI Kiss Video, Product Video Ad, Pet Animation, and Old Photo Alive. I am continuing to improve real generation quality, storage, and template coverage.
 
 I would love feedback on which template should be improved first.
 ```
@@ -98,7 +98,7 @@ I would love feedback on which template should be improved first.
 Launch post:
 
 ```text
-MotionPic AI is live on Product Hunt.
+FrameVela AI is live on Product Hunt.
 
 Upload one photo, pick a template, and turn it into a short AI video for TikTok, Reels, product pages, pets, couples, or old memories.
 
@@ -110,7 +110,7 @@ I built it for creators and small sellers who need quick video assets without op
 Build-in-public angle:
 
 ```text
-I am building MotionPic AI, an AI photo-to-video generator.
+I am building FrameVela AI, an AI photo-to-video generator.
 
 The first version started as a simple static page with mock generation. Then I added Creem test payments, Supabase credit persistence, Render deployment, Cloudflare custom domain, DashScope real generation, analytics, ops dashboards, and daily generation cost guardrails.
 
@@ -163,7 +163,7 @@ Happy to share details if anyone is building a similar small AI tool.
 Post 1:
 
 ```text
-Building MotionPic AI:
+Building FrameVela AI:
 
 Upload one photo -> choose a template -> generate a short AI video.
 
@@ -203,7 +203,7 @@ What would you use more?
 3. Couple photo -> romantic video
 4. Old photo -> alive memory
 
-I am deciding which MotionPic AI template to improve first.
+I am deciding which FrameVela AI template to improve first.
 ```
 
 ## Xiaohongshu
@@ -220,7 +220,7 @@ Title ideas:
 General post:
 
 ```text
-我最近在做一个 AI 照片转视频工具：MotionPic AI。
+我最近在做一个 AI 照片转视频工具：FrameVela AI。
 
 它的逻辑很简单：
 1. 上传一张照片
@@ -243,7 +243,7 @@ Pet version:
 ```text
 宠物照片动起来真的很容易出效果。
 
-我在做一个小工具 MotionPic AI，可以上传一张宠物照片，然后生成一个轻微动起来的短视频。比较适合宠物号、宠物店、节日祝福，或者单纯把猫猫狗狗的照片做成更好分享的素材。
+我在做一个小工具 FrameVela AI，可以上传一张宠物照片，然后生成一个轻微动起来的短视频。比较适合宠物号、宠物店、节日祝福，或者单纯把猫猫狗狗的照片做成更好分享的素材。
 
 目前我发现效果更稳定的照片是：
 - 脸部清晰
@@ -259,7 +259,7 @@ Product version:
 ```text
 产品图也可以变成短视频广告素材。
 
-我在做 MotionPic AI，一个照片转 AI 视频的小工具。对电商卖家来说，最实用的不是生成很夸张的大片，而是把已有产品图变成一个轻微推进、有一点动感、能放到商品页或社媒里的短视频。
+我在做 FrameVela AI，一个照片转 AI 视频的小工具。对电商卖家来说，最实用的不是生成很夸张的大片，而是把已有产品图变成一个轻微推进、有一点动感、能放到商品页或社媒里的短视频。
 
 适合测试的图片：
 - 产品主体清晰
@@ -284,13 +284,13 @@ Step 4: Generate the preview.
 
 Result: A short video ready for social posts, product pages, pets, couples, or old memories.
 
-CTA: Try MotionPic AI.
+CTA: Try FrameVela AI.
 ```
 
 30-second script:
 
 ```text
-I am building MotionPic AI, a photo-to-video generator.
+I am building FrameVela AI, a photo-to-video generator.
 
 Most AI video tools feel too open-ended. I wanted something simpler:
 
@@ -312,14 +312,14 @@ If you create content or sell products online, this can turn still images into q
 - How Ecommerce Sellers Can Turn Product Photos into Video Ads.
 - How to Animate Pet Photos with AI.
 - How to Bring Old Photos to Life with AI.
-- MotionPic AI Build Log: From Static MVP to Payment-Ready AI Tool.
+- FrameVela AI Build Log: From Static MVP to Payment-Ready AI Tool.
 
 ## Cold Outreach
 
 Creator outreach:
 
 ```text
-Hi, I am building MotionPic AI, a tool that turns one photo into a short AI video for Reels, TikTok, and Shorts.
+Hi, I am building FrameVela AI, a tool that turns one photo into a short AI video for Reels, TikTok, and Shorts.
 
 I noticed your content often uses strong visual hooks. I would love to offer free credits if you want to try turning a portrait, product image, pet photo, or old photo into a short video.
 ```
@@ -327,7 +327,7 @@ I noticed your content often uses strong visual hooks. I would love to offer fre
 Seller outreach:
 
 ```text
-Hi, I am building MotionPic AI, a tool that turns product photos into short AI video ads.
+Hi, I am building FrameVela AI, a tool that turns product photos into short AI video ads.
 
 It is designed for sellers who already have product images but need more lightweight video assets for product pages, ads, or social posts.
 

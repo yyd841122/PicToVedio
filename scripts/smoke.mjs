@@ -176,7 +176,7 @@ async function assertFavicon(baseUrl) {
     "/site.webmanifest should use the manifest content type",
   );
   const manifest = await manifestResponse.json();
-  assert(manifest.name === "MotionPic AI", "manifest should use the product name");
+  assert(manifest.name === "FrameVela AI", "manifest should use the product name");
   assert(manifest.icons?.length === 2, "manifest should include 192 and 512 pixel icons");
 }
 
@@ -224,7 +224,12 @@ async function assertPublicPages(baseUrl) {
     assert(response.ok, `${path} should return 200`);
     const body = await response.text();
     assert(body.length > 100, `${path} should return content`);
+    assert(!body.includes("MotionPic AI"), `${path} should not expose the former public brand`);
   }
+
+  const home = await fetchText(baseUrl, "/");
+  assert(home.includes("FrameVela AI"), "homepage should expose the current public brand");
+  assert(home.includes('<span class="mark" aria-hidden="true">F</span>'), "homepage should use the temporary FrameVela F mark");
 }
 
 async function assertHomeFormSemantics(baseUrl) {
@@ -287,7 +292,7 @@ async function assertSeoMetadata(baseUrl) {
 
 async function assertSupportAndLaunchCopy(baseUrl) {
   const account = await fetchText(baseUrl, "/account");
-  assert(account.includes("<title>Account - MotionPic AI</title>"), "account page should use the current account title");
+  assert(account.includes("<title>Account - FrameVela AI</title>"), "account page should use the current account title");
   assert(account.includes("Email login is available now"), "account page should say email login is available");
   assert(account.includes("Sign in with email to keep access across browser sessions and devices"), "browser accounts should explain the login benefit");
   assert(!account.includes("Email login is planned"), "account page should not describe released email login as planned");
@@ -295,7 +300,7 @@ async function assertSupportAndLaunchCopy(baseUrl) {
   const refund = await fetchText(baseUrl, "/refund");
   assert(refund.includes("If a provider request fails technically"), "refund page should explain failed generation refunds");
   assert(refund.includes("If a job succeeds but the result is aesthetically imperfect"), "refund page should explain imperfect successful outputs");
-  assert(refund.includes("MotionPic account ID"), "refund page should tell users to include the account ID");
+  assert(refund.includes("FrameVela account ID"), "refund page should tell users to include the account ID");
   assert(refund.includes("selected template"), "refund page should tell users to include the selected template");
   assert(refund.includes("Do not send private photos unless support specifically asks"), "refund page should discourage private photo sharing");
 

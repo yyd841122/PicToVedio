@@ -1,4 +1,4 @@
-# MotionPic AI Roadmap Plan
+# FrameVela AI Roadmap Plan
 
 This roadmap turns the current MVP into a real, searchable, payment-ready product.
 

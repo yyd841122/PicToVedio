@@ -1,8 +1,8 @@
-# MotionPic AI Baidu Submission Checklist
+# FrameVela AI Baidu Submission Checklist
 
 Last updated: 2026-06-04
 
-Use this checklist only if MotionPic AI starts targeting Chinese-language discovery. This is an operator guide, not an automation script. Do not submit, verify, or configure Baidu accounts without owner confirmation.
+Use this checklist only if FrameVela AI starts targeting Chinese-language discovery. This is an operator guide, not an automation script. Do not submit, verify, or configure Baidu accounts without owner confirmation.
 
 ## Context
 

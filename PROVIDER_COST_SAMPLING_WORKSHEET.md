@@ -1,4 +1,4 @@
-# MotionPic AI Provider Cost Sampling Worksheet
+# FrameVela AI Provider Cost Sampling Worksheet
 
 Last updated: 2026-06-06
 
@@ -6,7 +6,7 @@ This worksheet defines how to record DashScope generation cost samples after the
 
 ## Purpose
 
-MotionPic AI needs a small but consistent cost sample before live payments. The goal is to compare real provider cost, credits charged, output quality, and refund behavior for the first priority templates.
+FrameVela AI needs a small but consistent cost sample before live payments. The goal is to compare real provider cost, credits charged, output quality, and refund behavior for the first priority templates.
 
 Current confirmed baseline: owner confirmed Alibaba Cloud / DashScope charges CNY 0.60 per 4-second 720p audio-off use. Continue sampling because higher quality, longer duration, audio-on jobs, retries, or provider changes may have different costs.
 
