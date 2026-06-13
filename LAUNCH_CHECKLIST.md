@@ -59,8 +59,10 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Creem confirmed on 2026-06-13 that limited operational payment references and separate Supabase Auth email handling satisfy its buyer-data condition.
 - [x] Renamed the public product to FrameVela AI on 2026-06-13 before completing KYC/KYB.
 - [x] Renamed the two Creem test products to FrameVela AI and retained `$9 / 40` and `$29 / 160`.
-- [ ] Complete KYC/KYB and receive actual Creem live-mode activation; conditional guidance is not guaranteed approval.
-- [ ] Finish Creem live store verification.
+- [x] Complete Creem Individual identity verification.
+- [x] Approve and link a China CNY Alipay payout account to the store.
+- [x] Confirm the verification center reports `1 verified / 1 ready for payments`.
+- [ ] Receive actual Creem live-mode activation; the main dashboard still reports live payments disabled.
 - [ ] Create live Creator Pack product.
 - [ ] Create live Commerce Pack product.
 - [ ] Create live webhook for `https://video.cozyguidehub.com/api/creem/webhook`.

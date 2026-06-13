@@ -19,9 +19,11 @@ MotionPic does not store full card data, security codes, billing addresses, sens
 
 - Buyer-data review: passed.
 - Product-category guidance: acceptable subject to normal review.
-- KYC/KYB: pending.
+- Individual identity verification: approved.
+- China CNY Alipay payout verification: approved and linked to the store.
+- Store verification center: ready for payments.
 - Creem live-mode activation: pending.
 - Render live payment variables: unchanged.
 - Real payment: not authorized or performed.
 
-Continue using Creem test mode until KYC/KYB passes, Creem enables live mode, and the owner explicitly approves the live switch.
+Continue using Creem test mode until Creem enables live payments, the atomic paid-credit RPC is verified in test mode, and the owner explicitly approves the live switch.

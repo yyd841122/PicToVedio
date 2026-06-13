@@ -119,8 +119,10 @@ Payments:
 - [x] Sent the limited payment/event-reference and Supabase Auth email boundary to Creem for clarification on 2026-06-11.
 - [x] Creem accepted the limited payment/event references and separate Supabase Auth email boundary on 2026-06-13.
 - [x] Renamed the two Creem test products to FrameVela AI before resuming KYC/KYB.
-- [ ] Complete KYC/KYB and receive actual live-mode activation before any live configuration.
-- [ ] Finish Creem live store verification.
+- [x] Complete Creem Individual identity verification.
+- [x] Approve and link a China CNY Alipay payout account.
+- [x] Confirm the verification center reports the store ready for payments.
+- [ ] Receive actual live-mode activation before any live configuration; the main dashboard still reports live payments disabled.
 - [ ] Create live Creator Pack product.
 - [ ] Create live Commerce Pack product.
 - [ ] Create live webhook for `https://video.cozyguidehub.com/api/creem/webhook`.

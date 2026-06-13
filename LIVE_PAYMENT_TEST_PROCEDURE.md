@@ -29,8 +29,9 @@ Collect these before the owner approves a live test:
 
 | Item | Required evidence |
 |---|---|
-| Creem eligibility | Buyer-data boundary accepted by Creem on 2026-06-13; normal KYC/KYB and actual live-mode activation still required |
-| Creem live store | Owner confirms live store and payout setup are ready |
+| Creem eligibility | Buyer-data boundary accepted; Individual identity verification approved on 2026-06-13 |
+| Creem payout setup | China CNY Alipay payout account approved, linked, and shown as ready for payments |
+| Creem live activation | Still required; the main dashboard reports live payments disabled |
 | Live products | Product names, prices, credit grants, and product IDs are known |
 | Live webhook | Webhook URL is `https://video.cozyguidehub.com/api/creem/webhook` |
 | Render variables | Owner confirms the exact values to set, without exposing secrets in Git |
@@ -43,7 +44,7 @@ Collect these before the owner approves a live test:
 
 Do not paste API keys, webhook secrets, full receipts, card details, or private customer data into repo files.
 
-Creem confirmed on 2026-06-13 that the limited operational data boundary and separate Supabase Auth email handling are acceptable. This removes the buyer-data concern but does not guarantee KYC/KYB approval. Keep test mode enabled until KYC/KYB is complete and live mode is actually available.
+Creem confirmed on 2026-06-13 that the limited operational data boundary and separate Supabase Auth email handling are acceptable. Individual identity and payout verification were subsequently approved the same day. Keep test mode enabled until Creem actually enables live payments, the atomic paid-credit RPC is installed and proven in test mode, and the owner approves the controlled cutover.
 
 ## Selected Pricing Decision
 
@@ -87,7 +88,7 @@ FrameVela stores only limited operational payment references: provider, payment/
 Owner steps in Creem:
 
 1. Open the live Creem dashboard, not the test dashboard.
-2. Confirm store identity, payout, and tax/business settings are complete enough for live payment.
+2. Confirm the approved identity and linked payout account remain active, and confirm Creem has actually enabled live payments.
 3. Create or confirm the live `Creator Pack` product.
 4. Set its price and description to match the selected pricing path.
 5. Create or confirm the live `Commerce Pack` product.

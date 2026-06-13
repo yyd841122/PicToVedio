@@ -98,8 +98,10 @@ Requires owner confirmation and real payment readiness:
 - [x] Creem confirmed on 2026-06-13 that the current limited transaction references and Supabase Auth email boundary satisfy its buyer-data condition.
 - [x] Public branding changed to FrameVela AI on 2026-06-13 before KYC/KYB completion.
 - [x] Creem test product names and descriptions show FrameVela AI before KYC/KYB resumes.
-- [ ] Creem KYC/KYB passes and live mode is actually activated.
-- [ ] Creem live store is verified.
+- [x] Creem Individual identity verification is approved.
+- [x] China CNY Alipay payout verification is approved and linked to the store.
+- [x] Creem verification center reports the store as ready for payments.
+- [ ] Creem live mode is actually activated; the main dashboard still reports live payments disabled.
 - [ ] Live products match visible site package names.
 - [ ] Live product prices match site copy.
 - [ ] Live product credit grants match Render variables.
@@ -172,7 +174,7 @@ Use this section as a manual record. Do not include private IDs or secrets.
 | Private dashboards | Passed for MVP | Owner confirmed analytics and ops dashboards are protected and show product events, jobs, payments, ledger, and cost signals. |
 | Database security | Passed for current architecture | Owner confirmed 0 Advisor errors on 2026-06-07. Core tables intentionally have RLS with no browser-role policies; server access uses `service_role`. |
 | Real generation | In progress | Owner confirmed the DashScope flow works; current 4s/720p silent cost sample is CNY 0.60 per use, but output quality still needs tuning. |
-| Payment | Buyer-data review passed; KYC/KYB pending | Creem confirmed on 2026-06-13 that the limited operational payment references and separate Supabase Auth email handling are acceptable. Live configuration remains frozen until KYC/KYB passes and Creem actually enables live mode. |
+| Payment | Identity and payout verification passed; live disabled | Creem approved Individual identity verification and the linked China CNY Alipay payout account on 2026-06-13. The verification center reports the store ready for payments, while the main dashboard still reports live payments disabled. Live configuration remains frozen. |
 | Storage | Pending | |
 | Support and policy | Email operations passed | `support@cozyguidehub.com` receives through Cloudflare Email Routing and sends through verified Resend SMTP. Gmail replies from the receiving address. Final policy comfort remains an owner judgment. |
 | Promotion | Drafted, not launched | Demo and launch copy are prepared for review only; no public posting or submission has been performed. |

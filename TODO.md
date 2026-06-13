@@ -120,7 +120,11 @@ Last updated: 2026-06-13
 - [x] Receive conditional Creem category guidance: generally acceptable if buyer data is not saved, subject to KYC/KYB.
 - [x] Send Creem the current limited transaction-reference and Supabase Auth email boundary for clarification.
 - [x] Creem confirmed the current limited payment/event references and Supabase Auth email boundary satisfy its buyer-data condition.
-- [ ] Repeat the product-id, description, and Render-variable alignment only after KYC/KYB and actual live-mode activation.
+- [x] Complete Creem Individual identity verification.
+- [x] Add, verify, and link a China CNY Alipay payout account to the Creem store.
+- [x] Confirm the Creem verification center reports the store as ready for payouts.
+- [ ] Receive actual Creem live-payment activation; the dashboard still reports live payments disabled.
+- [ ] Repeat the product-id, description, and Render-variable alignment only after actual live-mode activation.
 - [ ] Prepare, owner-approve, and apply the Supabase atomic paid-credit RPC before any live payment test.
 - [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
 - [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
@@ -137,7 +141,7 @@ Last updated: 2026-06-13
 - [x] Return `429` without deducting credits when daily generation caps are reached.
 - [x] Reject unsupported or oversized input images before creating jobs or deducting credits.
 - [x] Add private `/admin/ops` live-payment preflight checks for Auth, Creem, pricing, caps, and storage.
-- [ ] Switch Creem from test to live only after data-boundary clarification, KYC/KYB, actual live activation, and explicit owner confirmation.
+- [ ] Switch Creem from test to live only after actual live activation, atomic-credit verification, and explicit owner confirmation.
 - [ ] Create a low-price live product for first live payment testing.
 - [x] Set the default anonymous starter balance to `STARTER_CREDITS=2`.
 
