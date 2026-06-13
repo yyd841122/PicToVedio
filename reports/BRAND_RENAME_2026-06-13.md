@@ -29,6 +29,7 @@ The following internal identifiers remain unchanged to avoid breaking existing a
 
 - Completed: renamed both Creem test products to `FrameVela AI Creator Pack` and `FrameVela AI Commerce Pack`.
 - Keep prices and grants aligned at `$9 / 40 credits` and `$29 / 160 credits`.
-- Update the Gmail sender display name to `FrameVela AI Support`.
+- Completed: updated the Gmail sender display name to `FrameVela AI Support`.
+- Send one external test to confirm the recipient sees the new display name.
 - Replace the legacy M favicon and PWA icon set when approved FrameVela artwork is available.
 - Resume Creem KYC/KYB only after the public deployment and Creem test-product names match.

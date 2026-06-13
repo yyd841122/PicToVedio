@@ -107,7 +107,8 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Refund page explains failed technical jobs, imperfect successful outputs, and support-request details.
 - [x] `support@cozyguidehub.com` test message was received through Cloudflare Email Routing in the monitored Gmail inbox on 2026-06-07.
 - [x] Resend verified `cozyguidehub.com` for outbound email, and Gmail sent a successful test under the former sender display name `MotionPic AI Support`.
-- [ ] Update the Gmail sender display name to `FrameVela AI Support` and send one new external test.
+- [x] Updated the Gmail sender display name to `FrameVela AI Support`.
+- [ ] Send one new external test and confirm the sender name and address at the recipient.
 - [x] Gmail is configured to reply from the same address that received the message.
 - [x] Public inbound MX, DKIM, return-path MX, SPF, and DMARC records pass `npm run email:dns`.
 
