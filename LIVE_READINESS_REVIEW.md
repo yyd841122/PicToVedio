@@ -118,7 +118,7 @@ Payments:
 - [x] Creem provided conditional category guidance on 2026-06-11: the product should generally be acceptable if buyer data is not saved.
 - [x] Sent the limited payment/event-reference and Supabase Auth email boundary to Creem for clarification on 2026-06-11.
 - [x] Creem accepted the limited payment/event references and separate Supabase Auth email boundary on 2026-06-13.
-- [ ] Rename the two Creem test products to FrameVela AI before resuming KYC/KYB.
+- [x] Renamed the two Creem test products to FrameVela AI before resuming KYC/KYB.
 - [ ] Complete KYC/KYB and receive actual live-mode activation before any live configuration.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.

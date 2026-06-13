@@ -58,7 +58,7 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Sent Creem a clarification of the limited transaction-reference and Supabase Auth email boundary on 2026-06-11.
 - [x] Creem confirmed on 2026-06-13 that limited operational payment references and separate Supabase Auth email handling satisfy its buyer-data condition.
 - [x] Renamed the public product to FrameVela AI on 2026-06-13 before completing KYC/KYB.
-- [ ] Rename the two Creem test products to FrameVela AI and verify their descriptions still show `$9 / 40` and `$29 / 160`.
+- [x] Renamed the two Creem test products to FrameVela AI and retained `$9 / 40` and `$29 / 160`.
 - [ ] Complete KYC/KYB and receive actual Creem live-mode activation; conditional guidance is not guaranteed approval.
 - [ ] Finish Creem live store verification.
 - [ ] Create live Creator Pack product.

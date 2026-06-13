@@ -97,7 +97,7 @@ Requires owner confirmation and real payment readiness:
 - [x] A detailed data-boundary clarification was sent to Creem on 2026-06-11.
 - [x] Creem confirmed on 2026-06-13 that the current limited transaction references and Supabase Auth email boundary satisfy its buyer-data condition.
 - [x] Public branding changed to FrameVela AI on 2026-06-13 before KYC/KYB completion.
-- [ ] Creem test product names and descriptions show FrameVela AI before KYC/KYB resumes.
+- [x] Creem test product names and descriptions show FrameVela AI before KYC/KYB resumes.
 - [ ] Creem KYC/KYB passes and live mode is actually activated.
 - [ ] Creem live store is verified.
 - [ ] Live products match visible site package names.

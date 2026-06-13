@@ -197,5 +197,5 @@ Last updated: 2026-06-13
 - [ ] Creem live API key, live product IDs, and live webhook signing secret.
 - [x] Public contact email placeholder.
 - [x] Confirmed the public brand name `FrameVela AI` on 2026-06-13 after an exact-name conflict review.
-- [ ] Rename the two Creem test products from MotionPic AI to FrameVela AI before resuming KYC/KYB.
+- [x] Renamed the two Creem test products from MotionPic AI to FrameVela AI before resuming KYC/KYB.
 - [ ] Update the Gmail sender display name from MotionPic AI Support to FrameVela AI Support.
