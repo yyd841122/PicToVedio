@@ -136,7 +136,7 @@ Requires owner confirmation because it writes to object storage:
 - [x] Public support email is `support@cozyguidehub.com`.
 - [x] A test message reached the monitored Gmail destination through Cloudflare Email Routing on 2026-06-07.
 - [x] A Resend SMTP test reached an external mailbox under the former sender display name `MotionPic AI Support`.
-- [ ] A new external test reaches the mailbox as `FrameVela AI Support <support@cozyguidehub.com>`.
+- [x] A new external test reached the mailbox as `FrameVela AI Support <support@cozyguidehub.com>`.
 - [x] Gmail is set to reply using the same address that received the message.
 - [x] Public inbound MX, DKIM, return-path MX, SPF, and DMARC records are verified.
 - [ ] Refund policy matches real operating behavior.

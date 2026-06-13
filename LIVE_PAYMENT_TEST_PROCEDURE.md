@@ -165,7 +165,7 @@ Before changing payment mode:
 - [ ] Supabase paid-credit grant has been moved to an owner-approved atomic RPC and verified with Creem test mode.
 - [x] `support@cozyguidehub.com` test mail was received in the monitored Gmail destination.
 - [x] Outbound support mail was delivered externally under the former display name `MotionPic AI Support <support@cozyguidehub.com>`.
-- [ ] Repeat the outbound test after changing the Gmail sender display name to `FrameVela AI Support`.
+- [x] Repeated the outbound test and confirmed the recipient sees `FrameVela AI Support <support@cozyguidehub.com>`.
 - [x] Gmail replies from the same address that received the message.
 - [ ] The owner understands that AI outputs can be distorted and successful jobs are not automatically refunded for aesthetic imperfections.
 
