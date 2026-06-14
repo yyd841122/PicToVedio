@@ -13,7 +13,8 @@ with target as (
     p.oid,
     p.proowner,
     p.prosecdef,
-    p.proconfig
+    p.proconfig,
+    p.proacl
   from pg_catalog.pg_proc p
   where p.oid = pg_catalog.to_regprocedure(
     'public.motionpic_process_payment_credit(text,text,text,text,text,text,integer,text)'

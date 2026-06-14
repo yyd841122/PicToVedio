@@ -65,6 +65,11 @@ assert.match(
   "post-install verification should require the exact RPC signature",
 );
 assert.match(verification, /prosecdef/i, "post-install verification should check security definer");
+assert.match(
+  verification,
+  /select[\s\S]+p\.proacl[\s\S]+from\s+pg_catalog\.pg_proc\s+p/i,
+  "post-install verification should select the function ACL before expanding it",
+);
 assert.match(verification, /search_path=/i, "post-install verification should check the empty search path");
 assert.match(verification, /service_role_execute/i, "post-install verification should check service_role execute");
 assert.match(verification, /public_execute_revoked/i, "post-install verification should check public execute");
