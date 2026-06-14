@@ -3,6 +3,10 @@ import assert from "node:assert/strict";
 
 const sql = readFileSync(new URL("../SUPABASE_ATOMIC_CREDIT_RPC_DRAFT.sql", import.meta.url), "utf8");
 const preflight = readFileSync(new URL("../SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql", import.meta.url), "utf8");
+const verification = readFileSync(
+  new URL("../SUPABASE_ATOMIC_CREDIT_RPC_VERIFY_READONLY.sql", import.meta.url),
+  "utf8",
+);
 const server = readFileSync(new URL("../server.mjs", import.meta.url), "utf8");
 
 assert.match(
@@ -55,6 +59,31 @@ assert.match(preflight, /payment_ledger_mismatch/i, "preflight should find payme
 assert.match(preflight, /ledger_missing_payment/i, "preflight should find checkout ledgers without payments");
 assert.match(preflight, /payment_event_reused/i, "preflight should find event ids linked to multiple payments");
 assert.doesNotMatch(preflight, /\b(insert|update|delete|create|drop|alter|grant|revoke|truncate)\b/i, "preflight must be read-only");
+assert.match(
+  verification,
+  /to_regprocedure\(\s*'public\.motionpic_process_payment_credit\(text,text,text,text,text,text,integer,text\)'\s*\)/i,
+  "post-install verification should require the exact RPC signature",
+);
+assert.match(verification, /prosecdef/i, "post-install verification should check security definer");
+assert.match(verification, /search_path=/i, "post-install verification should check the empty search path");
+assert.match(verification, /service_role_execute/i, "post-install verification should check service_role execute");
+assert.match(verification, /public_execute_revoked/i, "post-install verification should check public execute");
+assert.match(verification, /anon_execute_revoked/i, "post-install verification should check anon execute");
+assert.match(
+  verification,
+  /authenticated_execute_revoked/i,
+  "post-install verification should check authenticated execute",
+);
+assert.match(
+  verification,
+  /only_service_role_execute/i,
+  "post-install verification should reject unexpected non-owner execute grants",
+);
+assert.doesNotMatch(
+  verification,
+  /\b(insert|update|delete|create|drop|alter|grant|revoke|truncate|call)\b/i,
+  "post-install verification must be read-only",
+);
 assert.match(
   server,
   /process\.env\.SUPABASE_ATOMIC_CREDIT_RPC\s*===\s*"true"/,
