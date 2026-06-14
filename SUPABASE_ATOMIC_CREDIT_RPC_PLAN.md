@@ -14,6 +14,12 @@ Local static review command:
 npm run sql:check
 ```
 
+Current status:
+
+- Production read-only preflight completed on 2026-06-14.
+- Result: zero rows.
+- No RPC function has been installed and the feature flag remains off.
+
 ## Why This Exists
 
 The current Supabase path uses several REST calls for operations that should behave as one database transaction:
@@ -93,7 +99,7 @@ It should move the browser account balance and related rows to the authenticated
 
 1. Owner confirms this migration can be prepared for the production Supabase project.
 2. Draft SQL is reviewed locally with `npm run sql:check` and kept out of chat screenshots that contain secrets.
-3. Owner runs `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql` and confirms it returns zero payment rows without matching ledger entries.
+3. Completed 2026-06-14: owner ran `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql`; it returned zero rows.
 4. Owner opens Supabase SQL Editor and runs only the approved SQL.
 5. Verify that the function exists and only `service_role` can execute it.
 6. Confirm the deployed backend includes the default-off `SUPABASE_ATOMIC_CREDIT_RPC` integration.

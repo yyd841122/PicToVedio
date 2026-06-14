@@ -29,7 +29,7 @@ performed during this verification flow.
 
 Keep Creem in test mode. Before any live payment:
 
-1. Run the owner-approved read-only Supabase atomic-credit preflight.
+1. Completed 2026-06-14: the owner-approved read-only Supabase atomic-credit preflight returned zero rows.
 2. Review and apply the atomic paid-credit RPC only with explicit approval.
 3. Verify the RPC with Creem test mode.
 4. Confirm Creem has actually enabled live payments.
