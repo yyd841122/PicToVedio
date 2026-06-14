@@ -214,11 +214,11 @@ Paid-credit webhook writes can use the reviewed Supabase transaction RPC after i
 SUPABASE_ATOMIC_CREDIT_RPC=true
 ```
 
-The production preflight returned zero rows and the RPC installation plus
-read-only permission verification completed on 2026-06-14. Keep this variable
-unset or `false` until the owner separately approves the Render configuration
-change and controlled Creem test-mode verification. With the flag off, the
-existing payment path remains active.
+The production preflight returned zero rows, the RPC installation plus
+read-only permission verification completed, and the owner-approved Render
+cutover deployed on 2026-06-14. Keep Creem outside live mode until one
+controlled test-mode payment confirms exactly one payment row, ledger grant,
+and balance increase through the RPC.
 
 Current generation credit rules:
 
@@ -362,6 +362,7 @@ Before taking real payments, switch Creem from test mode to live mode in Render 
 - [SUPPORT_RESPONSE_TEMPLATES.md](./SUPPORT_RESPONSE_TEMPLATES.md): support reply templates for failed generations, distorted outputs, credits, payments, and privacy concerns.
 - [SUPABASE_ATOMIC_CREDIT_RPC_PLAN.md](./SUPABASE_ATOMIC_CREDIT_RPC_PLAN.md): staged transaction-RPC rollout and rollback plan.
 - [reports/SUPABASE_ATOMIC_CREDIT_RPC_INSTALL_RESULT_2026-06-14.md](./reports/SUPABASE_ATOMIC_CREDIT_RPC_INSTALL_RESULT_2026-06-14.md): production installation and read-only security-verification result.
+- [reports/ATOMIC_CREDIT_RPC_RENDER_CUTOVER_2026-06-14.md](./reports/ATOMIC_CREDIT_RPC_RENDER_CUTOVER_2026-06-14.md): approved Render feature-flag deployment and remaining test-mode transaction gate.
 - [R2_SETUP_GUIDE.md](./R2_SETUP_GUIDE.md): Cloudflare R2 setup steps for storing uploaded photos and generated videos.
 - [STORAGE_SETUP_REVIEW_CHECKLIST.md](./STORAGE_SETUP_REVIEW_CHECKLIST.md): object-storage cutover review checklist, acceptance criteria, and rollback plan.
 - [reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md](./reports/PUBLIC_SEO_READINESS_CHECK_2026-06-03.md): public SEO metadata, JSON-LD, internal-link, and endpoint readiness report.

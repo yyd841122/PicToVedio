@@ -48,7 +48,8 @@ Use this checklist before moving from test mode to real public launch.
 - [x] Backend RPC integration is staged behind default-off `SUPABASE_ATOMIC_CREDIT_RPC`.
 - [x] Production atomic-credit read-only preflight returned zero rows on 2026-06-14.
 - [x] Production atomic-credit RPC was installed and its function security and execute permissions passed read-only verification on 2026-06-14.
-- [ ] Obtain explicit owner approval before setting `SUPABASE_ATOMIC_CREDIT_RPC=true` in Render.
+- [x] Owner approved and the Render Blueprint deployed `SUPABASE_ATOMIC_CREDIT_RPC=true` on 2026-06-14.
+- [ ] Verify one controlled Creem test-mode payment creates exactly one payment row, one ledger grant, and one balance increase through the RPC.
 - [x] Model the controlled-live direct provider margin at `$9/40` and `$29/160`.
 - [ ] Validate actual net margin after Creem/payment fees, retries, refunds, and support.
 - [x] Final Creator Pack test payment succeeded on 2026-06-07 and increased the signed-in balance by exactly 40 credits after return/refresh.

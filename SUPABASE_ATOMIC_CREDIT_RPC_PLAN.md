@@ -22,8 +22,10 @@ Current status:
 - Post-install read-only verification passed: the exact function exists, uses
   `SECURITY DEFINER` with an empty `search_path`, and only `service_role` has
   non-owner `EXECUTE`.
-- The feature flag remains off, so the deployed application has not switched
-  to the RPC path.
+- The owner approved the Render cutover and build `0babcf9`, containing
+  `SUPABASE_ATOMIC_CREDIT_RPC=true`, deployed successfully on 2026-06-14.
+- Transaction-level verification with one controlled Creem test-mode payment
+  is still pending.
 
 ## Why This Exists
 
@@ -112,7 +114,8 @@ It should move the browser account balance and related rows to the authenticated
    `SUPABASE_ATOMIC_CREDIT_RPC` integration.
 7. Completed 2026-06-14: local mock and static tests passed.
 8. Current state: Creem live payments remain disabled.
-9. Set `SUPABASE_ATOMIC_CREDIT_RPC=true` in Render and deploy only after owner approval.
+9. Completed 2026-06-14: after explicit owner approval, set
+   `SUPABASE_ATOMIC_CREDIT_RPC=true` in the Render Blueprint and deploy.
 10. Run a Creem test checkout and confirm exactly one payment row, one ledger grant, and one balance increase.
 11. Only after Creem category approval, owner may approve live-mode configuration.
 
