@@ -1369,7 +1369,7 @@ function buildOwnerActionChecklist(runtime) {
       area: "Credit RPC",
       action: runtime.atomicPaymentCreditRpcActive
         ? "Verify one Creem test payment creates exactly one payment, ledger grant, and balance increase."
-        : "Run the read-only preflight, apply the reviewed SQL, then enable the flag only after explicit approval.",
+        : "Production SQL was installed and read-only verified on 2026-06-14. Enable the Render flag only after separate explicit approval.",
       risk: "Changes the durable payment-credit transaction path.",
       status: runtime.atomicPaymentCreditRpcActive ? "Test required" : "Owner approval",
       tone: runtime.atomicPaymentCreditRpcActive ? "tone-warning" : "tone-info",

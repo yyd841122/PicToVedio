@@ -111,8 +111,9 @@ function assertReadinessStatus() {
     "readiness should not list completed support inbox work as an owner action",
   );
   assert(
-    result.stdout.includes("RPC integration is staged but off"),
-    "readiness should keep atomic paid credits visibly disabled by default",
+    result.stdout.includes("Production SQL is installed and read-only verified")
+      && result.stdout.includes("feature flag remains off"),
+    "readiness should show verified SQL while keeping atomic paid credits disabled by default",
   );
   assert(
     result.stdout.includes("Creem accepted the buyer-data boundary on 2026-06-13"),
@@ -509,6 +510,11 @@ async function assertOpsPreflight(baseUrl) {
   assert(dailyCaps?.status === "10 site / 2 user", "preflight should show controlled daily caps");
   const atomicCredits = ops.livePaymentPreflight.find((item) => item.label === "Atomic Paid Credits");
   assert(atomicCredits?.status === "Off", "atomic payment credits should remain off by default");
+  const creditRpcAction = ops.ownerActionChecklist.find((item) => item.area === "Credit RPC");
+  assert(
+    creditRpcAction?.action.includes("installed and read-only verified"),
+    "owner actions should show the completed atomic credit SQL verification",
+  );
   const buyerDataScope = ops.livePaymentPreflight.find((item) => item.label === "Buyer Data Scope");
   assert(buyerDataScope?.status === "Creem accepted", "preflight should show Creem buyer-data acceptance");
   const creemGate = ops.ownerActionChecklist.find((item) => item.area === "Creem");

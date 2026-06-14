@@ -20,7 +20,7 @@ const checks = [
 
 const ownerActions = [
   "Creem accepted the buyer-data boundary on 2026-06-13; complete KYC/KYB and confirm live-mode activation before live configuration.",
-  "Run the read-only Supabase credit preflight and apply the RPC only after explicit approval.",
+  "Atomic paid-credit SQL was installed and read-only verified on 2026-06-14; enable the Render feature flag only after separate explicit approval.",
   "Create or confirm Creem live products and webhook only after explicit approval and live-mode activation.",
   "Change Render live payment variables only after explicit approval.",
   "Run one small live payment only after explicit approval.",
@@ -125,7 +125,10 @@ function checkAtomicCredits() {
   if (liveMode) {
     return block("Atomic Paid Credits", "Creem live mode must not proceed while the atomic paid-credit RPC is disabled.");
   }
-  return warn("Atomic Paid Credits", "RPC integration is staged but off. Keep Creem in test mode until SQL is installed and verified.");
+  return warn(
+    "Atomic Paid Credits",
+    "Production SQL is installed and read-only verified, but the Render feature flag remains off pending explicit cutover approval.",
+  );
 }
 
 function checkPricing() {
