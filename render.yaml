@@ -17,6 +17,8 @@ services:
         value: "false"
       - key: DATA_PROVIDER
         value: supabase
+      - key: SUPABASE_ATOMIC_CREDIT_RPC
+        value: "true"
       - key: STORAGE_PROVIDER
         value: none
       - key: PAYMENT_PROVIDER
