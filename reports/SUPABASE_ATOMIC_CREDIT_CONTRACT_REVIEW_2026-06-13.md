@@ -28,6 +28,11 @@ different payment id. The event row is now locked, and an event already linked
 to another payment raises a conflict. This prevents concurrent or malformed
 replays from using one event id for multiple credit grants.
 
+After the first production installation attempt returned a syntax error at
+`IF NOT FOUND`, the draft was changed to use explicit boolean row-found flags
+for event, user, payment, and ledger lookups. This preserves the same behavior
+without relying on the PL/pgSQL `FOUND` special variable.
+
 The read-only preflight now reports:
 
 - payments without their expected ledger row;

@@ -1,5 +1,5 @@
 -- MotionPic AI atomic paid-credit RPC draft
--- Last updated: 2026-06-13
+-- Last updated: 2026-06-14
 --
 -- REVIEW ONLY until the owner explicitly approves running production SQL.
 -- This function is intended for the Render backend using SUPABASE_SERVICE_ROLE_KEY.
@@ -35,9 +35,21 @@ declare
   v_plan text := pg_catalog.lower(pg_catalog.btrim(coalesce(p_plan, '')));
   v_source text := pg_catalog.lower(pg_catalog.btrim(coalesce(p_source, '')));
   v_ledger_id text;
-  v_existing_event record;
-  v_existing_ledger record;
-  v_existing_payment record;
+  v_existing_event_provider text;
+  v_existing_event_type text;
+  v_existing_payment_provider text;
+  v_existing_payment_event_id text;
+  v_existing_payment_user_id text;
+  v_existing_payment_plan text;
+  v_existing_payment_credits integer;
+  v_existing_ledger_user_id text;
+  v_existing_ledger_amount integer;
+  v_existing_ledger_source text;
+  v_existing_ledger_external_id text;
+  v_existing_ledger_plan text;
+  v_existing_ledger_balance integer;
+  v_event_found boolean := false;
+  v_user_found boolean := false;
   v_ledger_found boolean := false;
   v_payment_found boolean := false;
   v_current_credits integer;
@@ -82,18 +94,18 @@ begin
   values (v_event_id, v_provider, nullif(v_event_type, ''), v_now)
   on conflict (id) do nothing;
 
-  select e.provider, e.type
-    into v_existing_event
+  select e.provider, e.type, true
+    into v_existing_event_provider, v_existing_event_type, v_event_found
   from public.webhook_events as e
   where e.id = v_event_id
   for update;
 
-  if not found then
+  if not v_event_found then
     raise exception 'Webhook event row could not be created or read: %', v_event_id using errcode = 'P0001';
   end if;
 
-  if v_existing_event.provider is distinct from v_provider
-    or coalesce(v_existing_event.type, '') is distinct from v_event_type
+  if v_existing_event_provider is distinct from v_provider
+    or coalesce(v_existing_event_type, '') is distinct from v_event_type
   then
     raise exception 'Existing webhook event does not match the attempted payment event: %', v_event_id
       using errcode = '23505';
@@ -103,13 +115,13 @@ begin
   values (v_user_id, 0, v_now, v_now)
   on conflict (id) do nothing;
 
-  select u.credits
-    into v_current_credits
+  select u.credits, true
+    into v_current_credits, v_user_found
   from public.app_users as u
   where u.id = v_user_id
   for update;
 
-  if not found then
+  if not v_user_found then
     raise exception 'User row could not be created or locked: %', v_user_id using errcode = 'P0001';
   end if;
 
@@ -123,21 +135,26 @@ begin
       using errcode = '23505';
   end if;
 
-  select p.id, p.provider, p.event_id, p.user_id, p.plan, p.credits
-    into v_existing_payment
+  select p.provider, p.event_id, p.user_id, p.plan, p.credits, true
+    into
+      v_existing_payment_provider,
+      v_existing_payment_event_id,
+      v_existing_payment_user_id,
+      v_existing_payment_plan,
+      v_existing_payment_credits,
+      v_payment_found
   from public.payments as p
   where p.id = v_payment_id;
-  v_payment_found := found;
 
   if v_payment_found then
-    if v_existing_payment.provider is distinct from v_provider
+    if v_existing_payment_provider is distinct from v_provider
       or (
-        v_existing_payment.event_id is not null
-        and v_existing_payment.event_id is distinct from v_event_id
+        v_existing_payment_event_id is not null
+        and v_existing_payment_event_id is distinct from v_event_id
       )
-      or v_existing_payment.user_id is distinct from v_user_id
-      or v_existing_payment.plan is distinct from v_plan
-      or v_existing_payment.credits is distinct from p_credits
+      or v_existing_payment_user_id is distinct from v_user_id
+      or v_existing_payment_plan is distinct from v_plan
+      or v_existing_payment_credits is distinct from p_credits
     then
       raise exception 'Existing payment row does not match the attempted credit grant: %', v_payment_id
         using errcode = '23505';
@@ -145,24 +162,30 @@ begin
   end if;
 
   select
-    l.id,
     l.user_id,
     l.amount,
     l.source,
     l.external_id,
     l.plan,
-    l.balance_after
-    into v_existing_ledger
+    l.balance_after,
+    true
+    into
+      v_existing_ledger_user_id,
+      v_existing_ledger_amount,
+      v_existing_ledger_source,
+      v_existing_ledger_external_id,
+      v_existing_ledger_plan,
+      v_existing_ledger_balance,
+      v_ledger_found
   from public.credit_ledger as l
   where l.id = v_ledger_id;
-  v_ledger_found := found;
 
   if v_ledger_found then
-    if v_existing_ledger.user_id is distinct from v_user_id
-      or v_existing_ledger.amount is distinct from p_credits
-      or v_existing_ledger.source is distinct from v_source
-      or v_existing_ledger.external_id is distinct from v_payment_id
-      or v_existing_ledger.plan is distinct from v_plan
+    if v_existing_ledger_user_id is distinct from v_user_id
+      or v_existing_ledger_amount is distinct from p_credits
+      or v_existing_ledger_source is distinct from v_source
+      or v_existing_ledger_external_id is distinct from v_payment_id
+      or v_existing_ledger_plan is distinct from v_plan
     then
       raise exception 'Existing credit ledger row does not match the attempted credit grant: %', v_ledger_id
         using errcode = '23505';
@@ -174,7 +197,7 @@ begin
     end if;
 
     return query
-      select false, v_existing_ledger.balance_after::integer, 'credit_ledger'::text;
+      select false, v_existing_ledger_balance, 'credit_ledger'::text;
     return;
   end if;
 

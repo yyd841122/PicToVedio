@@ -13,6 +13,9 @@ assert.match(
 assert.match(sql, /security\s+definer/i, "RPC should use security definer");
 assert.match(sql, /set\s+search_path\s*=\s*''/i, "RPC should pin an empty search_path");
 assert.match(sql, /for\s+update/i, "RPC should lock the user balance row");
+assert.doesNotMatch(sql, /if\s+not\s+found\s+then/i, "RPC should use explicit row-found flags");
+assert.match(sql, /v_event_found\s+boolean\s*:=\s*false/i, "RPC should track webhook event lookup explicitly");
+assert.match(sql, /v_user_found\s+boolean\s*:=\s*false/i, "RPC should track user lookup explicitly");
 assert.match(
   sql,
   /from\s+public\.webhook_events\s+as\s+e[\s\S]+where\s+e\.id\s*=\s*v_event_id[\s\S]+for\s+update/i,
