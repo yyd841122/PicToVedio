@@ -48,7 +48,10 @@ behavior.
 
 ## Remaining Gate
 
-Keep `SUPABASE_ATOMIC_CREDIT_RPC` disabled. Before any execution, the owner must
-review the final SQL, run the read-only preflight, confirm zero rows or reconcile
-every result, explicitly approve the SQL execution, and verify the RPC in Creem
-test mode before any live payment configuration.
+The production preflight, owner-approved installation, and post-install
+read-only security verification completed successfully on 2026-06-14.
+
+Keep `SUPABASE_ATOMIC_CREDIT_RPC` disabled until the owner separately approves
+the Render configuration change. After that controlled cutover, verify exactly
+one balance increase, payment row, and ledger grant with Creem still outside
+live mode before considering any live payment configuration.

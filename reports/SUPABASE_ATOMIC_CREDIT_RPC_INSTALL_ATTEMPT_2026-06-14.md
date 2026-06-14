@@ -22,3 +22,16 @@ boolean row-found flags instead of the `FOUND` special variable.
 The revised draft must pass local static tests and then be copied into a new
 Supabase query tab and executed as a fresh full query. The old saved query must
 not be rerun. The feature flag remains disabled, and Render is unchanged.
+
+## Resolution
+
+Later on 2026-06-14, the owner ran the complete current draft in a new query.
+Supabase returned `Success. No rows returned`.
+
+The separate post-install read-only verification then confirmed that the exact
+function exists, uses `SECURITY DEFINER` with an empty `search_path`, and grants
+non-owner `EXECUTE` only to `service_role`. See
+`SUPABASE_ATOMIC_CREDIT_RPC_INSTALL_RESULT_2026-06-14.md`.
+
+The application feature flag remains disabled, Render is unchanged, and no
+payment-credit RPC call or real payment was performed.

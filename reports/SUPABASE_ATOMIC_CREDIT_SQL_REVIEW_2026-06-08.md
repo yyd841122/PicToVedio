@@ -37,6 +37,16 @@ The RPC does not automatically repair that case because it cannot prove whether 
 - Obtain explicit owner approval to execute the function creation and grants.
 - After execution, enable `SUPABASE_ATOMIC_CREDIT_RPC=true` and verify it while Creem remains in test mode.
 
+## Subsequent Result
+
+The first three items completed on 2026-06-14. The production preflight returned
+zero rows, the owner approved and applied the complete current SQL, and the
+post-install read-only query verified the exact function, security settings, and
+service-role-only non-owner execution permission.
+
+The final item remains pending separate owner approval. The Render feature flag
+is still disabled, so the application has not switched to the RPC path.
+
 ## Backend Integration Status
 
 The backend integration is staged behind `SUPABASE_ATOMIC_CREDIT_RPC`, which defaults to `false`. When disabled, the existing payment path remains active. When enabled with Supabase as the active data provider, Creem and Stripe paid-credit grants call `rpc/motionpic_process_payment_credit`.

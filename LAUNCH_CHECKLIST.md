@@ -47,6 +47,8 @@ Use this checklist before moving from test mode to real public launch.
 - [ ] Supabase paid-credit grants use an owner-approved atomic RPC before any live payment test.
 - [x] Backend RPC integration is staged behind default-off `SUPABASE_ATOMIC_CREDIT_RPC`.
 - [x] Production atomic-credit read-only preflight returned zero rows on 2026-06-14.
+- [x] Production atomic-credit RPC was installed and its function security and execute permissions passed read-only verification on 2026-06-14.
+- [ ] Obtain explicit owner approval before setting `SUPABASE_ATOMIC_CREDIT_RPC=true` in Render.
 - [x] Model the controlled-live direct provider margin at `$9/40` and `$29/160`.
 - [ ] Validate actual net margin after Creem/payment fees, retries, refunds, and support.
 - [x] Final Creator Pack test payment succeeded on 2026-06-07 and increased the signed-in balance by exactly 40 credits after return/refresh.

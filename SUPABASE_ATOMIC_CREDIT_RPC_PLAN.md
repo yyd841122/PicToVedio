@@ -18,7 +18,12 @@ Current status:
 
 - Production read-only preflight completed on 2026-06-14.
 - Result: zero rows.
-- No RPC function has been installed and the feature flag remains off.
+- The production RPC was installed on 2026-06-14.
+- Post-install read-only verification passed: the exact function exists, uses
+  `SECURITY DEFINER` with an empty `search_path`, and only `service_role` has
+  non-owner `EXECUTE`.
+- The feature flag remains off, so the deployed application has not switched
+  to the RPC path.
 
 ## Why This Exists
 
@@ -100,11 +105,13 @@ It should move the browser account balance and related rows to the authenticated
 1. Owner confirms this migration can be prepared for the production Supabase project.
 2. Draft SQL is reviewed locally with `npm run sql:check` and kept out of chat screenshots that contain secrets.
 3. Completed 2026-06-14: owner ran `SUPABASE_ATOMIC_CREDIT_PREFLIGHT_READONLY.sql`; it returned zero rows.
-4. Owner opens Supabase SQL Editor and runs only the approved SQL.
-5. Verify that the function exists and only `service_role` can execute it.
-6. Confirm the deployed backend includes the default-off `SUPABASE_ATOMIC_CREDIT_RPC` integration.
-7. Run local mock tests.
-8. Keep Creem test mode enabled.
+4. Completed 2026-06-14: owner ran the complete approved SQL in a new query.
+5. Completed 2026-06-14: read-only verification confirmed the function and its
+   security properties.
+6. Completed: the deployed backend code includes the default-off
+   `SUPABASE_ATOMIC_CREDIT_RPC` integration.
+7. Completed 2026-06-14: local mock and static tests passed.
+8. Current state: Creem live payments remain disabled.
 9. Set `SUPABASE_ATOMIC_CREDIT_RPC=true` in Render and deploy only after owner approval.
 10. Run a Creem test checkout and confirm exactly one payment row, one ledger grant, and one balance increase.
 11. Only after Creem category approval, owner may approve live-mode configuration.

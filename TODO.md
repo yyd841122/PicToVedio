@@ -126,7 +126,8 @@ Last updated: 2026-06-13
 - [ ] Receive actual Creem live-payment activation; the dashboard still reports live payments disabled.
 - [ ] Repeat the product-id, description, and Render-variable alignment only after actual live-mode activation.
 - [x] Run the production Supabase atomic-credit preflight read-only query and confirm zero rows on 2026-06-14.
-- [ ] Prepare, owner-approve, and apply the Supabase atomic paid-credit RPC before any live payment test.
+- [x] Prepare, owner-approve, apply, and read-only verify the Supabase atomic paid-credit RPC on 2026-06-14.
+- [ ] Explicitly approve the Render RPC feature-flag cutover and verify one Creem test-mode payment before any live payment test.
 - [x] Confirm actual Alibaba Cloud / DashScope bill cost for the completed Stage 1 generations: CNY 0.60 per use.
 - [x] Keep `ESTIMATED_VIDEO_COST_CNY=0.6` as the current planning value after owner cost confirmation.
 - [ ] Re-check `ESTIMATED_VIDEO_COST_CNY` after more real DashScope generations, 1080p tests, 8-second tests, or audio-on tests.
