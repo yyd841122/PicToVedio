@@ -32,6 +32,7 @@ The read-only preflight now reports:
 
 - payments without their expected ledger row;
 - payment and ledger field mismatches;
+- checkout ledger rows without matching payments;
 - event ids linked to more than one payment.
 
 ## Verification

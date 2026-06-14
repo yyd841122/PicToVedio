@@ -49,6 +49,7 @@ assert.match(
   "preflight should find legacy payments without matching ledgers",
 );
 assert.match(preflight, /payment_ledger_mismatch/i, "preflight should find payment and ledger field mismatches");
+assert.match(preflight, /ledger_missing_payment/i, "preflight should find checkout ledgers without payments");
 assert.match(preflight, /payment_event_reused/i, "preflight should find event ids linked to multiple payments");
 assert.doesNotMatch(preflight, /\b(insert|update|delete|create|drop|alter|grant|revoke|truncate)\b/i, "preflight must be read-only");
 assert.match(

@@ -49,6 +49,25 @@ where l.user_id is distinct from p.user_id
 union all
 
 select
+  'ledger_missing_payment' as issue,
+  l.external_id as id,
+  pg_catalog.replace(l.source, '-checkout', '') as provider,
+  null::text as event_id,
+  l.user_id,
+  l.plan,
+  l.amount as credits,
+  l.created_at as payment_created_at,
+  u.credits as current_balance
+from public.credit_ledger l
+join public.app_users u on u.id = l.user_id
+left join public.payments p
+  on p.id = l.external_id
+where l.source in ('creem-checkout', 'stripe-checkout')
+  and p.id is null
+
+union all
+
+select
   'payment_event_reused' as issue,
   p.id,
   p.provider,
